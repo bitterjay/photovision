@@ -6,11 +6,13 @@ const url = require('url');
 const DataManager = require('./lib/dataManager');
 const ClaudeClient = require('./lib/claudeClient');
 const SmugMugClient = require('./lib/smugmugClient');
+const JobQueue = require('./lib/jobQueue');
 
 const PORT = process.env.PORT || 3000;
 const dataManager = new DataManager();
 const claudeClient = new ClaudeClient(process.env.ANTHROPIC_API_KEY);
 const smugmugClient = new SmugMugClient(process.env.SMUGMUG_API_KEY, process.env.SMUGMUG_API_SECRET);
+const jobQueue = new JobQueue();
 
 // Simple MIME type mapping
 const mimeTypes = {
@@ -522,6 +524,273 @@ async function handleAPIRoutes(req, res, parsedUrl) {
       }
     }
 
+    // Batch processing endpoints
+
+    // Start batch processing endpoint
+    if (pathname === '/api/batch/start' && method === 'POST') {
+      log('Batch processing start request');
+
+      try {
+        const requestData = await parseJSON(req);
+        
+        if (!requestData.albumKey) {
+          return sendError(res, 400, 'Album key is required');
+        }
+
+        // Check SmugMug connection
+        const config = await dataManager.getConfig();
+        const smugmugConfig = config.smugmug || {};
+
+        if (!smugmugConfig.connected || !smugmugConfig.accessToken) {
+          return sendError(res, 401, 'SmugMug not connected');
+        }
+
+        // Get album images
+        const albumUri = `/api/v2/album/${requestData.albumKey}`;
+        const imagesResult = await smugmugClient.getAlbumImages(
+          smugmugConfig.accessToken,
+          smugmugConfig.accessTokenSecret,
+          albumUri
+        );
+
+        if (!imagesResult.success) {
+          return sendError(res, 500, 'Failed to get album images: ' + imagesResult.error);
+        }
+
+        if (imagesResult.images.length === 0) {
+          return sendError(res, 400, 'No images found in album');
+        }
+
+        // Create jobs for each image
+        const jobs = imagesResult.images
+          .filter(img => img.LargestImage && img.LargestImage.ImageUrl)
+          .slice(0, requestData.maxImages || 50) // Limit batch size
+          .map((image, index) => ({
+            id: `img_${requestData.albumKey}_${image.ImageKey}`,
+            type: 'image_analysis',
+            data: {
+              imageUrl: image.LargestImage.ImageUrl,
+              imageKey: image.ImageKey,
+              filename: image.FileName || `image_${index + 1}`,
+              title: image.Title || '',
+              caption: image.Caption || ''
+            },
+            albumKey: requestData.albumKey,
+            imageName: image.FileName || `image_${index + 1}`
+          }));
+
+        if (jobs.length === 0) {
+          return sendError(res, 400, 'No processable images found in album');
+        }
+
+        // Add jobs to queue
+        const batchInfo = jobQueue.addBatch(jobs, requestData.batchName || `Album ${requestData.albumKey}`);
+
+        // Define progress callback for real-time updates
+        const onProgress = (progress) => {
+          log(`Batch progress: ${progress.progress}% (${progress.processed}/${progress.total})`);
+        };
+
+        // Define completion callback
+        const onComplete = (result) => {
+          log(`Batch completed: ${result.processed} processed, ${result.failed} failed`);
+        };
+
+        // Define error callback
+        const onError = (error) => {
+          log(`Batch processing error: ${error.message}`, 'ERROR');
+        };
+
+        // Create image analysis processor
+        const processors = {
+          image_analysis: async (imageData, job) => {
+            log(`Processing image: ${imageData.filename}`);
+            
+            // Fetch image from SmugMug
+            const imageResponse = await fetch(imageData.imageUrl);
+            if (!imageResponse.ok) {
+              throw new Error(`Failed to fetch image: ${imageResponse.status}`);
+            }
+            
+            const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
+            const contentType = imageResponse.headers.get('content-type') || 'image/jpeg';
+            
+            // Analyze with Claude
+            const analysisResult = await claudeClient.analyzeImage(imageBuffer, contentType, null);
+            
+            if (!analysisResult.success) {
+              throw new Error(analysisResult.error);
+            }
+
+            // Store the result
+            const imageRecord = {
+              id: generateUniqueId(),
+              filename: imageData.filename,
+              smugmugImageKey: imageData.imageKey,
+              smugmugUrl: imageData.imageUrl,
+              title: imageData.title,
+              caption: imageData.caption,
+              albumKey: job.albumKey,
+              description: analysisResult.description,
+              keywords: analysisResult.keywords || [],
+              metadata: {
+                model: analysisResult.model,
+                timestamp: analysisResult.timestamp,
+                batchId: job.batchId,
+                jobId: job.id
+              }
+            };
+
+            // Save to data storage
+            await dataManager.addImage(imageRecord);
+            
+            return {
+              imageKey: imageData.imageKey,
+              description: analysisResult.description,
+              keywords: analysisResult.keywords,
+              saved: true
+            };
+          }
+        };
+
+        // Start processing in background
+        jobQueue.startProcessing(processors, onProgress, onComplete, onError)
+          .catch(error => {
+            log(`Batch processing failed: ${error.message}`, 'ERROR');
+          });
+
+        return sendSuccess(res, {
+          batchId: batchInfo.batchId,
+          jobCount: batchInfo.jobCount,
+          albumKey: requestData.albumKey,
+          message: `Started processing ${batchInfo.jobCount} images`
+        }, 'Batch processing started');
+
+      } catch (error) {
+        return sendError(res, 500, 'Failed to start batch processing', error);
+      }
+    }
+
+    // Batch status endpoint
+    if (pathname === '/api/batch/status' && method === 'GET') {
+      log('Batch status request');
+      
+      try {
+        const status = jobQueue.getStatus();
+        return sendSuccess(res, status, 'Batch status retrieved');
+      } catch (error) {
+        return sendError(res, 500, 'Failed to get batch status', error);
+      }
+    }
+
+    // Batch pause endpoint
+    if (pathname === '/api/batch/pause' && method === 'POST') {
+      log('Batch pause request');
+      
+      try {
+        const paused = jobQueue.pause();
+        return sendSuccess(res, { paused }, paused ? 'Batch processing paused' : 'Batch not currently processing');
+      } catch (error) {
+        return sendError(res, 500, 'Failed to pause batch processing', error);
+      }
+    }
+
+    // Batch resume endpoint
+    if (pathname === '/api/batch/resume' && method === 'POST') {
+      log('Batch resume request');
+      
+      try {
+        // Create processors again for resume
+        const processors = {
+          image_analysis: async (imageData, job) => {
+            log(`Processing image: ${imageData.filename}`);
+            
+            const imageResponse = await fetch(imageData.imageUrl);
+            if (!imageResponse.ok) {
+              throw new Error(`Failed to fetch image: ${imageResponse.status}`);
+            }
+            
+            const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
+            const contentType = imageResponse.headers.get('content-type') || 'image/jpeg';
+            
+            const analysisResult = await claudeClient.analyzeImage(imageBuffer, contentType, null);
+            
+            if (!analysisResult.success) {
+              throw new Error(analysisResult.error);
+            }
+
+            const imageRecord = {
+              id: generateUniqueId(),
+              filename: imageData.filename,
+              smugmugImageKey: imageData.imageKey,
+              smugmugUrl: imageData.imageUrl,
+              title: imageData.title,
+              caption: imageData.caption,
+              albumKey: job.albumKey,
+              description: analysisResult.description,
+              keywords: analysisResult.keywords || [],
+              metadata: {
+                model: analysisResult.model,
+                timestamp: analysisResult.timestamp,
+                batchId: job.batchId,
+                jobId: job.id
+              }
+            };
+
+            await dataManager.addImage(imageRecord);
+            
+            return {
+              imageKey: imageData.imageKey,
+              description: analysisResult.description,
+              keywords: analysisResult.keywords,
+              saved: true
+            };
+          }
+        };
+
+        const resumed = await jobQueue.resume(processors);
+        return sendSuccess(res, { resumed }, resumed ? 'Batch processing resumed' : 'No batch to resume');
+      } catch (error) {
+        return sendError(res, 500, 'Failed to resume batch processing', error);
+      }
+    }
+
+    // Batch cancel endpoint
+    if (pathname === '/api/batch/cancel' && method === 'POST') {
+      log('Batch cancel request');
+      
+      try {
+        jobQueue.cancel();
+        return sendSuccess(res, {}, 'Batch processing cancelled');
+      } catch (error) {
+        return sendError(res, 500, 'Failed to cancel batch processing', error);
+      }
+    }
+
+    // Batch retry failed jobs endpoint
+    if (pathname === '/api/batch/retry' && method === 'POST') {
+      log('Batch retry failed jobs request');
+      
+      try {
+        const result = jobQueue.retryFailedJobs();
+        return sendSuccess(res, result, result.message);
+      } catch (error) {
+        return sendError(res, 500, 'Failed to retry failed jobs', error);
+      }
+    }
+
+    // Batch details endpoint
+    if (pathname === '/api/batch/details' && method === 'GET') {
+      log('Batch details request');
+      
+      try {
+        const details = jobQueue.getQueueDetails();
+        return sendSuccess(res, details, 'Batch details retrieved');
+      } catch (error) {
+        return sendError(res, 500, 'Failed to get batch details', error);
+      }
+    }
+
     // API route not found
     return sendError(res, 404, `API endpoint not found: ${pathname}`);
 
@@ -588,6 +857,13 @@ server.listen(PORT, () => {
   log('  GET  /api/smugmug/status         - SmugMug connection status');
   log('  GET  /api/smugmug/albums         - Get SmugMug albums');
   log('  GET  /api/smugmug/album/:id/images - Get album images');
+  log('  POST /api/batch/start            - Start batch processing');
+  log('  GET  /api/batch/status           - Get batch status');
+  log('  POST /api/batch/pause            - Pause batch processing');
+  log('  POST /api/batch/resume           - Resume batch processing');
+  log('  POST /api/batch/cancel           - Cancel batch processing');
+  log('  POST /api/batch/retry            - Retry failed jobs');
+  log('  GET  /api/batch/details          - Get batch details');
   log('Press Ctrl+C to stop');
 });
 

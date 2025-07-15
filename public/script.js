@@ -376,6 +376,7 @@ class PhotoVision {
 
     async initializeStatusDashboard() {
         this.setupStatusEventListeners();
+        this.setupBatchProcessingEventListeners();
         await this.checkAllConnections();
     }
 
@@ -458,10 +459,12 @@ class PhotoVision {
                 this.updateServiceStatus('smugmug', 'connected', 'Connected');
                 this.showSmugMugAccountInfo(data.data.user);
                 this.enableSmugMugControls(true);
+                this.showBatchProcessingSection();
             } else {
                 this.updateServiceStatus('smugmug', 'disconnected', 'Not connected');
                 this.hideSmugMugAccountInfo();
                 this.enableSmugMugControls(false);
+                this.hideBatchProcessingSection();
             }
         } catch (error) {
             console.error('SmugMug status check error:', error);
@@ -616,6 +619,460 @@ class PhotoVision {
     updateLastChecked() {
         if (this.lastCheckedElement) {
             this.lastCheckedElement.textContent = new Date().toLocaleTimeString();
+        }
+    }
+
+    // Batch Processing Methods
+    setupBatchProcessingEventListeners() {
+        // Refresh albums button
+        const refreshAlbumsBtn = document.getElementById('refreshAlbums');
+        if (refreshAlbumsBtn) {
+            refreshAlbumsBtn.addEventListener('click', () => {
+                this.loadAlbums();
+            });
+        }
+
+        // Batch control buttons
+        const startBatchBtn = document.getElementById('startBatch');
+        if (startBatchBtn) {
+            startBatchBtn.addEventListener('click', () => {
+                this.startBatchProcessing();
+            });
+        }
+
+        const pauseBatchBtn = document.getElementById('pauseBatch');
+        if (pauseBatchBtn) {
+            pauseBatchBtn.addEventListener('click', () => {
+                this.pauseBatchProcessing();
+            });
+        }
+
+        const resumeBatchBtn = document.getElementById('resumeBatch');
+        if (resumeBatchBtn) {
+            resumeBatchBtn.addEventListener('click', () => {
+                this.resumeBatchProcessing();
+            });
+        }
+
+        const cancelBatchBtn = document.getElementById('cancelBatch');
+        if (cancelBatchBtn) {
+            cancelBatchBtn.addEventListener('click', () => {
+                this.cancelBatchProcessing();
+            });
+        }
+
+        const retryFailedBtn = document.getElementById('retryFailed');
+        if (retryFailedBtn) {
+            retryFailedBtn.addEventListener('click', () => {
+                this.retryFailedJobs();
+            });
+        }
+
+        const clearResultsBtn = document.getElementById('clearResults');
+        if (clearResultsBtn) {
+            clearResultsBtn.addEventListener('click', () => {
+                this.clearBatchResults();
+            });
+        }
+
+        // Initialize batch processing state
+        this.batchProgressInterval = null;
+        this.selectedAlbumKey = null;
+    }
+
+    async loadAlbums() {
+        const albumsList = document.getElementById('albumsList');
+        const albumCount = document.getElementById('albumCount');
+        
+        if (!albumsList) return;
+
+        albumsList.innerHTML = '<div class="loading-albums"><span class="loading"></span> Loading albums...</div>';
+        albumCount.textContent = 'Loading...';
+
+        try {
+            const response = await fetch('/api/smugmug/albums');
+            const data = await response.json();
+
+            if (data.success && data.data.albums) {
+                const albums = data.data.albums;
+                albumCount.textContent = `${albums.length} albums`;
+
+                if (albums.length === 0) {
+                    albumsList.innerHTML = '<div class="no-albums">No albums found in your SmugMug account.</div>';
+                    return;
+                }
+
+                // Render albums list
+                albumsList.innerHTML = albums.map(album => `
+                    <div class="album-item" data-album-key="${album.AlbumKey}">
+                        <div class="album-info">
+                            <div class="album-name">${album.Name || 'Untitled Album'}</div>
+                            <div class="album-details">
+                                <span class="image-count">${album.ImageCount || 0} images</span>
+                                ${album.Description ? `<span class="album-description">${album.Description}</span>` : ''}
+                            </div>
+                        </div>
+                        <button class="select-album-btn" data-album-key="${album.AlbumKey}">Select</button>
+                    </div>
+                `).join('');
+
+                // Add click handlers for album selection
+                albumsList.querySelectorAll('.select-album-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const albumKey = e.target.dataset.albumKey;
+                        this.selectAlbum(albumKey);
+                    });
+                });
+
+            } else {
+                albumsList.innerHTML = '<div class="error-message">Failed to load albums. Please check your SmugMug connection.</div>';
+                albumCount.textContent = 'Error';
+            }
+        } catch (error) {
+            console.error('Error loading albums:', error);
+            albumsList.innerHTML = '<div class="error-message">Error loading albums. Please try again.</div>';
+            albumCount.textContent = 'Error';
+        }
+    }
+
+    selectAlbum(albumKey) {
+        // Remove previous selection
+        document.querySelectorAll('.album-item').forEach(item => {
+            item.classList.remove('selected');
+        });
+
+        // Add selection to clicked album
+        const albumItem = document.querySelector(`[data-album-key="${albumKey}"]`);
+        if (albumItem) {
+            albumItem.classList.add('selected');
+        }
+
+        this.selectedAlbumKey = albumKey;
+
+        // Enable start button
+        const startBtn = document.getElementById('startBatch');
+        if (startBtn) {
+            startBtn.disabled = false;
+        }
+
+        // Update batch name if empty
+        const batchNameInput = document.getElementById('batchName');
+        const albumName = albumItem?.querySelector('.album-name')?.textContent;
+        if (batchNameInput && !batchNameInput.value && albumName) {
+            batchNameInput.value = albumName;
+        }
+    }
+
+    async startBatchProcessing() {
+        if (!this.selectedAlbumKey) {
+            this.addMessage('Please select an album first.', 'assistant');
+            return;
+        }
+
+        const maxImages = parseInt(document.getElementById('maxImages').value) || 50;
+        const batchName = document.getElementById('batchName').value || `Album ${this.selectedAlbumKey}`;
+
+        this.addMessage(`Starting batch processing for ${batchName} (max ${maxImages} images)...`, 'assistant');
+
+        try {
+            const response = await fetch('/api/batch/start', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    albumKey: this.selectedAlbumKey,
+                    maxImages: maxImages,
+                    batchName: batchName
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                this.addMessage(`Batch processing started! Processing ${data.data.jobCount} images.`, 'assistant');
+                this.showBatchProgress();
+                this.updateBatchControls('processing');
+                this.startProgressMonitoring();
+            } else {
+                this.addMessage(`Failed to start batch processing: ${data.error}`, 'assistant');
+            }
+        } catch (error) {
+            console.error('Error starting batch processing:', error);
+            this.addMessage('Error starting batch processing. Please try again.', 'assistant');
+        }
+    }
+
+    async pauseBatchProcessing() {
+        try {
+            const response = await fetch('/api/batch/pause', { method: 'POST' });
+            const data = await response.json();
+
+            if (data.success && data.data.paused) {
+                this.addMessage('Batch processing paused.', 'assistant');
+                this.updateBatchControls('paused');
+            } else {
+                this.addMessage('No active batch to pause.', 'assistant');
+            }
+        } catch (error) {
+            console.error('Error pausing batch:', error);
+            this.addMessage('Error pausing batch processing.', 'assistant');
+        }
+    }
+
+    async resumeBatchProcessing() {
+        try {
+            const response = await fetch('/api/batch/resume', { method: 'POST' });
+            const data = await response.json();
+
+            if (data.success && data.data.resumed) {
+                this.addMessage('Batch processing resumed.', 'assistant');
+                this.updateBatchControls('processing');
+            } else {
+                this.addMessage('No batch to resume.', 'assistant');
+            }
+        } catch (error) {
+            console.error('Error resuming batch:', error);
+            this.addMessage('Error resuming batch processing.', 'assistant');
+        }
+    }
+
+    async cancelBatchProcessing() {
+        try {
+            const response = await fetch('/api/batch/cancel', { method: 'POST' });
+            const data = await response.json();
+
+            if (data.success) {
+                this.addMessage('Batch processing cancelled.', 'assistant');
+                this.updateBatchControls('idle');
+                this.stopProgressMonitoring();
+                this.hideBatchProgress();
+            } else {
+                this.addMessage('Error cancelling batch processing.', 'assistant');
+            }
+        } catch (error) {
+            console.error('Error cancelling batch:', error);
+            this.addMessage('Error cancelling batch processing.', 'assistant');
+        }
+    }
+
+    async retryFailedJobs() {
+        try {
+            const response = await fetch('/api/batch/retry', { method: 'POST' });
+            const data = await response.json();
+
+            if (data.success) {
+                this.addMessage(`Retrying ${data.data.retriedJobs || 0} failed jobs.`, 'assistant');
+                if (data.data.retriedJobs > 0) {
+                    this.updateBatchControls('processing');
+                }
+            } else {
+                this.addMessage('No failed jobs to retry.', 'assistant');
+            }
+        } catch (error) {
+            console.error('Error retrying failed jobs:', error);
+            this.addMessage('Error retrying failed jobs.', 'assistant');
+        }
+    }
+
+    showBatchProgress() {
+        const progressSection = document.getElementById('batchProgress');
+        if (progressSection) {
+            progressSection.style.display = 'block';
+        }
+    }
+
+    hideBatchProgress() {
+        const progressSection = document.getElementById('batchProgress');
+        if (progressSection) {
+            progressSection.style.display = 'none';
+        }
+    }
+
+    updateBatchControls(state) {
+        const startBtn = document.getElementById('startBatch');
+        const pauseBtn = document.getElementById('pauseBatch');
+        const resumeBtn = document.getElementById('resumeBatch');
+        const cancelBtn = document.getElementById('cancelBatch');
+        const retryBtn = document.getElementById('retryFailed');
+
+        // Reset all buttons
+        [startBtn, pauseBtn, resumeBtn, cancelBtn, retryBtn].forEach(btn => {
+            if (btn) btn.disabled = true;
+        });
+
+        switch (state) {
+            case 'idle':
+                if (startBtn && this.selectedAlbumKey) startBtn.disabled = false;
+                break;
+            case 'processing':
+                if (pauseBtn) pauseBtn.disabled = false;
+                if (cancelBtn) cancelBtn.disabled = false;
+                break;
+            case 'paused':
+                if (resumeBtn) resumeBtn.disabled = false;
+                if (cancelBtn) cancelBtn.disabled = false;
+                break;
+            case 'completed':
+                if (startBtn && this.selectedAlbumKey) startBtn.disabled = false;
+                if (retryBtn) retryBtn.disabled = false;
+                break;
+        }
+    }
+
+    startProgressMonitoring() {
+        if (this.batchProgressInterval) {
+            clearInterval(this.batchProgressInterval);
+        }
+
+        this.batchProgressInterval = setInterval(async () => {
+            await this.updateBatchProgress();
+        }, 2000); // Update every 2 seconds
+    }
+
+    stopProgressMonitoring() {
+        if (this.batchProgressInterval) {
+            clearInterval(this.batchProgressInterval);
+            this.batchProgressInterval = null;
+        }
+    }
+
+    async updateBatchProgress() {
+        try {
+            const response = await fetch('/api/batch/status');
+            const data = await response.json();
+
+            if (data.success) {
+                const status = data.data;
+                this.displayBatchStatus(status);
+
+                // Check if batch is complete
+                if (status.isComplete) {
+                    this.stopProgressMonitoring();
+                    this.updateBatchControls('completed');
+                    this.showBatchResults(status);
+                    this.addMessage(`Batch processing completed! Processed: ${status.processed}, Failed: ${status.failed}`, 'assistant');
+                } else if (status.isPaused) {
+                    this.updateBatchControls('paused');
+                }
+            }
+        } catch (error) {
+            console.error('Error updating batch progress:', error);
+        }
+    }
+
+    displayBatchStatus(status) {
+        // Update progress bar
+        const progressFill = document.getElementById('batchProgressFill');
+        const progressPercentage = document.getElementById('progressPercentage');
+        if (progressFill && progressPercentage) {
+            const percentage = status.total > 0 ? Math.round((status.processed / status.total) * 100) : 0;
+            progressFill.style.width = `${percentage}%`;
+            progressPercentage.textContent = `${percentage}%`;
+        }
+
+        // Update counters
+        const processedCount = document.getElementById('processedCount');
+        const totalCount = document.getElementById('totalCount');
+        const failedCount = document.getElementById('failedCount');
+        const remainingCount = document.getElementById('remainingCount');
+
+        if (processedCount) processedCount.textContent = status.processed || 0;
+        if (totalCount) totalCount.textContent = status.total || 0;
+        if (failedCount) failedCount.textContent = status.failed || 0;
+        if (remainingCount) remainingCount.textContent = (status.total - status.processed) || 0;
+
+        // Update status
+        const batchStatus = document.getElementById('batchStatus');
+        if (batchStatus) {
+            if (status.isComplete) {
+                batchStatus.textContent = 'Completed';
+                batchStatus.className = 'batch-status completed';
+            } else if (status.isPaused) {
+                batchStatus.textContent = 'Paused';
+                batchStatus.className = 'batch-status paused';
+            } else if (status.isProcessing) {
+                batchStatus.textContent = 'Processing';
+                batchStatus.className = 'batch-status processing';
+            } else {
+                batchStatus.textContent = 'Idle';
+                batchStatus.className = 'batch-status idle';
+            }
+        }
+
+        // Update current job
+        const currentJobName = document.getElementById('currentJobName');
+        if (currentJobName) {
+            if (status.currentJob) {
+                currentJobName.textContent = status.currentJob.imageName || 'Processing...';
+            } else if (status.isComplete) {
+                currentJobName.textContent = 'All jobs completed';
+            } else {
+                currentJobName.textContent = 'Waiting...';
+            }
+        }
+    }
+
+    showBatchResults(status) {
+        const resultsSection = document.getElementById('batchResults');
+        const resultsSummary = document.getElementById('resultsSummary');
+        const failedJobs = document.getElementById('failedJobs');
+        const failedList = document.getElementById('failedList');
+
+        if (!resultsSection || !resultsSummary) return;
+
+        // Show results section
+        resultsSection.style.display = 'block';
+
+        // Update summary
+        resultsSummary.innerHTML = `
+            <div class="summary-stats">
+                <div class="summary-stat success">
+                    <span class="stat-number">${status.processed - (status.failed || 0)}</span>
+                    <span class="stat-label">Successful</span>
+                </div>
+                <div class="summary-stat failed">
+                    <span class="stat-number">${status.failed || 0}</span>
+                    <span class="stat-label">Failed</span>
+                </div>
+                <div class="summary-stat total">
+                    <span class="stat-number">${status.total || 0}</span>
+                    <span class="stat-label">Total</span>
+                </div>
+            </div>
+        `;
+
+        // Show failed jobs if any
+        if (status.failed > 0 && status.failedJobs && failedJobs && failedList) {
+            failedJobs.style.display = 'block';
+            failedList.innerHTML = status.failedJobs.map(job => `
+                <div class="failed-job">
+                    <span class="job-name">${job.imageName || job.id}</span>
+                    <span class="job-error">${job.error || 'Unknown error'}</span>
+                </div>
+            `).join('');
+        } else if (failedJobs) {
+            failedJobs.style.display = 'none';
+        }
+    }
+
+    clearBatchResults() {
+        const resultsSection = document.getElementById('batchResults');
+        if (resultsSection) {
+            resultsSection.style.display = 'none';
+        }
+    }
+
+    showBatchProcessingSection() {
+        const section = document.getElementById('batchProcessingSection');
+        if (section) {
+            section.style.display = 'block';
+            this.loadAlbums();
+        }
+    }
+
+    hideBatchProcessingSection() {
+        const section = document.getElementById('batchProcessingSection');
+        if (section) {
+            section.style.display = 'none';
         }
     }
 }

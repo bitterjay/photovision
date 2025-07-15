@@ -98,6 +98,93 @@
                     <small>Last checked: <span id="lastChecked">Never</span></small>
                 </div>
             </div>
+
+            <div class="batch-processing-section" id="batchProcessingSection" style="display: none;">
+                <div class="section-header">
+                    <h3>📁 Album Batch Processing</h3>
+                    <button id="refreshAlbums" class="refresh-btn">🔄</button>
+                </div>
+                
+                <div class="albums-container">
+                    <div class="albums-header">
+                        <h4>Select Album to Process</h4>
+                        <span class="album-count" id="albumCount">Loading...</span>
+                    </div>
+                    
+                    <div class="albums-list" id="albumsList">
+                        <div class="loading-albums">
+                            <span class="loading"></span> Loading albums...
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="batch-controls">
+                    <div class="batch-settings">
+                        <label for="maxImages">Max Images:</label>
+                        <input type="number" id="maxImages" value="50" min="1" max="200">
+                        
+                        <label for="batchName">Batch Name:</label>
+                        <input type="text" id="batchName" placeholder="Optional batch name">
+                    </div>
+                    
+                    <div class="control-buttons">
+                        <button id="startBatch" class="start-btn" disabled>🚀 Start Processing</button>
+                        <button id="pauseBatch" class="pause-btn" disabled>⏸️ Pause</button>
+                        <button id="resumeBatch" class="resume-btn" disabled>▶️ Resume</button>
+                        <button id="cancelBatch" class="cancel-btn" disabled>❌ Cancel</button>
+                        <button id="retryFailed" class="retry-btn" disabled>🔄 Retry Failed</button>
+                    </div>
+                </div>
+                
+                <div class="batch-progress" id="batchProgress" style="display: none;">
+                    <div class="progress-header">
+                        <h4>Processing Progress</h4>
+                        <span class="batch-status" id="batchStatus">Idle</span>
+                    </div>
+                    
+                    <div class="progress-bar-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="batchProgressFill"></div>
+                        </div>
+                        <span class="progress-percentage" id="progressPercentage">0%</span>
+                    </div>
+                    
+                    <div class="progress-details">
+                        <div class="progress-stats">
+                            <span class="stat">
+                                <strong>Processed:</strong> <span id="processedCount">0</span>
+                            </span>
+                            <span class="stat">
+                                <strong>Total:</strong> <span id="totalCount">0</span>
+                            </span>
+                            <span class="stat">
+                                <strong>Failed:</strong> <span id="failedCount">0</span>
+                            </span>
+                            <span class="stat">
+                                <strong>Remaining:</strong> <span id="remainingCount">0</span>
+                            </span>
+                        </div>
+                        
+                        <div class="current-job" id="currentJob">
+                            <strong>Current:</strong> <span id="currentJobName">Waiting...</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="batch-results" id="batchResults" style="display: none;">
+                    <div class="results-header">
+                        <h4>Batch Results</h4>
+                        <button id="clearResults" class="clear-btn">Clear</button>
+                    </div>
+                    
+                    <div class="results-summary" id="resultsSummary"></div>
+                    
+                    <div class="failed-jobs" id="failedJobs" style="display: none;">
+                        <h5>Failed Images</h5>
+                        <div class="failed-list" id="failedList"></div>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 
