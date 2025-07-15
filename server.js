@@ -256,34 +256,16 @@ async function handleAPIRoutes(req, res, parsedUrl) {
           return sendError(res, 500, 'Image analysis failed: ' + analysisResult.error);
         }
 
-        // Create image record
-        const imageRecord = {
-          id: generateUniqueId(),
-          filename: formData.image.filename || 'uploaded_image',
-          mimeType: formData.image.type,
-          size: formData.image.data.length,
-          uploadedAt: new Date().toISOString(),
-          analysis: {
-            description: analysisResult.description,
-            model: analysisResult.model,
-            usage: analysisResult.usage,
-            analyzedAt: analysisResult.timestamp
-          }
-        };
-
-        // Store the analysis result
-        const saveResult = await dataManager.addImage(imageRecord);
-        
-        if (!saveResult.success) {
-          log(`Failed to save image record: ${saveResult.error}`, 'ERROR');
-          return sendError(res, 500, 'Failed to save analysis result');
-        }
-
         log('Image analysis completed successfully');
 
         return sendSuccess(res, {
-          imageId: imageRecord.id,
-          analysis: analysisResult.description,
+          filename: formData.image.filename || 'uploaded_image',
+          mimeType: formData.image.type,
+          size: formData.image.data.length,
+          analysis: {
+            description: analysisResult.description,
+            keywords: analysisResult.keywords || []
+          },
           metadata: {
             model: analysisResult.model,
             usage: analysisResult.usage,

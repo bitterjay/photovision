@@ -18,5 +18,79 @@
       },
       "analyzedAt": "2025-07-15T17:45:31.753Z"
     }
+  },
+  {
+    "id": "md4xsubxz3xagzj608",
+    "timestamp": "2025-07-15T19:40:18.190Z",
+    "filename": "girl.jpeg",
+    "mimeType": "image/jpeg",
+    "size": 977976,
+    "uploadedAt": "2025-07-15T19:40:18.189Z",
+    "analysis": {
+      "description": "The image shows a young girl with curly dark hair and a bright, warm smile standing in an outdoor setting. She is holding several colorful pencils or markers in her hand. In the background, there are archery targets or bull's-eye-style circles, indicating this is likely an archery or outdoor recreation area. The sky is a clear, vibrant blue and the surrounding environment appears to be a grassy, natural setting. The overall mood is one of joy, enthusiasm, and a sense of learning or exploration, with the girl's engaging expression and the colorful, playful elements in the scene.",
+      "keywords": [
+        "young girl",
+        "curly hair",
+        "smile",
+        "outdoor setting",
+        "archery targets",
+        "bull's-eye",
+        "colorful pencils",
+        "markers",
+        "grassy",
+        "natural setting",
+        "joy",
+        "enthusiasm",
+        "learning",
+        "exploration"
+      ],
+      "model": "claude-3-haiku-20240307",
+      "usage": {
+        "input_tokens": 1830,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "output_tokens": 199,
+        "service_tier": "standard"
+      },
+      "analyzedAt": "2025-07-15T19:40:18.189Z"
+    }
+  },
+  {
+    "id": "md4y2f3eo3w7f9os0ae",
+    "timestamp": "2025-07-15T19:47:45.003Z",
+    "filename": "girl.jpeg",
+    "mimeType": "image/jpeg",
+    "size": 977976,
+    "uploadedAt": "2025-07-15T19:47:45.002Z",
+    "analysis": {
+      "description": "The image shows a young, smiling girl with curly dark hair standing in an outdoor setting. She is holding a set of colored pencils and appears to be posing in front of archery targets. The background features a grassy field and a clear blue sky, indicating an outdoor, daytime environment. The girl's expression is cheerful and upbeat, conveying a sense of excitement or enthusiasm. The overall scene has a vibrant, playful atmosphere, with the colorful archery targets adding visual interest and a recreational element to the setting.",
+      "keywords": [
+        "girl",
+        "child",
+        "archery",
+        "outdoor",
+        "field",
+        "targets",
+        "colored pencils",
+        "smiling",
+        "happy",
+        "cheerful",
+        "recreation",
+        "activity",
+        "nature",
+        "blue sky",
+        "grass",
+        "colorful"
+      ],
+      "model": "claude-3-haiku-20240307",
+      "usage": {
+        "input_tokens": 1830,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "output_tokens": 185,
+        "service_tier": "standard"
+      },
+      "analyzedAt": "2025-07-15T19:47:45.002Z"
+    }
   }
 ]

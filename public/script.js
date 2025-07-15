@@ -110,9 +110,9 @@ class PhotoVision {
             const data = await response.json();
 
             if (data.success) {
-                this.showAnalysisResult(data.data.analysis);
+                this.showAnalysisResult(data.data.analysis.description);
                 this.loadStatus(); // Refresh status
-                this.addMessage(`Image "${file.name}" analyzed successfully!`, 'assistant');
+                this.addComprehensiveAnalysisMessage(data.data);
             } else {
                 this.addMessage(`Analysis failed: ${data.error}`, 'assistant');
             }
@@ -211,6 +211,77 @@ class PhotoVision {
         const contentDiv = document.createElement('div');
         contentDiv.className = 'message-content';
         contentDiv.textContent = content;
+        
+        messageDiv.appendChild(contentDiv);
+        this.messagesContainer.appendChild(messageDiv);
+        
+        // Scroll to bottom
+        this.scrollToBottom();
+    }
+
+    addComprehensiveAnalysisMessage(data) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message assistant';
+        
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'message-content';
+        
+        // Format file size
+        const formatFileSize = (bytes) => {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        };
+
+        // Format timestamp
+        const formatTimestamp = (timestamp) => {
+            return new Date(timestamp).toLocaleString();
+        };
+
+        // Create comprehensive message
+        let messageHTML = `
+            <div style="margin-bottom: 10px;">
+                <strong>✅ Image Analysis Complete</strong>
+            </div>
+            <div style="margin-bottom: 8px;">
+                <strong>📄 Filename:</strong> ${data.filename}
+            </div>
+            <div style="margin-bottom: 8px;">
+                <strong>🖼️ Image Type:</strong> ${data.mimeType}
+            </div>
+            <div style="margin-bottom: 8px;">
+                <strong>📏 File Size:</strong> ${formatFileSize(data.size)}
+            </div>
+            <div style="margin-bottom: 8px;">
+                <strong>🤖 AI Model:</strong> ${data.metadata.model}
+            </div>
+            <div style="margin-bottom: 8px;">
+                <strong>⏰ Analyzed:</strong> ${formatTimestamp(data.metadata.timestamp)}
+            </div>
+        `;
+
+        // Add keywords if available
+        if (data.analysis.keywords && data.analysis.keywords.length > 0) {
+            messageHTML += `
+                <div style="margin-bottom: 8px;">
+                    <strong>🏷️ Keywords:</strong> ${data.analysis.keywords.map(keyword => `<span style="background-color: #e3f2fd; padding: 2px 6px; border-radius: 3px; margin-right: 4px; font-size: 0.9em;">${keyword}</span>`).join('')}
+                </div>
+            `;
+        }
+
+        // Add description
+        messageHTML += `
+            <div style="margin-top: 12px;">
+                <strong>📝 Description:</strong>
+                <div style="margin-top: 4px; padding: 8px; background-color: #f5f5f5; border-radius: 4px; font-style: italic;">
+                    ${data.analysis.description}
+                </div>
+            </div>
+        `;
+
+        contentDiv.innerHTML = messageHTML;
         
         messageDiv.appendChild(contentDiv);
         this.messagesContainer.appendChild(messageDiv);
