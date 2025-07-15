@@ -772,20 +772,35 @@ class PhotoVision {
         const maxImages = parseInt(document.getElementById('maxImages').value) || 50;
         const batchName = document.getElementById('batchName').value || `Album ${this.selectedAlbumKey}`;
 
+        // Debug logging
+        console.log('=== BATCH START DEBUG ===');
+        console.log('Selected Album Key:', this.selectedAlbumKey);
+        console.log('Max Images:', maxImages);
+        console.log('Batch Name:', batchName);
+
+        const requestData = {
+            albumKey: this.selectedAlbumKey,
+            maxImages: maxImages,
+            batchName: batchName
+        };
+        
+        console.log('Request Data:', JSON.stringify(requestData, null, 2));
+        console.log('========================');
+
         this.addMessage(`Starting batch processing for ${batchName} (max ${maxImages} images)...`, 'assistant');
 
         try {
             const response = await fetch('/api/batch/start', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    albumKey: this.selectedAlbumKey,
-                    maxImages: maxImages,
-                    batchName: batchName
-                })
+                body: JSON.stringify(requestData)
             });
 
+            console.log('Response status:', response.status);
+            console.log('Response headers:', response.headers);
+
             const data = await response.json();
+            console.log('Response data:', data);
 
             if (data.success) {
                 this.addMessage(`Batch processing started! Processing ${data.data.jobCount} images.`, 'assistant');
@@ -794,6 +809,7 @@ class PhotoVision {
                 this.startProgressMonitoring();
             } else {
                 this.addMessage(`Failed to start batch processing: ${data.error}`, 'assistant');
+                console.error('Batch start failed:', data);
             }
         } catch (error) {
             console.error('Error starting batch processing:', error);

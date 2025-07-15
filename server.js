@@ -539,7 +539,12 @@ async function handleAPIRoutes(req, res, parsedUrl) {
       try {
         const requestData = await parseJSON(req);
         
+        // Debug logging
+        log(`Batch start request body: ${JSON.stringify(requestData)}`, 'DEBUG');
+        log(`Request headers: ${JSON.stringify(req.headers)}`, 'DEBUG');
+        
         if (!requestData.albumKey) {
+          log(`Missing albumKey in request: ${JSON.stringify(requestData)}`, 'ERROR');
           return sendError(res, 400, 'Album key is required');
         }
 
@@ -569,13 +574,13 @@ async function handleAPIRoutes(req, res, parsedUrl) {
 
         // Create jobs for each image
         const jobs = imagesResult.images
-          .filter(img => img.LargestImage && img.LargestImage.ImageUrl)
+          .filter(img => img.ArchivedUri || (img.Uris && img.Uris.LargestImage))
           .slice(0, requestData.maxImages || 50) // Limit batch size
           .map((image, index) => ({
             id: `img_${requestData.albumKey}_${image.ImageKey}`,
             type: 'image_analysis',
             data: {
-              imageUrl: image.LargestImage.ImageUrl,
+              imageUrl: image.ArchivedUri, // Use ArchivedUri for full-resolution image
               imageKey: image.ImageKey,
               filename: image.FileName || `image_${index + 1}`,
               title: image.Title || '',
