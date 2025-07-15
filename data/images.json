@@ -240,5 +240,346 @@
       "batchId": "batch_1752622607659_mjvm0036a",
       "jobId": "img_7p2DF6_cDfhbxZ"
     }
+  },
+  {
+    "id": "md56e1fkrgp4lhe1pcb",
+    "timestamp": "2025-07-15T23:40:44.098Z",
+    "filename": "GCP09212.jpg",
+    "smugmugImageKey": "T3qRDTP",
+    "smugmugUrl": "https://photos.smugmug.com/2025/SoCal-Showdown/Trials-Awards/i-T3qRDTP/0/MBFHk487DbV79FjnzTKqNxNfWH8Q9nTrkxKKPpRV9/D/GCP09212-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "7p2DF6",
+    "description": "{\n  \"description\": \"The image shows a smiling woman in a wheelchair holding a certificate or award. She is wearing a gray and blue athletic jersey that says 'Tracy' and features the logos of the 'SoCal Showdown' and 'Easton Foundation' events. The woman is sitting on a blue platform with the number '1' displayed, indicating she is a finalist or medalist in a competition.\n\nThe background has several colorful logos and branding for the 'SoCal Showdown' and 'Easton Foundation' events, which appear to be athletic or sports-related. The setting has a bright, celebratory atmosphere with the vibrant colors and signage.\n\nThe woman's expression is one of joy and accomplishment, capturing the excitement and pride of her achievement. The image conveys a sense of empowerment, sportsmanship, and overcoming challenges through adaptive sports and recreation.\",\n  \"keywords\": [\"wheelchair\", \"adaptive sports\", \"competition\", \"award\", \"celebration\", \"empowerment\", \"disability\", \"athletic event\", \"SoCal Showdown\", \"Easton Foundation\"]\n}",
+    "keywords": [],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-15T23:40:44.096Z",
+      "batchId": "batch_1752622825774_ptkd25f1t",
+      "jobId": "img_7p2DF6_T3qRDTP"
+    }
+  },
+  {
+    "id": "md56ecw7a6o6tlm3355",
+    "timestamp": "2025-07-15T23:40:58.952Z",
+    "filename": "GCP09620.jpg",
+    "smugmugImageKey": "HBtPK85",
+    "smugmugUrl": "https://photos.smugmug.com/2025/SoCal-Showdown/Trials-Awards/i-HBtPK85/0/NTTbJbGsgW3MNxrzKRpfqpDvv2c9Rg64kkvTgBhQb/D/GCP09620-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "7p2DF6",
+    "description": "The image shows three women standing in an outdoor sports field. One woman is seated in a wheelchair, holding a certificate, while the other two stand on either side of her, also holding certificates. They appear to be celebrating some kind of accomplishment or competition. Behind them are large archery targets on stands, indicating this is likely an archery or shooting range. The setting is a grassy, open field with some trees and buildings visible in the background. The mood is one of joy and pride, with the women smiling brightly. The colors are vibrant, with the targets and certificates adding splashes of blue, red, and yellow against the green grass and blue sky. Overall, the image conveys a sense of achievement, inclusivity, and camaraderie.",
+    "keywords": [
+      "archery",
+      "competition",
+      "disability",
+      "field",
+      "graduation",
+      "outdoor",
+      "people",
+      "sports",
+      "targets",
+      "wheelchair",
+      "women"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-15T23:40:58.951Z",
+      "batchId": "batch_1752622825774_ptkd25f1t",
+      "jobId": "img_7p2DF6_HBtPK85"
+    }
+  },
+  {
+    "id": "md56enevz3fq0z1ain",
+    "timestamp": "2025-07-15T23:41:12.583Z",
+    "filename": "GCP09620.jpg",
+    "smugmugImageKey": "HBtPK85",
+    "smugmugUrl": "https://photos.smugmug.com/2025/SoCal-Showdown/Trials-Awards/i-HBtPK85/0/NTTbJbGsgW3MNxrzKRpfqpDvv2c9Rg64kkvTgBhQb/D/GCP09620-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "7p2DF6",
+    "description": "The image shows three women standing in an outdoor sports field. One woman is seated in a wheelchair, holding a certificate, while the other two stand on either side of her, also holding certificates. They appear to be celebrating some kind of accomplishment or competition. Behind them are large archery targets on stands, indicating this is likely an archery or shooting range. The setting is a grassy, open field with some trees and buildings visible in the background. The overall mood is celebratory and positive, with the women smiling. The image has a vibrant, colorful composition with the targets and certificates adding visual interest. There is also signage visible on the field, though the text is not legible in the image.",
+    "keywords": [
+      "women",
+      "wheelchair",
+      "archery",
+      "sports field",
+      "celebration",
+      "competition",
+      "accomplishment",
+      "targets",
+      "certificates",
+      "outdoor",
+      "field",
+      "colorful",
+      "vibrant",
+      "signage"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-15T23:41:12.583Z",
+      "batchId": "batch_1752622825774_ptkd25f1t",
+      "jobId": "img_7p2DF6_HBtPK85"
+    }
+  },
+  {
+    "id": "md56ero0leabc5kpf8n",
+    "timestamp": "2025-07-15T23:41:18.097Z",
+    "filename": "GCP09212.jpg",
+    "smugmugImageKey": "T3qRDTP",
+    "smugmugUrl": "https://photos.smugmug.com/2025/SoCal-Showdown/Trials-Awards/i-T3qRDTP/0/MBFHk487DbV79FjnzTKqNxNfWH8Q9nTrkxKKPpRV9/D/GCP09212-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "7p2DF6",
+    "description": "The image shows a smiling woman in a wheelchair holding a certificate or award. She is posing in front of a backdrop featuring several logos, including 'SoCal Showdown', 'Easton Foundation', and 'World Para Championships'. The woman is wearing a gray sports jersey with blue and white patterns. The setting appears to be an indoor event or sports venue, with the logos and blue backdrop creating a professional, sports-related atmosphere. The woman's expression is one of joy and pride, suggesting she has accomplished a significant achievement. The lighting is bright and even, highlighting the woman's features and the details of the backdrop. The overall composition and visual elements create a celebratory and inspirational tone.",
+    "keywords": [
+      "wheelchair",
+      "award",
+      "sports",
+      "competition",
+      "achievement",
+      "celebration",
+      "indoor event",
+      "backdrop",
+      "logos",
+      "disability",
+      "adaptive sports"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-15T23:41:18.096Z",
+      "batchId": "batch_1752622870238_kerxv31pk",
+      "jobId": "img_7p2DF6_T3qRDTP"
+    }
+  },
+  {
+    "id": "md56ez96l4fz5lpu3e",
+    "timestamp": "2025-07-15T23:41:27.932Z",
+    "filename": "GCP09828.jpg",
+    "smugmugImageKey": "XgVZwWt",
+    "smugmugUrl": "https://photos.smugmug.com/2025/SoCal-Showdown/Trials-Awards/i-XgVZwWt/0/MtvWZ8Dm8L3kSH5bdmRTf9gMdDPrnWWqmGGWQz9mZ/D/GCP09828-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "7p2DF6",
+    "description": "{\n  \"description\": \"The image shows three people in wheelchairs posing in front of archery targets on a grassy field. The targets are large and colorful, with concentric rings of red, blue, and yellow. Two of the people are holding up signs indicating their participation in a competitive event or activity.\n\nThe setting appears to be an outdoor sports or recreation facility, with trees and other greenery visible in the background. The mood is upbeat and celebratory, with the participants smiling and engaged in the activity. The lighting is bright and natural, suggesting a sunny day.\n\nThe visual composition features the three people centered in the frame, with the targets evenly spaced behind them. The use of bold colors and the symmetrical arrangement of the targets creates a visually striking and eye-catching image.\",\n  \"keywords\": [\n    \"wheelchair\",\n    \"archery\",\n    \"competition\",\n    \"outdoor recreation\",\n    \"disability\",\n    \"adaptive sports\",\n    \"inclusivity\",\n    \"colorful\",\n    \"nature\",\n    \"celebration\"\n  ]\n}",
+    "keywords": [],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-15T23:41:27.930Z",
+      "batchId": "batch_1752622870238_kerxv31pk",
+      "jobId": "img_7p2DF6_XgVZwWt"
+    }
+  },
+  {
+    "id": "md56f46xwutscq3bfh9",
+    "timestamp": "2025-07-15T23:41:34.330Z",
+    "filename": "GCP09620.jpg",
+    "smugmugImageKey": "HBtPK85",
+    "smugmugUrl": "https://photos.smugmug.com/2025/SoCal-Showdown/Trials-Awards/i-HBtPK85/0/NTTbJbGsgW3MNxrzKRpfqpDvv2c9Rg64kkvTgBhQb/D/GCP09620-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "7p2DF6",
+    "description": "The image shows three women standing in an outdoor sports field. One woman is seated in a wheelchair, holding a certificate, while the other two stand on either side of her, also holding certificates. They appear to be celebrating some kind of accomplishment or competition. Behind them are large archery or shooting targets set up on stands, indicating this is likely an archery or target shooting event. The setting is a grassy field with some trees and buildings visible in the background. The overall mood is celebratory and the lighting is bright, creating a sunny, pleasant atmosphere. The women are dressed casually in t-shirts, jeans, and athletic wear, and one is wearing a baseball cap. The composition of the image is balanced, with the three women and the targets creating a symmetrical and visually appealing arrangement.",
+    "keywords": [
+      "archery",
+      "target shooting",
+      "competition",
+      "celebration",
+      "outdoor",
+      "sports field",
+      "disability",
+      "wheelchair",
+      "women",
+      "certificates",
+      "sunny",
+      "athletic",
+      "casual clothing"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-15T23:41:34.329Z",
+      "batchId": "batch_1752622870238_kerxv31pk",
+      "jobId": "img_7p2DF6_HBtPK85"
+    }
+  },
+  {
+    "id": "md56fbddc9eugfz0tyo",
+    "timestamp": "2025-07-15T23:41:43.634Z",
+    "filename": "GCP09833.jpg",
+    "smugmugImageKey": "XvLVqJF",
+    "smugmugUrl": "https://photos.smugmug.com/2025/SoCal-Showdown/Trials-Awards/i-XvLVqJF/0/LNkb7vbxNRHBbM2GBcWCc3KH6cjcNsTVdWmdm7RHx/D/GCP09833-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "7p2DF6",
+    "description": "The image shows three women in wheelchairs posing together on a grassy field. They are all holding signs that indicate they are finalists in a Recurve Open event. One woman is wearing a white T-shirt with the Paralympic logo, while the other two are wearing casual athletic attire. Behind them is an archery target with a red flag on top, suggesting this is an archery competition or event. The setting appears to be an outdoor sports facility or park, with trees and other greenery visible in the background. The mood is celebratory and the women have bright, happy expressions on their faces. The colors in the image are vibrant, with the red, white, and blue of the Paralympic logo and the yellow target standing out against the green grass and blue sky. The overall composition is balanced and visually appealing.",
+    "keywords": [
+      "Paralympics",
+      "wheelchair",
+      "archery",
+      "competition",
+      "finalists",
+      "outdoor",
+      "sports",
+      "celebration",
+      "happiness",
+      "colorful",
+      "diversity",
+      "athletic",
+      "medal",
+      "trophy",
+      "target"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-15T23:41:43.633Z",
+      "batchId": "batch_1752622870238_kerxv31pk",
+      "jobId": "img_7p2DF6_XvLVqJF"
+    }
+  },
+  {
+    "id": "md56lc5lkafsyzyj5f8",
+    "timestamp": "2025-07-15T23:46:24.587Z",
+    "filename": "GCP09212.jpg",
+    "smugmugImageKey": "T3qRDTP",
+    "smugmugUrl": "https://photos.smugmug.com/2025/SoCal-Showdown/Trials-Awards/i-T3qRDTP/0/MBFHk487DbV79FjnzTKqNxNfWH8Q9nTrkxKKPpRV9/D/GCP09212-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "7p2DF6",
+    "description": "The image shows a smiling woman in a wheelchair holding up a certificate or award. She is wearing a gray and blue athletic jersey that says 'TRACY' on it. The woman appears to be at some kind of sports or athletic event, as the background contains logos and branding for the 'SoCal Showdown' and 'Easton Foundation' events. There are palm trees and a stylized sun graphic visible, suggesting a warm, outdoor setting. The woman is sitting on a blue platform or podium, which seems to be part of the event setup. The overall mood is one of celebration and achievement, with the woman's bright smile and the awards/branding elements conveying a sense of success and recognition.",
+    "keywords": [
+      "wheelchair",
+      "athlete",
+      "award",
+      "sports event",
+      "SoCal Showdown",
+      "Easton Foundation",
+      "palm trees",
+      "sunny",
+      "celebration",
+      "achievement"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-15T23:46:24.585Z",
+      "batchId": "batch_1752623176345_kblw1qkyf",
+      "jobId": "img_7p2DF6_T3qRDTP"
+    }
+  },
+  {
+    "id": "md56lns5q1xijmprx8k",
+    "timestamp": "2025-07-15T23:46:39.653Z",
+    "filename": "GCP09620.jpg",
+    "smugmugImageKey": "HBtPK85",
+    "smugmugUrl": "https://photos.smugmug.com/2025/SoCal-Showdown/Trials-Awards/i-HBtPK85/0/NTTbJbGsgW3MNxrzKRpfqpDvv2c9Rg64kkvTgBhQb/D/GCP09620-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "7p2DF6",
+    "description": "{\n  \"description\": \"The image shows three women standing in front of archery targets at an outdoor sports facility. One woman is seated in a wheelchair, holding a certificate that appears to be a competition finalist award. The other two women are standing next to her, also holding similar certificates. They are all smiling, conveying a sense of accomplishment and celebration. \n\nThe setting is a grassy field surrounded by trees, with sports equipment and signage visible in the background. The targets are large and colorful, indicating this is likely an archery competition or event. The overall atmosphere is bright, cheerful, and supportive, with the sunny outdoor environment and the women's expressions creating a positive and uplifting mood.\n\nThe image highlights the inclusion and participation of people with disabilities in athletic and competitive activities, celebrating their achievements and fostering a sense of community and empowerment. The diverse group of women and their shared joy reinforces themes of diversity, accessibility, and equal opportunity in sports and recreation.\",\n  \"keywords\": [\"archery\", \"competition\", \"disability\", \"diversity\", \"empowerment\", \"outdoor sports\", \"celebration\", \"achievement\", \"wheelchair\", \"inclusive\", \"sunny\", \"cheerful\", \"community\"]\n}",
+    "keywords": [],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-15T23:46:39.653Z",
+      "batchId": "batch_1752623176345_kblw1qkyf",
+      "jobId": "img_7p2DF6_HBtPK85"
+    }
+  },
+  {
+    "id": "md56ufttonrf5ny7zu",
+    "timestamp": "2025-07-15T23:53:29.249Z",
+    "filename": "GCP09212.jpg",
+    "smugmugImageKey": "T3qRDTP",
+    "smugmugUrl": "https://photos.smugmug.com/2025/SoCal-Showdown/Trials-Awards/i-T3qRDTP/0/MBFHk487DbV79FjnzTKqNxNfWH8Q9nTrkxKKPpRV9/D/GCP09212-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "7p2DF6",
+    "description": "The image shows a smiling woman in a wheelchair holding a certificate. She is wearing a gray and blue athletic shirt that says 'Tracy' and features the logos of the SoCal Showdown and Easton Foundation events. The woman is sitting in front of a backdrop with more logos and branding for the SoCal Showdown and Easton Foundation. The setting appears to be an indoor event or competition, with the woman positioned on a raised platform with the number '1' displayed in front of her. The overall mood is celebratory and the lighting is bright, creating a vibrant and positive atmosphere. The composition and visual elements, including the bright colors and bold logos, contribute to the energetic and dynamic feel of the image.",
+    "keywords": [
+      "wheelchair",
+      "athletic event",
+      "competition",
+      "medal",
+      "award",
+      "disability",
+      "celebration",
+      "indoor",
+      "sports",
+      "branding",
+      "logos",
+      "athletic wear",
+      "positive",
+      "vibrant",
+      "energetic"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-15T23:53:29.249Z",
+      "batchId": "batch_1752623593013_dto7x5x0k",
+      "jobId": "img_7p2DF6_T3qRDTP"
+    }
+  },
+  {
+    "id": "md56wc0inl5i37ny1z",
+    "timestamp": "2025-07-15T23:54:57.619Z",
+    "filename": "GCP09212.jpg",
+    "smugmugImageKey": "T3qRDTP",
+    "smugmugUrl": "https://photos.smugmug.com/2025/SoCal-Showdown/Trials-Awards/i-T3qRDTP/0/MBFHk487DbV79FjnzTKqNxNfWH8Q9nTrkxKKPpRV9/D/GCP09212-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "7p2DF6",
+    "description": "The image shows a smiling woman in a wheelchair holding a certificate or award. She is wearing a sports jersey with 'Tracy' printed on it and appears to be at some kind of athletic event or competition. The background features colorful banners and logos for 'SoCal Showdown' and 'Easton Foundation', suggesting this is a sports or athletic organization event. The woman is sitting on a blue podium or platform, indicating she has likely placed or finished highly in a competition. The overall mood is one of joy and accomplishment, with the bright colors and celebratory setting creating a positive, uplifting atmosphere.",
+    "keywords": [
+      "wheelchair",
+      "disabled athlete",
+      "sports competition",
+      "award ceremony",
+      "SoCal Showdown",
+      "Easton Foundation",
+      "joy",
+      "accomplishment",
+      "colorful",
+      "celebratory"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-15T23:54:57.618Z",
+      "batchId": "batch_1752623669334_t5cjjbvid",
+      "jobId": "img_7p2DF6_T3qRDTP"
+    }
+  },
+  {
+    "id": "md56x4etna11qbzc90k",
+    "timestamp": "2025-07-15T23:55:34.423Z",
+    "filename": "GCP09620.jpg",
+    "smugmugImageKey": "HBtPK85",
+    "smugmugUrl": "https://photos.smugmug.com/2025/SoCal-Showdown/Trials-Awards/i-HBtPK85/0/NTTbJbGsgW3MNxrzKRpfqpDvv2c9Rg64kkvTgBhQb/D/GCP09620-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "7p2DF6",
+    "description": "{\n  \"description\": \"The image shows three women standing on a grassy field, with targets for archery or shooting practice visible in the background. The woman in the center is seated in a wheelchair, holding a certificate that appears to be a recognition of some kind of competition or event. The other two women are standing next to her, also holding similar certificates. They all have cheerful, proud expressions on their faces.\n\nThe setting appears to be an outdoor sports or recreational facility, with a sports field, targets, and lighting poles visible. The sky is overcast, creating a muted, peaceful atmosphere. The composition of the image places the three women at the center, with the targets and field creating a visually interesting backdrop.\n\nThe text on the certificates held by the women indicates that this is likely some kind of championship or competition event, possibly related to adaptive sports or accessibility. The overall tone of the image is one of celebration, achievement, and inclusion.\",\n  \"keywords\": [\"outdoor\", \"sports\", \"archery\", \"competition\", \"achievement\", \"disability\", \"accessibility\", \"inclusivity\", \"celebration\", \"field\", \"targets\", \"wheelchair\", \"certificates\", \"proud\", \"cheerful\"]\n}",
+    "keywords": [],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-15T23:55:34.421Z",
+      "batchId": "batch_1752623669334_t5cjjbvid",
+      "jobId": "img_7p2DF6_HBtPK85"
+    }
+  },
+  {
+    "id": "md56xl6f6byzvbt2p0x",
+    "timestamp": "2025-07-15T23:55:56.152Z",
+    "filename": "GCP09623.jpg",
+    "smugmugImageKey": "j34bwJf",
+    "smugmugUrl": "https://photos.smugmug.com/2025/SoCal-Showdown/Trials-Awards/i-j34bwJf/0/L5b4SBLZpVH6FhVNCFwJbQG3Kwn3fqCs9m5D8fLLm/D/GCP09623-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "7p2DF6",
+    "description": "{\n  \"description\": \"The image shows three women standing together on a grassy field. Two of the women are holding certificates that indicate they are finalists in a compound open competition, likely a para-archery event. The third woman is wearing a GX4 Adaptive Archery t-shirt, suggesting she is part of the support team or organization.\n\nThe setting appears to be an outdoor sports facility, with targets and flags visible in the background. The lighting is bright and the atmosphere seems celebratory, with the women all smiling and appearing proud of their accomplishments.\n\nThe composition of the image is centered on the three women, with the archery targets providing a visually interesting backdrop. The use of bright, contrasting colors like the purple, navy blue, and pink add to the vibrant, festive feel of the scene.\n\nOverall, the image conveys a sense of achievement, camaraderie, and adaptive sports participation, with the women's disabilities not diminishing their athletic prowess and competitive spirit.\",\n  \"keywords\": [\"archery\", \"para-archery\", \"adaptive sports\", \"wheelchair\", \"disability\", \"competition\", \"finalists\", \"outdoor\", \"sports facility\", \"celebration\", \"accomplishment\", \"camaraderie\"]\n}",
+    "keywords": [],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-15T23:55:56.151Z",
+      "batchId": "batch_1752623669334_t5cjjbvid",
+      "jobId": "img_7p2DF6_j34bwJf"
+    }
   }
 ]

@@ -687,8 +687,34 @@ async function handleAPIRoutes(req, res, parsedUrl) {
       log('Batch status request');
       
       try {
-        const status = jobQueue.getStatus();
-        return sendSuccess(res, status, 'Batch status retrieved');
+        const rawStatus = jobQueue.getStatus();
+        
+        // Transform JobQueue status to frontend-expected format
+        const transformedStatus = {
+          // Map to frontend-expected property names
+          total: rawStatus.totalJobs,
+          processed: rawStatus.processedCount,
+          failed: rawStatus.failedCount,
+          
+          // Add missing status flags that frontend expects
+          isComplete: !rawStatus.processing && rawStatus.totalJobs > 0 && 
+                      (rawStatus.completedJobs + rawStatus.failedJobs) >= rawStatus.totalJobs,
+          isPaused: !rawStatus.processing && rawStatus.totalJobs > 0 && 
+                    (rawStatus.completedJobs + rawStatus.failedJobs) < rawStatus.totalJobs,
+          isProcessing: rawStatus.processing,
+          
+          // Keep other useful properties
+          batchId: rawStatus.batchId,
+          currentJob: rawStatus.currentJob,
+          progress: rawStatus.progress,
+          failedJobs: rawStatus.failedJobDetails || [],
+          
+          // Additional properties for frontend
+          startTime: rawStatus.startTime,
+          estimatedCompletion: rawStatus.estimatedCompletion
+        };
+        
+        return sendSuccess(res, transformedStatus, 'Batch status retrieved');
       } catch (error) {
         return sendError(res, 500, 'Failed to get batch status', error);
       }
