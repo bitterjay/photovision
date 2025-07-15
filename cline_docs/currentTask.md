@@ -3,7 +3,7 @@
 ## Current Objectives
 
 ### Primary Goal
-Phase 4 of the PhotoVision project: SmugMug Integration - **COMPLETED**
+Phase 5 of the PhotoVision project: Basic Search - **READY TO BEGIN**
 
 ### Specific Tasks Completed
 From projectRoadmap.md - Phase 4:

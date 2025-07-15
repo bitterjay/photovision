@@ -38,6 +38,9 @@
 - **SmugMug API**: Photo collection access
   - Justification: Direct integration with user's photo collections
   - Usage: Fetch images, metadata, album information
+  - Authentication: OAuth 1.0a (IMPLEMENTED & WORKING)
+  - Implementation: Complete OAuth flow with signature generation
+  - Status: Fully functional with request token generation and access token exchange
 
 ### Development Tools
 - **npm**: Package management (minimal dependencies)
@@ -69,7 +72,12 @@
     ├── server.js (main server)
     ├── public/ (static files)
     ├── data/ (JSON storage)
-    └── lib/ (utility modules)
+    ├── lib/ (utility modules)
+    │   ├── claudeClient.js (AI integration)
+    │   ├── smugmugClient.js (OAuth & API)
+    │   └── dataManager.js (data operations)
+    ├── cline_docs/ (documentation)
+    └── userInstructions/ (user guides)
     ```
 
 ### Error Handling
@@ -80,8 +88,13 @@
 ### Security Considerations
 - **API key management**: Environment variables for sensitive data
   - Justification: Keep credentials secure, not in code
-  - Implementation: .env file with API keys
+  - Implementation: .env file with API keys and secrets
   
+- **OAuth token management**: Secure token storage and lifecycle management
+  - Justification: Proper OAuth security and token refresh handling
+  - Implementation: JSON-based token storage with expiration tracking
+  - Security: Request tokens, access tokens, and secrets properly managed
+
 - **Input validation**: Basic sanitization of user inputs
   - Justification: Prevent injection attacks, data corruption
   - Implementation: Simple validation functions
@@ -91,10 +104,10 @@
 ### Minimal Dependencies Approach
 - **Core principle**: Only add dependencies when absolutely necessary
 - **Evaluation criteria**: Can this be implemented with built-in features?
-- **Current planned dependencies**:
-  - `express` (if needed for routing)
-  - `dotenv` (for environment variables)
-  - No other dependencies planned initially
+- **Current dependencies**:
+  - `dotenv` (for environment variables) - IMPLEMENTED
+  - `express` (if needed for routing) - Using Node.js built-in HTTP currently
+  - No other dependencies added - maintaining minimal approach
 
 ### Dependency Management
 - **Version locking**: Exact versions to ensure consistency
