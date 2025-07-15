@@ -1,0 +1,18 @@
+{
+  "application": {
+    "name": "PhotoVision",
+    "version": "1.0.0",
+    "status": "development"
+  },
+  "smugmug": {
+    "connected": false,
+    "lastSync": null,
+    "totalImages": 0
+  },
+  "processing": {
+    "queue": [],
+    "inProgress": false,
+    "completed": 0,
+    "failed": 0
+  }
+}
