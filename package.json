@@ -1,0 +1,17 @@
+{
+  "name": "photovision",
+  "version": "1.0.0",
+  "description": "A conversational image discovery platform for SmugMug photo collections",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["photo", "search", "smugmug", "ai", "conversation"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {},
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

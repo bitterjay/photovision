@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhotoVision - Conversational Image Discovery</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>PhotoVision</h1>
+            <p>Search your SmugMug photos with natural language</p>
+        </header>
+
+        <main class="main">
+            <div class="chat-container">
+                <div class="messages" id="messages">
+                    <div class="message system">
+                        <div class="message-content">
+                            Welcome to PhotoVision! Once you connect your SmugMug account and process your photos, you'll be able to search using natural language queries like "10 photos of young adults smiling" or "photos that feel nostalgic from summer evenings."
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-container">
+                    <input type="text" id="messageInput" placeholder="Ask about your photos..." disabled>
+                    <button id="sendButton" disabled>Send</button>
+                </div>
+            </div>
+
+            <div class="status-container">
+                <div class="status" id="status">
+                    <span class="status-text">Not connected</span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
