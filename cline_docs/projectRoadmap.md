@@ -3,9 +3,9 @@
 ## High-Level Goals
 
 ### Core Vision
-- [ ] Build a conversational image discovery platform for SmugMug photo collections
-- [ ] Enable natural language search queries like "10 photos of young adults smiling"
-- [ ] Transform traditional keyword search into intelligent, contextual discovery
+- [ ] Build a conversational AI bridge between users and their SmugMug photo collections
+- [ ] Enable natural language queries like "find 10 photos of girls ages 5-8 smiling" with Claude AI interpreting intent
+- [ ] Transform photo discovery through intelligent conversation rather than traditional search interfaces
 - [ ] Create a minimal, straightforward technical architecture without unnecessary frameworks
 
 ### Key Features
@@ -36,21 +36,21 @@
 3. [x] Process one image from SmugMug
 4. [x] Test: Connect to SmugMug, fetch and analyze one image
 
-#### Phase 5: Basic Search
-1. [ ] Simple text search through stored analyses
-2. [ ] Basic conversational interface
-3. [ ] Return image results with SmugMug links
-4. [ ] Test: Search works, results display correctly
-
-#### Phase 6: Batch Processing
-1. [ ] Queue system for multiple images
+#### Phase 5: Batch Processing
+1. [ ] Queue system for multiple SmugMug images
 2. [ ] Progress tracking and status updates
 3. [ ] Error handling for failed analyses
 4. [ ] Test: Process multiple images, handle failures gracefully
 
+#### Phase 6: Conversational LLM Bridge
+1. [ ] Claude interprets natural language queries (e.g., "find 10 photos of girls ages 5-8 smiling")
+2. [ ] Function calling approach for structured database searches
+3. [ ] Conversational responses with photo results and SmugMug links
+4. [ ] Test: Natural language search queries work correctly with intelligent results
+
 #### Phase 7: Enhanced Search & Polish
-1. [ ] Improved search algorithms
-2. [ ] Better conversational responses
+1. [ ] Improved search algorithms and query understanding
+2. [ ] Better conversational responses and context awareness
 3. [ ] UI improvements and polish
 4. [ ] Test: End-to-end user experience
 
@@ -118,8 +118,8 @@
 
 ## Progress Tracker
 
-**Current Phase**: Phase 5 - Basic Search
-**Next Milestone**: Simple text search through stored analyses and basic conversational interface
+**Current Phase**: Phase 5 - Batch Processing
+**Next Milestone**: Queue system for multiple SmugMug images and progress tracking
 **Completed**: Phase 1, Phase 2, Phase 3, & Phase 4 - Foundation, Core API Foundation, Enhanced Image Analysis Pipeline, & SmugMug Integration
 **Last Updated**: Phase 4 completed successfully - SmugMug OAuth 1.0a authentication working, request token generation successful, complete OAuth flow implemented
 

@@ -3,7 +3,7 @@
 ## Current Objectives
 
 ### Primary Goal
-Phase 5 of the PhotoVision project: Basic Search - **READY TO BEGIN**
+Phase 5 of the PhotoVision project: Batch Processing - **READY TO BEGIN**
 
 ### Specific Tasks Completed
 From projectRoadmap.md - Phase 4:
@@ -42,7 +42,7 @@ From projectRoadmap.md - Phase 3:
 - ✅ **Phase 2**: Core API Foundation (COMPLETED)  
 - ✅ **Phase 3**: Image Analysis Pipeline (COMPLETED & ENHANCED)
 - ✅ **Phase 4**: SmugMug Integration (COMPLETED & OAUTH WORKING)
-- 🚀 **Phase 5**: Basic Search (READY TO BEGIN)
+- 🚀 **Phase 5**: Batch Processing (READY TO BEGIN)
 
 ### Testing Results Summary
 
@@ -79,7 +79,7 @@ PhotoVision is a conversational image discovery platform that transforms SmugMug
 - Working web interface with chat UI and comprehensive analysis feedback
 - Server running successfully with full API integration
 - SmugMug client ready for authentication with valid API keys
-- Ready to begin Phase 5: Basic Search functionality
+- Ready to begin Phase 5: Batch Processing functionality
 
 ### Technical Approach
 - Vanilla HTML, CSS, JavaScript for frontend
@@ -90,32 +90,32 @@ PhotoVision is a conversational image discovery platform that transforms SmugMug
 
 ## Next Steps
 
-### Immediate Actions (Phase 5: Basic Search)
-1. **Simple text search through stored analyses**
-   - Implement search functionality across image descriptions and keywords
-   - Create search ranking algorithm
-   - Add query parsing for natural language input
+### Immediate Actions (Phase 5: Batch Processing)
+1. **Queue system for multiple SmugMug images**
+   - Implement image processing queue for batch operations
+   - Add job scheduling and management system
+   - Create batch import functionality from SmugMug albums
 
-2. **Basic conversational interface**
-   - Enhance chat interface to handle search queries
-   - Add conversational responses with context
-   - Implement query refinement suggestions
+2. **Progress tracking and status updates**
+   - Real-time progress indicators for batch processing
+   - Status reporting for individual image analysis
+   - User feedback during long-running operations
 
-3. **Return image results with SmugMug links**
-   - Format search results with image metadata
-   - Include direct links to SmugMug images
-   - Add result pagination and filtering
+3. **Error handling for failed analyses**
+   - Robust error handling for individual image failures
+   - Retry logic for transient failures
+   - Comprehensive error reporting and logging
 
-4. **Test: Search works, results display correctly**
-   - Verify search accuracy across different query types
-   - Test result ranking and relevance
-   - Ensure SmugMug links are properly formatted
+4. **Test: Process multiple images, handle failures gracefully**
+   - Verify batch processing works with multiple images
+   - Test error handling and recovery scenarios
+   - Ensure system stability during large batch operations
 
-### Following Phase 5 (Phase 6 Preview)
-1. Queue system for multiple images
-2. Progress tracking and status updates
-3. Error handling for failed analyses
-4. Test: Process multiple images, handle failures gracefully
+### Following Phase 5 (Phase 6 Preview - Conversational LLM Bridge)
+1. Claude interprets natural language queries (e.g., "find 10 photos of girls ages 5-8 smiling")
+2. Function calling approach for structured database searches
+3. Conversational responses with photo results and SmugMug links
+4. Test: Natural language search queries work correctly with intelligent results
 
 ## Technical Decisions Made
 - **No frameworks policy**: Vanilla implementations only

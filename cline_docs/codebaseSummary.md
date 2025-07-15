@@ -70,13 +70,13 @@
 5. Generated descriptions stored in JSON files
 6. Search index updated with new content
 
-### Search Flow
-1. User enters natural language query in chat interface
-2. Frontend sends query to backend via API call
-3. Backend processes query through search utilities
-4. Text search performed against stored analyses
-5. Results ranked and formatted
-6. Frontend displays results with SmugMug links
+### Future Conversational Search Flow (Phase 6)
+1. User enters natural language query in chat interface (e.g., "find 10 photos of girls ages 5-8 smiling")
+2. Claude AI interprets user intent and extracts search parameters
+3. Claude calls search functions with structured database queries
+4. Search results retrieved from analyzed photo database
+5. Claude formats conversational response with photo results
+6. Frontend displays results with SmugMug links and contextual information
 
 ### API Communication Flow
 ```
@@ -212,10 +212,10 @@ Frontend (script.js) → Backend (server.js) → External APIs
 - **SmugMug Client**: Full-featured API client with proper signature generation
 
 ### Next Implementation Steps (Phase 5)
-1. **Simple text search through stored analyses**: Implement search functionality across image descriptions and keywords
-2. **Basic conversational interface**: Enhance chat interface to handle search queries
-3. **Return image results with SmugMug links**: Format search results with image metadata
-4. **Test: Search works, results display correctly**: Verify search accuracy and result display
+1. **Queue system for multiple SmugMug images**: Implement image processing queue for batch operations
+2. **Progress tracking and status updates**: Real-time progress indicators for batch processing
+3. **Error handling for failed analyses**: Robust error handling for individual image failures
+4. **Test: Process multiple images, handle failures gracefully**: Verify batch processing works with multiple images
 
 ### Code Organization Strategy
 - **Minimal File Structure**: Start with essential files only
