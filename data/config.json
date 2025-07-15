@@ -5,9 +5,263 @@
     "status": "development"
   },
   "smugmug": {
-    "connected": false,
-    "lastSync": null,
-    "totalImages": 0
+    "connected": true,
+    "lastSync": "2025-07-15T20:53:39.247Z",
+    "totalImages": 0,
+    "requestToken": null,
+    "requestTokenSecret": null,
+    "accessToken": "cPZ92wB8p4B3MFwPXsNB8R4nnFv7gZMz",
+    "accessTokenSecret": "RJVPv3P3wjT45DR6WGH99jrCKkRMKJjR5MbsRxCTgz7xRTXLckXNQLTZ2JGHf2f3",
+    "user": {
+      "AccountStatus": "Active",
+      "FirstName": "Tyler",
+      "FriendsView": false,
+      "ImageCount": 101396,
+      "IsGettingStarted": false,
+      "IsTrial": false,
+      "PendingClosure": false,
+      "LastName": "Foote",
+      "NickName": "usaarchery",
+      "SortBy": "LastUpdated",
+      "ViewPassHint": "",
+      "ViewPassword": "",
+      "Domain": "",
+      "DomainOnly": "",
+      "RefTag": "GfSKrq",
+      "Name": "USA Archery",
+      "Plan": "Portfolio 2024 $246/yr (Stripe)",
+      "QuickShare": true,
+      "TimeZone": "America/Chicago",
+      "MfaEnabled": false,
+      "Uri": "/api/v2/user/usaarchery",
+      "WebUri": "https://usaarchery.smugmug.com",
+      "UriDescription": "User By Nickname",
+      "Uris": {
+        "BioImage": {
+          "Uri": "/api/v2/user/usaarchery!bioimage",
+          "Locator": "BioImage",
+          "LocatorType": "Object",
+          "UriDescription": "User BioImage",
+          "EndpointType": "BioImage"
+        },
+        "CoverImage": {
+          "Uri": "/api/v2/user/usaarchery!coverimage",
+          "Locator": "CoverImage",
+          "LocatorType": "Object",
+          "UriDescription": "User CoverImage",
+          "EndpointType": "CoverImage"
+        },
+        "UserProfile": {
+          "Uri": "/api/v2/user/usaarchery!profile",
+          "Locator": "UserProfile",
+          "LocatorType": "Object",
+          "UriDescription": "User's profile information",
+          "EndpointType": "UserProfile"
+        },
+        "Node": {
+          "Uri": "/api/v2/node/RfkHj4",
+          "Locator": "Node",
+          "LocatorType": "Object",
+          "UriDescription": "Node with the given id.",
+          "EndpointType": "Node"
+        },
+        "Folder": {
+          "Uri": "/api/v2/folder/user/usaarchery",
+          "Locator": "Folder",
+          "LocatorType": "Object",
+          "UriDescription": "A folder or legacy (sub)category by UrlPath",
+          "EndpointType": "Folder"
+        },
+        "Features": {
+          "Uri": "/api/v2/user/usaarchery!features",
+          "Locator": "Features",
+          "LocatorType": "Object",
+          "UriDescription": "User's account features information",
+          "EndpointType": "Features"
+        },
+        "SiteSettings": {
+          "Uri": "/api/v2/user/usaarchery!sitesettings",
+          "Locator": "SiteSettings",
+          "LocatorType": "Object",
+          "UriDescription": "User site settings",
+          "EndpointType": "SiteSettings"
+        },
+        "UserAlbums": {
+          "Uri": "/api/v2/user/usaarchery!albums",
+          "Locator": "Album",
+          "LocatorType": "Objects",
+          "UriDescription": "All of user's albums",
+          "EndpointType": "UserAlbums"
+        },
+        "UserGeoMedia": {
+          "Uri": "/api/v2/user/usaarchery!geomedia",
+          "Locator": "Image",
+          "LocatorType": "Objects",
+          "UriDescription": "Geotagged images for user",
+          "EndpointType": "UserGeoMedia"
+        },
+        "UserPopularMedia": {
+          "Uri": "/api/v2/user/usaarchery!popularmedia",
+          "Locator": "Image",
+          "LocatorType": "Objects",
+          "UriDescription": "User's popular images",
+          "EndpointType": "UserPopularMedia"
+        },
+        "UserFeaturedAlbums": {
+          "Uri": "/api/v2/user/usaarchery!featuredalbums",
+          "Locator": "Album",
+          "LocatorType": "Objects",
+          "UriDescription": "User's featured albums",
+          "EndpointType": "UserFeaturedAlbums"
+        },
+        "UserRecentImages": {
+          "Uri": "/api/v2/user/usaarchery!recentimages",
+          "Locator": "Image",
+          "LocatorType": "Objects",
+          "UriDescription": "User's recent images",
+          "EndpointType": "UserRecentImages"
+        },
+        "UserImageSearch": {
+          "Uri": "/api/v2/user/usaarchery!imagesearch",
+          "Locator": "Image",
+          "LocatorType": "Objects",
+          "UriDescription": "Search for user images",
+          "EndpointType": "UserImageSearch"
+        },
+        "UserTopKeywords": {
+          "Uri": "/api/v2/user/usaarchery!topkeywords",
+          "Locator": "UserTopKeywords",
+          "LocatorType": "Object",
+          "UriDescription": "User's top keywords",
+          "EndpointType": "UserTopKeywords"
+        },
+        "UrlPathLookup": {
+          "Uri": "/api/v2/user/usaarchery!urlpathlookup",
+          "Locator": "Folder,Album,Page",
+          "LocatorType": "Object",
+          "UriDescription": "Lookup user's folder, album, or page by path",
+          "EndpointType": "UrlPathLookup"
+        },
+        "AvailableSiteDesigns": {
+          "Uri": "/api/v2/user/usaarchery!availabledesigns",
+          "Locator": "SiteDesign",
+          "LocatorType": "Objects",
+          "UriDescription": "List of Available SiteDesigns by SiteDesignKey",
+          "EndpointType": "AvailableSiteDesigns"
+        },
+        "UserAlbumTemplates": {
+          "Uri": "/api/v2/user/usaarchery!albumtemplates",
+          "Locator": "AlbumTemplate",
+          "LocatorType": "Objects",
+          "UriDescription": "User's album templates",
+          "EndpointType": "UserAlbumTemplates"
+        },
+        "SortUserFeaturedAlbums": {
+          "Uri": "/api/v2/user/usaarchery!sortfeaturedalbums",
+          "UriDescription": "Change the ordering of the user's featured albums",
+          "EndpointType": "SortUserFeaturedAlbums"
+        },
+        "UserTasks": {
+          "Uri": "/api/v2/user/usaarchery!tasks",
+          "Locator": "Task",
+          "LocatorType": "Objects",
+          "UriDescription": "Background tasks associated with a user",
+          "EndpointType": "UserTasks"
+        },
+        "UserWatermarks": {
+          "Uri": "/api/v2/user/usaarchery!watermarks",
+          "Locator": "Watermark",
+          "LocatorType": "Objects",
+          "UriDescription": "User's watermarks",
+          "EndpointType": "UserWatermarks"
+        },
+        "UserPrintmarks": {
+          "Uri": "/api/v2/user/usaarchery!printmarks",
+          "Locator": "Printmark",
+          "LocatorType": "Objects",
+          "UriDescription": "User's printmarks",
+          "EndpointType": "UserPrintmarks"
+        },
+        "UserUploadLimits": {
+          "Uri": "/api/v2/user/usaarchery!uploadlimits",
+          "Locator": "UserUploadLimits",
+          "LocatorType": "List",
+          "UriDescription": "User's upload limits",
+          "EndpointType": "UserUploadLimits"
+        },
+        "UserAssetsAlbum": {
+          "Uri": "/api/v2/user/usaarchery!assetsalbum",
+          "Locator": "Album",
+          "LocatorType": "Object",
+          "UriDescription": "User Site Assets Albums",
+          "EndpointType": "UserAssetsAlbum"
+        },
+        "UserGuideStates": {
+          "Uri": "/api/v2/user/usaarchery!guides",
+          "Locator": "UserGuideState",
+          "LocatorType": "Objects",
+          "UriDescription": "User's progress through walkthrough guides",
+          "EndpointType": "UserGuideStates"
+        },
+        "UserHideGuides": {
+          "Uri": "/api/v2/user/usaarchery!hideguides",
+          "Locator": "UserHideGuides",
+          "LocatorType": "Object",
+          "UriDescription": "Hide guides from the user for a period of time",
+          "EndpointType": "UserHideGuides"
+        },
+        "UserGrants": {
+          "Uri": "/api/v2/user/usaarchery!grants",
+          "Locator": "Grant",
+          "LocatorType": "Objects",
+          "UriDescription": "User's grants",
+          "EndpointType": "UserGrants"
+        },
+        "DuplicateImageSearch": {
+          "Uri": "/api/v2/user/usaarchery!duplicateimagesearch",
+          "Locator": "Image",
+          "LocatorType": "Objects",
+          "UriDescription": "Searches for duplicate images for a user.",
+          "EndpointType": "DuplicateImageSearch"
+        },
+        "UserDeletedAlbums": {
+          "Uri": "/api/v2/user/usaarchery!deletedalbums",
+          "Locator": "DeletedAlbum",
+          "LocatorType": "Objects",
+          "UriDescription": "User's deleted albums",
+          "EndpointType": "UserDeletedAlbums"
+        },
+        "UserDeletedFolders": {
+          "Uri": "/api/v2/user/usaarchery!deletedfolders",
+          "Locator": "DeletedFolder",
+          "LocatorType": "Objects",
+          "UriDescription": "User's deleted folders",
+          "EndpointType": "UserDeletedFolders"
+        },
+        "UserDeletedPages": {
+          "Uri": "/api/v2/user/usaarchery!deletedpages",
+          "Locator": "DeletedPage",
+          "LocatorType": "Objects",
+          "UriDescription": "User's deleted pages",
+          "EndpointType": "UserDeletedPages"
+        },
+        "UserContacts": {
+          "Uri": "/api/v2/user/usaarchery!contacts",
+          "Locator": "Contact",
+          "LocatorType": "Objects",
+          "UriDescription": "User's contacts",
+          "EndpointType": "UserContacts"
+        },
+        "RawManagementAddOnStatus": {
+          "Uri": "/api/v2/user/usaarchery!rawmanagementaddonstatus",
+          "Locator": "RawManagementAddOnStatus",
+          "LocatorType": "Object",
+          "UriDescription": "Status and Statistics for Raw Management Subscription Add-On",
+          "EndpointType": "RawManagementAddOnStatus"
+        }
+      },
+      "ResponseLevel": "Full"
+    }
   },
   "processing": {
     "queue": [],

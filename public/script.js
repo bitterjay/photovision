@@ -17,14 +17,18 @@ class PhotoVision {
         this.analysisResult = document.getElementById('analysisResult');
         this.resultContent = document.getElementById('resultContent');
         
+        // Connection dashboard elements
+        this.claudeStatusCard = document.getElementById('claudeStatusCard');
+        this.smugmugStatusCard = document.getElementById('smugmugStatusCard');
+        this.lastCheckedElement = document.getElementById('lastChecked');
+        
         this.init();
     }
 
     init() {
         this.setupEventListeners();
         this.setupUpload();
-        this.loadStatus();
-        this.updateStatus('Ready to connect', 'info');
+        this.initializeStatusDashboard();
         console.log('PhotoVision initialized');
     }
 
@@ -368,6 +372,251 @@ class PhotoVision {
         this.messageInput.disabled = true;
         this.sendButton.disabled = true;
         this.updateStatus('Disconnected', 'error');
+    }
+
+    async initializeStatusDashboard() {
+        this.setupStatusEventListeners();
+        await this.checkAllConnections();
+    }
+
+    setupStatusEventListeners() {
+        // Refresh status button
+        const refreshBtn = document.getElementById('refreshStatus');
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', () => {
+                this.checkAllConnections();
+            });
+        }
+        
+        // Claude AI test button
+        const testClaudeBtn = document.getElementById('testClaude');
+        if (testClaudeBtn) {
+            testClaudeBtn.addEventListener('click', () => {
+                this.testClaudeConnection();
+            });
+        }
+        
+        // SmugMug connect button
+        const connectBtn = document.getElementById('connectSmugmug');
+        if (connectBtn) {
+            connectBtn.addEventListener('click', () => {
+                this.connectSmugMug();
+            });
+        }
+        
+        // SmugMug test button
+        const testSmugmugBtn = document.getElementById('testSmugmug');
+        if (testSmugmugBtn) {
+            testSmugmugBtn.addEventListener('click', () => {
+                this.testSmugMugConnection();
+            });
+        }
+        
+        // SmugMug disconnect button
+        const disconnectBtn = document.getElementById('disconnectSmugmug');
+        if (disconnectBtn) {
+            disconnectBtn.addEventListener('click', () => {
+                this.disconnectSmugMug();
+            });
+        }
+    }
+
+    async checkAllConnections() {
+        this.updateLastChecked();
+        await Promise.all([
+            this.checkClaudeStatus(),
+            this.checkSmugMugStatus()
+        ]);
+    }
+
+    async checkClaudeStatus() {
+        this.updateServiceStatus('claude', 'checking', 'Testing connection...');
+        
+        try {
+            const response = await fetch('/api/health/claude');
+            const data = await response.json();
+            
+            if (data.success) {
+                this.updateServiceStatus('claude', 'connected', 'Connected');
+            } else {
+                this.updateServiceStatus('claude', 'disconnected', 'Connection failed');
+            }
+        } catch (error) {
+            console.error('Claude status check error:', error);
+            this.updateServiceStatus('claude', 'disconnected', 'Connection error');
+        }
+    }
+
+    async checkSmugMugStatus() {
+        this.updateServiceStatus('smugmug', 'checking', 'Checking connection...');
+        
+        try {
+            const response = await fetch('/api/smugmug/status');
+            const data = await response.json();
+            
+            if (data.success && data.data.connected) {
+                this.updateServiceStatus('smugmug', 'connected', 'Connected');
+                this.showSmugMugAccountInfo(data.data.user);
+                this.enableSmugMugControls(true);
+            } else {
+                this.updateServiceStatus('smugmug', 'disconnected', 'Not connected');
+                this.hideSmugMugAccountInfo();
+                this.enableSmugMugControls(false);
+            }
+        } catch (error) {
+            console.error('SmugMug status check error:', error);
+            this.updateServiceStatus('smugmug', 'disconnected', 'Connection error');
+            this.enableSmugMugControls(false);
+        }
+    }
+
+    updateServiceStatus(service, status, message) {
+        const statusElement = document.getElementById(`${service}Status`);
+        if (!statusElement) return;
+        
+        const indicator = statusElement.querySelector('.status-indicator');
+        const text = statusElement.querySelector('.status-text');
+        
+        if (indicator && text) {
+            // Remove all status classes
+            indicator.classList.remove('connected', 'disconnected', 'checking');
+            // Add current status class
+            indicator.classList.add(status);
+            
+            text.textContent = message;
+        }
+    }
+
+    async testClaudeConnection() {
+        this.addMessage('Testing Claude AI connection...', 'assistant');
+        await this.checkClaudeStatus();
+        
+        const statusElement = document.getElementById('claudeStatus');
+        const status = statusElement ? statusElement.querySelector('.status-text').textContent : 'Unknown';
+        this.addMessage(`Claude AI test result: ${status}`, 'assistant');
+    }
+
+    async testSmugMugConnection() {
+        this.addMessage('Testing SmugMug connection...', 'assistant');
+        await this.checkSmugMugStatus();
+        
+        const statusElement = document.getElementById('smugmugStatus');
+        const status = statusElement ? statusElement.querySelector('.status-text').textContent : 'Unknown';
+        this.addMessage(`SmugMug test result: ${status}`, 'assistant');
+    }
+
+    async connectSmugMug() {
+        this.addMessage('Initiating SmugMug connection...', 'assistant');
+        
+        try {
+            const response = await fetch('/api/smugmug/auth-start', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    callbackUrl: `${window.location.origin}/api/smugmug/callback` 
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                this.addMessage('Opening SmugMug authentication window...', 'assistant');
+                
+                // Open OAuth window
+                const authWindow = window.open(
+                    data.data.authUrl, 
+                    'smugmug-auth', 
+                    'width=600,height=600,scrollbars=yes,resizable=yes'
+                );
+                
+                // Monitor for completion
+                this.monitorOAuthWindow(authWindow);
+            } else {
+                this.addMessage(`Failed to start SmugMug authentication: ${data.error}`, 'assistant');
+            }
+        } catch (error) {
+            console.error('SmugMug connection error:', error);
+            this.addMessage('Failed to initiate SmugMug connection. Please try again.', 'assistant');
+        }
+    }
+
+    monitorOAuthWindow(authWindow) {
+        const pollTimer = setInterval(() => {
+            try {
+                if (authWindow.closed) {
+                    clearInterval(pollTimer);
+                    this.addMessage('Authentication window closed. Checking connection status...', 'assistant');
+                    // Recheck SmugMug status after window closes
+                    setTimeout(() => {
+                        this.checkSmugMugStatus();
+                    }, 2000);
+                }
+            } catch (error) {
+                // Cross-origin error means window is still open and on different domain
+            }
+        }, 1000);
+    }
+
+    async disconnectSmugMug() {
+        this.addMessage('Disconnecting from SmugMug...', 'assistant');
+        
+        try {
+            const response = await fetch('/api/smugmug/disconnect', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                this.addMessage('Successfully disconnected from SmugMug.', 'assistant');
+                this.updateServiceStatus('smugmug', 'disconnected', 'Not connected');
+                this.hideSmugMugAccountInfo();
+                this.enableSmugMugControls(false);
+            } else {
+                this.addMessage(`Failed to disconnect from SmugMug: ${data.error}`, 'assistant');
+            }
+        } catch (error) {
+            console.error('SmugMug disconnect error:', error);
+            this.addMessage('Failed to disconnect from SmugMug. Please try again.', 'assistant');
+        }
+    }
+
+    enableSmugMugControls(connected) {
+        const connectBtn = document.getElementById('connectSmugmug');
+        const testBtn = document.getElementById('testSmugmug');
+        const disconnectBtn = document.getElementById('disconnectSmugmug');
+        
+        if (connectBtn) connectBtn.disabled = connected;
+        if (testBtn) testBtn.disabled = !connected;
+        if (disconnectBtn) disconnectBtn.disabled = !connected;
+    }
+
+    showSmugMugAccountInfo(user) {
+        const accountInfo = document.getElementById('smugmugAccountInfo');
+        const accountDetails = document.getElementById('accountDetails');
+        
+        if (accountInfo && accountDetails && user) {
+            accountDetails.innerHTML = `
+                <strong>User:</strong> ${user.NickName || user.Name || 'Unknown'}<br>
+                <strong>Account:</strong> ${user.AccountStatus || 'Active'}
+            `;
+            
+            accountInfo.style.display = 'block';
+        }
+    }
+
+    hideSmugMugAccountInfo() {
+        const accountInfo = document.getElementById('smugmugAccountInfo');
+        if (accountInfo) {
+            accountInfo.style.display = 'none';
+        }
+    }
+
+    updateLastChecked() {
+        if (this.lastCheckedElement) {
+            this.lastCheckedElement.textContent = new Date().toLocaleTimeString();
+        }
     }
 }
 

@@ -53,9 +53,49 @@
                 </div>
             </div>
 
-            <div class="status-container">
-                <div class="status" id="status">
-                    <span class="status-text">Not connected</span>
+            <div class="connections-dashboard">
+                <div class="dashboard-header">
+                    <h3>System Status</h3>
+                    <button id="refreshStatus" class="refresh-btn">🔄</button>
+                </div>
+                
+                <div class="services-grid">
+                    <div class="service-card" id="claudeStatusCard">
+                        <div class="service-icon">🤖</div>
+                        <div class="service-info">
+                            <div class="service-name">Claude AI</div>
+                            <div class="service-status" id="claudeStatus">
+                                <span class="status-indicator checking"></span>
+                                <span class="status-text">Checking...</span>
+                            </div>
+                        </div>
+                        <button id="testClaude" class="test-btn">Test</button>
+                    </div>
+                    
+                    <div class="service-card" id="smugmugStatusCard">
+                        <div class="service-icon">📸</div>
+                        <div class="service-info">
+                            <div class="service-name">SmugMug</div>
+                            <div class="service-status" id="smugmugStatus">
+                                <span class="status-indicator disconnected"></span>
+                                <span class="status-text">Not Connected</span>
+                            </div>
+                        </div>
+                        <div class="smugmug-controls">
+                            <button id="connectSmugmug" class="connect-btn">Connect</button>
+                            <button id="testSmugmug" class="test-btn" disabled>Test</button>
+                            <button id="disconnectSmugmug" class="disconnect-btn" disabled>Disconnect</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="smugmug-account-info" id="smugmugAccountInfo" style="display: none;">
+                    <h4>Connected SmugMug Account</h4>
+                    <div class="account-details" id="accountDetails"></div>
+                </div>
+                
+                <div class="last-checked">
+                    <small>Last checked: <span id="lastChecked">Never</span></small>
                 </div>
             </div>
         </main>

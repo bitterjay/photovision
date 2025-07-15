@@ -5,10 +5,12 @@ const path = require('path');
 const url = require('url');
 const DataManager = require('./lib/dataManager');
 const ClaudeClient = require('./lib/claudeClient');
+const SmugMugClient = require('./lib/smugmugClient');
 
 const PORT = process.env.PORT || 3000;
 const dataManager = new DataManager();
 const claudeClient = new ClaudeClient(process.env.ANTHROPIC_API_KEY);
+const smugmugClient = new SmugMugClient(process.env.SMUGMUG_API_KEY, process.env.SMUGMUG_API_SECRET);
 
 // Simple MIME type mapping
 const mimeTypes = {
@@ -161,6 +163,26 @@ async function handleAPIRoutes(req, res, parsedUrl) {
       return sendSuccess(res, status, 'Status retrieved successfully');
     }
 
+    // Claude AI health check endpoint
+    if (pathname === '/api/health/claude' && method === 'GET') {
+      log('Claude health check request received');
+      
+      try {
+        // Perform a simple test to verify Claude API is accessible
+        const testResult = await claudeClient.testConnection();
+        
+        return sendSuccess(res, { 
+          status: 'connected',
+          model: testResult.model || 'claude-3-5-sonnet-20241022',
+          timestamp: new Date().toISOString()
+        }, 'Claude AI connection test successful');
+
+      } catch (error) {
+        log(`Claude health check failed: ${error.message}`, 'ERROR');
+        return sendError(res, 500, 'Claude AI connection failed: ' + error.message);
+      }
+    }
+
     // Search endpoint
     if (pathname === '/api/search' && method === 'GET') {
       const searchQuery = query.q;
@@ -278,6 +300,228 @@ async function handleAPIRoutes(req, res, parsedUrl) {
       }
     }
 
+    // SmugMug OAuth start endpoint
+    if (pathname === '/api/smugmug/auth-start' && method === 'POST') {
+      log('SmugMug OAuth start request');
+      
+      // Check if SmugMug API keys are configured
+      if (!process.env.SMUGMUG_API_KEY || !process.env.SMUGMUG_API_SECRET) {
+        return sendError(res, 500, 'SmugMug API keys not configured');
+      }
+
+      try {
+        const callbackUrl = `http://localhost:${PORT}/api/smugmug/callback`;
+        const requestTokenResult = await smugmugClient.getRequestToken(callbackUrl);
+        
+        if (!requestTokenResult.success) {
+          return sendError(res, 500, 'Failed to get request token: ' + requestTokenResult.error);
+        }
+
+        // Store request token in config for later use
+        await dataManager.updateConfig('smugmug.requestToken', requestTokenResult.token);
+        await dataManager.updateConfig('smugmug.requestTokenSecret', requestTokenResult.tokenSecret);
+        
+        // Generate authorization URL
+        const authUrl = smugmugClient.getAuthorizationUrl(
+          requestTokenResult.token,
+          'Public', // Access level
+          'Read'    // Permissions
+        );
+
+        return sendSuccess(res, {
+          authUrl: authUrl,
+          requestToken: requestTokenResult.token
+        }, 'Authorization URL generated');
+
+      } catch (error) {
+        return sendError(res, 500, 'OAuth start failed', error);
+      }
+    }
+
+    // SmugMug OAuth callback endpoint
+    if (pathname === '/api/smugmug/callback' && method === 'GET') {
+      log('SmugMug OAuth callback received');
+      
+      const verifier = query.oauth_verifier;
+      const token = query.oauth_token;
+      
+      if (!verifier || !token) {
+        return sendError(res, 400, 'Missing OAuth verifier or token');
+      }
+
+      try {
+        // Get stored request token secret
+        const config = await dataManager.getConfig();
+        const requestTokenSecret = config.smugmug.requestTokenSecret;
+        
+        if (!requestTokenSecret) {
+          return sendError(res, 400, 'Request token secret not found');
+        }
+
+        // Exchange for access token
+        const accessTokenResult = await smugmugClient.getAccessToken(
+          token,
+          requestTokenSecret,
+          verifier
+        );
+        
+        if (!accessTokenResult.success) {
+          return sendError(res, 500, 'Failed to get access token: ' + accessTokenResult.error);
+        }
+
+        // Store access tokens
+        await dataManager.updateConfig('smugmug.accessToken', accessTokenResult.token);
+        await dataManager.updateConfig('smugmug.accessTokenSecret', accessTokenResult.tokenSecret);
+        await dataManager.updateConfig('smugmug.connected', true);
+        await dataManager.updateConfig('smugmug.lastSync', new Date().toISOString());
+
+        // Get user info
+        const userResult = await smugmugClient.getAuthUser(
+          accessTokenResult.token,
+          accessTokenResult.tokenSecret
+        );
+
+        if (userResult.success) {
+          await dataManager.updateConfig('smugmug.user', userResult.user);
+        }
+
+        // Clean up request tokens
+        await dataManager.updateConfig('smugmug.requestToken', null);
+        await dataManager.updateConfig('smugmug.requestTokenSecret', null);
+
+        // Redirect to success page
+        res.writeHead(302, {
+          'Location': '/?smugmug=connected'
+        });
+        res.end();
+
+      } catch (error) {
+        return sendError(res, 500, 'OAuth callback failed', error);
+      }
+    }
+
+    // SmugMug disconnect endpoint
+    if (pathname === '/api/smugmug/disconnect' && method === 'POST') {
+      log('SmugMug disconnect request');
+      
+      try {
+        // Clear all SmugMug tokens and data
+        await dataManager.updateConfig('smugmug.connected', false);
+        await dataManager.updateConfig('smugmug.accessToken', null);
+        await dataManager.updateConfig('smugmug.accessTokenSecret', null);
+        await dataManager.updateConfig('smugmug.user', null);
+        await dataManager.updateConfig('smugmug.lastSync', null);
+
+        return sendSuccess(res, {}, 'SmugMug account disconnected');
+
+      } catch (error) {
+        return sendError(res, 500, 'Disconnect failed', error);
+      }
+    }
+
+    // SmugMug connection status endpoint
+    if (pathname === '/api/smugmug/status' && method === 'GET') {
+      log('SmugMug status request');
+      
+      try {
+        const config = await dataManager.getConfig();
+        const smugmugConfig = config.smugmug || {};
+
+        // Test connection if we have tokens
+        let connectionValid = false;
+        let user = null;
+
+        if (smugmugConfig.connected && smugmugConfig.accessToken && smugmugConfig.accessTokenSecret) {
+          const testResult = await smugmugClient.testConnection(
+            smugmugConfig.accessToken,
+            smugmugConfig.accessTokenSecret
+          );
+          
+          connectionValid = testResult.success;
+          user = testResult.user || smugmugConfig.user;
+          
+          // Update connection status if test failed
+          if (!connectionValid) {
+            await dataManager.updateConfig('smugmug.connected', false);
+          }
+        }
+
+        return sendSuccess(res, {
+          connected: connectionValid,
+          user: user,
+          lastSync: smugmugConfig.lastSync
+        }, 'SmugMug status retrieved');
+
+      } catch (error) {
+        return sendError(res, 500, 'Status check failed', error);
+      }
+    }
+
+    // SmugMug albums endpoint
+    if (pathname === '/api/smugmug/albums' && method === 'GET') {
+      log('SmugMug albums request');
+      
+      try {
+        const config = await dataManager.getConfig();
+        const smugmugConfig = config.smugmug || {};
+
+        if (!smugmugConfig.connected || !smugmugConfig.accessToken) {
+          return sendError(res, 401, 'SmugMug not connected');
+        }
+
+        const albumsResult = await smugmugClient.getUserAlbums(
+          smugmugConfig.accessToken,
+          smugmugConfig.accessTokenSecret,
+          smugmugConfig.user.Uris.User
+        );
+
+        if (!albumsResult.success) {
+          return sendError(res, 500, 'Failed to get albums: ' + albumsResult.error);
+        }
+
+        return sendSuccess(res, {
+          albums: albumsResult.albums
+        }, `Retrieved ${albumsResult.albums.length} albums`);
+
+      } catch (error) {
+        return sendError(res, 500, 'Albums request failed', error);
+      }
+    }
+
+    // SmugMug album images endpoint
+    if (pathname.startsWith('/api/smugmug/album/') && pathname.endsWith('/images') && method === 'GET') {
+      const albumKey = pathname.split('/')[4]; // Extract album key from URL
+      log(`SmugMug album images request for album: ${albumKey}`);
+      
+      try {
+        const config = await dataManager.getConfig();
+        const smugmugConfig = config.smugmug || {};
+
+        if (!smugmugConfig.connected || !smugmugConfig.accessToken) {
+          return sendError(res, 401, 'SmugMug not connected');
+        }
+
+        const albumUri = `/api/v2/album/${albumKey}`;
+        const imagesResult = await smugmugClient.getAlbumImages(
+          smugmugConfig.accessToken,
+          smugmugConfig.accessTokenSecret,
+          albumUri
+        );
+
+        if (!imagesResult.success) {
+          return sendError(res, 500, 'Failed to get album images: ' + imagesResult.error);
+        }
+
+        return sendSuccess(res, {
+          albumKey: albumKey,
+          images: imagesResult.images
+        }, `Retrieved ${imagesResult.images.length} images from album`);
+
+      } catch (error) {
+        return sendError(res, 500, 'Album images request failed', error);
+      }
+    }
+
     // API route not found
     return sendError(res, 404, `API endpoint not found: ${pathname}`);
 
@@ -338,6 +582,12 @@ server.listen(PORT, () => {
   log('  GET  /api/config    - Get configuration');
   log('  POST /api/config    - Update configuration');
   log('  POST /api/analyze   - Analyze image with Claude');
+  log('  POST /api/smugmug/auth-start     - Start SmugMug OAuth');
+  log('  GET  /api/smugmug/callback       - OAuth callback');
+  log('  POST /api/smugmug/disconnect     - Disconnect SmugMug');
+  log('  GET  /api/smugmug/status         - SmugMug connection status');
+  log('  GET  /api/smugmug/albums         - Get SmugMug albums');
+  log('  GET  /api/smugmug/album/:id/images - Get album images');
   log('Press Ctrl+C to stop');
 });
 
