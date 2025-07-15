@@ -1,5 +1,5 @@
 // PhotoVision Frontend JavaScript
-// Vanilla JavaScript implementation for chat interface
+// Handles chat interface and image upload functionality
 
 class PhotoVision {
     constructor() {
@@ -8,11 +8,22 @@ class PhotoVision {
         this.messagesContainer = document.getElementById('messages');
         this.statusElement = document.getElementById('status');
         
+        // Upload elements
+        this.uploadArea = document.getElementById('uploadArea');
+        this.fileInput = document.getElementById('fileInput');
+        this.uploadProgress = document.getElementById('uploadProgress');
+        this.progressFill = document.getElementById('progressFill');
+        this.progressText = document.getElementById('progressText');
+        this.analysisResult = document.getElementById('analysisResult');
+        this.resultContent = document.getElementById('resultContent');
+        
         this.init();
     }
 
     init() {
         this.setupEventListeners();
+        this.setupUpload();
+        this.loadStatus();
         this.updateStatus('Ready to connect', 'info');
         console.log('PhotoVision initialized');
     }
@@ -37,6 +48,118 @@ class PhotoVision {
         });
     }
 
+    setupUpload() {
+        // File input change handler
+        this.fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                this.handleFileUpload(e.target.files[0]);
+            }
+        });
+
+        // Drag and drop handlers
+        this.uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            this.uploadArea.classList.add('drag-over');
+        });
+
+        this.uploadArea.addEventListener('dragleave', () => {
+            this.uploadArea.classList.remove('drag-over');
+        });
+
+        this.uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            this.uploadArea.classList.remove('drag-over');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                this.handleFileUpload(files[0]);
+            }
+        });
+    }
+
+    async handleFileUpload(file) {
+        // Validate file type
+        const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        if (!validTypes.includes(file.type)) {
+            alert('Please select a valid image file (JPEG, PNG, GIF, or WebP).');
+            return;
+        }
+
+        // Validate file size (limit to 10MB)
+        const maxSize = 10 * 1024 * 1024;
+        if (file.size > maxSize) {
+            alert('File size must be less than 10MB.');
+            return;
+        }
+
+        // Show progress
+        this.showUploadProgress();
+        this.hideAnalysisResult();
+
+        try {
+            // Create form data
+            const formData = new FormData();
+            formData.append('image', file);
+
+            // Send to analysis API
+            const response = await fetch('/api/analyze', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                this.showAnalysisResult(data.data.analysis);
+                this.loadStatus(); // Refresh status
+                this.addMessage(`Image "${file.name}" analyzed successfully!`, 'assistant');
+            } else {
+                this.addMessage(`Analysis failed: ${data.error}`, 'assistant');
+            }
+        } catch (error) {
+            console.error('Upload error:', error);
+            this.addMessage('Upload failed. Please try again.', 'assistant');
+        } finally {
+            this.hideUploadProgress();
+        }
+    }
+
+    showUploadProgress() {
+        this.uploadProgress.style.display = 'block';
+        this.progressFill.style.width = '100%';
+        this.progressText.textContent = 'Analyzing...';
+    }
+
+    hideUploadProgress() {
+        this.uploadProgress.style.display = 'none';
+        this.progressFill.style.width = '0%';
+    }
+
+    showAnalysisResult(analysis) {
+        this.resultContent.textContent = analysis;
+        this.analysisResult.style.display = 'block';
+    }
+
+    hideAnalysisResult() {
+        this.analysisResult.style.display = 'none';
+    }
+
+    async loadStatus() {
+        try {
+            const response = await fetch('/api/status');
+            const data = await response.json();
+            
+            if (data.success) {
+                this.updateStatus(`Ready • ${data.data.totalImages} images processed`, 'success');
+            } else {
+                this.updateStatus('Error loading status', 'error');
+            }
+        } catch (error) {
+            console.error('Status loading error:', error);
+            this.updateStatus('Connection error', 'error');
+        }
+    }
+
     handleSendMessage() {
         const message = this.messageInput.value.trim();
         if (!message) return;
@@ -51,11 +174,34 @@ class PhotoVision {
         // Show typing indicator
         this.showTypingIndicator();
 
-        // Simulate processing (will be replaced with actual API calls)
-        setTimeout(() => {
+        // Process message with API
+        this.processMessage(message);
+    }
+
+    async processMessage(message) {
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message }),
+            });
+
+            const data = await response.json();
+            
             this.hideTypingIndicator();
-            this.addMessage('I\'m not connected to any services yet. This is a placeholder response. In future phases, I\'ll be able to search your SmugMug photos!', 'assistant');
-        }, 1500);
+            
+            if (data.success) {
+                this.addMessage(data.data.message, 'assistant');
+            } else {
+                this.addMessage('Sorry, I encountered an error processing your request.', 'assistant');
+            }
+        } catch (error) {
+            console.error('Chat error:', error);
+            this.hideTypingIndicator();
+            this.addMessage('Sorry, I\'m having trouble connecting right now.', 'assistant');
+        }
     }
 
     addMessage(content, type = 'assistant') {

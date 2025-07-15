@@ -1,11 +1,14 @@
+require('dotenv').config();
 const http = require('http');
 const fs = require('fs/promises');
 const path = require('path');
 const url = require('url');
 const DataManager = require('./lib/dataManager');
+const ClaudeClient = require('./lib/claudeClient');
 
 const PORT = process.env.PORT || 3000;
 const dataManager = new DataManager();
+const claudeClient = new ClaudeClient(process.env.ANTHROPIC_API_KEY);
 
 // Simple MIME type mapping
 const mimeTypes = {
@@ -86,6 +89,64 @@ async function parseJSON(req) {
   });
 }
 
+// Parse multipart form data for file uploads
+async function parseMultipartData(req) {
+  return new Promise((resolve, reject) => {
+    let body = Buffer.alloc(0);
+    
+    req.on('data', chunk => {
+      body = Buffer.concat([body, chunk]);
+    });
+    
+    req.on('end', () => {
+      try {
+        const boundary = req.headers['content-type'].split('boundary=')[1];
+        const parts = body.toString('binary').split(`--${boundary}`);
+        const formData = {};
+        
+        for (let part of parts) {
+          if (part.includes('Content-Disposition: form-data')) {
+            const [headers, data] = part.split('\r\n\r\n');
+            const nameMatch = headers.match(/name="([^"]+)"/);
+            const filenameMatch = headers.match(/filename="([^"]+)"/);
+            const typeMatch = headers.match(/Content-Type: ([^\r\n]+)/);
+            
+            if (nameMatch) {
+              const name = nameMatch[1];
+              const cleanData = data.replace(/\r\n$/, '');
+              
+              if (filenameMatch && typeMatch) {
+                // File upload
+                formData[name] = {
+                  filename: filenameMatch[1],
+                  type: typeMatch[1],
+                  data: Buffer.from(cleanData, 'binary')
+                };
+              } else {
+                // Regular field
+                formData[name] = cleanData;
+              }
+            }
+          }
+        }
+        
+        resolve(formData);
+      } catch (error) {
+        reject(new Error('Failed to parse multipart data'));
+      }
+    });
+    
+    req.on('error', error => {
+      reject(error);
+    });
+  });
+}
+
+// Generate a unique ID for records
+function generateUniqueId() {
+  return Date.now().toString(36) + Math.random().toString(36).substr(2);
+}
+
 // API Routes
 async function handleAPIRoutes(req, res, parsedUrl) {
   const pathname = parsedUrl.pathname;
@@ -154,6 +215,87 @@ async function handleAPIRoutes(req, res, parsedUrl) {
       return sendSuccess(res, config, 'Configuration updated');
     }
 
+    // Image analysis endpoint
+    if (pathname === '/api/analyze' && method === 'POST') {
+      log('Image analysis request received');
+      
+      // Check if Claude API key is configured
+      if (!process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY === 'your_anthropic_api_key_here') {
+        return sendError(res, 500, 'Claude API key not configured');
+      }
+
+      const contentType = req.headers['content-type'];
+      if (!contentType || !contentType.startsWith('multipart/form-data')) {
+        return sendError(res, 400, 'Expected multipart/form-data');
+      }
+
+      try {
+        const formData = await parseMultipartData(req);
+        
+        if (!formData.image) {
+          return sendError(res, 400, 'No image provided');
+        }
+
+        // Validate image type
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        if (!allowedTypes.includes(formData.image.type)) {
+          return sendError(res, 400, 'Unsupported image type');
+        }
+
+        log('Starting image analysis...');
+
+        // Analyze image with Claude
+        const analysisResult = await claudeClient.analyzeImage(
+          formData.image.data,
+          formData.image.type,
+          formData.prompt || null
+        );
+
+        if (!analysisResult.success) {
+          log(`Image analysis failed: ${analysisResult.error}`, 'ERROR');
+          return sendError(res, 500, 'Image analysis failed: ' + analysisResult.error);
+        }
+
+        // Create image record
+        const imageRecord = {
+          id: generateUniqueId(),
+          filename: formData.image.filename || 'uploaded_image',
+          mimeType: formData.image.type,
+          size: formData.image.data.length,
+          uploadedAt: new Date().toISOString(),
+          analysis: {
+            description: analysisResult.description,
+            model: analysisResult.model,
+            usage: analysisResult.usage,
+            analyzedAt: analysisResult.timestamp
+          }
+        };
+
+        // Store the analysis result
+        const saveResult = await dataManager.addImage(imageRecord);
+        
+        if (!saveResult.success) {
+          log(`Failed to save image record: ${saveResult.error}`, 'ERROR');
+          return sendError(res, 500, 'Failed to save analysis result');
+        }
+
+        log('Image analysis completed successfully');
+
+        return sendSuccess(res, {
+          imageId: imageRecord.id,
+          analysis: analysisResult.description,
+          metadata: {
+            model: analysisResult.model,
+            usage: analysisResult.usage,
+            timestamp: analysisResult.timestamp
+          }
+        }, 'Image analyzed successfully');
+
+      } catch (error) {
+        return sendError(res, 500, 'Failed to process image', error);
+      }
+    }
+
     // API route not found
     return sendError(res, 404, `API endpoint not found: ${pathname}`);
 
@@ -213,6 +355,7 @@ server.listen(PORT, () => {
   log('  GET  /api/images    - Get all images');
   log('  GET  /api/config    - Get configuration');
   log('  POST /api/config    - Update configuration');
+  log('  POST /api/analyze   - Analyze image with Claude');
   log('Press Ctrl+C to stop');
 });
 

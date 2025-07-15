@@ -7,10 +7,19 @@
     "start": "node server.js",
     "dev": "node server.js"
   },
-  "keywords": ["photo", "search", "smugmug", "ai", "conversation"],
+  "keywords": [
+    "photo",
+    "search",
+    "smugmug",
+    "ai",
+    "conversation"
+  ],
   "author": "",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "dotenv": "^17.2.0",
+    "sharp": "^0.34.3"
+  },
   "engines": {
     "node": ">=16.0.0"
   }

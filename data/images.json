@@ -1,1 +1,22 @@
-[]
+[
+  {
+    "id": "md4tp8q1kdnna9gah2k",
+    "timestamp": "2025-07-15T17:45:31.758Z",
+    "filename": "adult-man.jpg",
+    "mimeType": "image/jpeg",
+    "size": 7125633,
+    "uploadedAt": "2025-07-15T17:45:31.753Z",
+    "analysis": {
+      "description": "The image shows a person engaged in archery, using a compound bow. The person is wearing a red and black jersey with the text \"TDY Archery\" printed on it, as well as a black cap. They are standing outdoors, likely at an archery range or practice area, with a clear blue sky in the background and some natural greenery visible.\n\nThe person is in the process of drawing back the bow, with a focused expression on their face. The bow appears to be a high-quality, state-of-the-art compound bow, with a sleek, modern design. The setting suggests an outdoor, natural environment, with a calm and serene atmosphere.\n\nThe composition of the image is well-balanced, with the person and the bow taking up a significant portion of the frame. The lighting appears to be natural, creating a warm and vibrant tone to the scene.\n\nOverall, this image could be useful for searches related to archery, outdoor sports, or athletic activities in natural settings.",
+      "model": "claude-3-haiku-20240307",
+      "usage": {
+        "input_tokens": 1664,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "output_tokens": 215,
+        "service_tier": "standard"
+      },
+      "analyzedAt": "2025-07-15T17:45:31.753Z"
+    }
+  }
+]
