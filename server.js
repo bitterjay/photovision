@@ -471,10 +471,16 @@ async function handleAPIRoutes(req, res, parsedUrl) {
           return sendError(res, 401, 'SmugMug not connected');
         }
 
+        // Check if user object and URI exist
+        if (!smugmugConfig.user || !smugmugConfig.user.Uri) {
+          return sendError(res, 500, 'SmugMug user information not available');
+        }
+
+        // Use the base user URI (the getUserAlbums method will append !albums)
         const albumsResult = await smugmugClient.getUserAlbums(
           smugmugConfig.accessToken,
           smugmugConfig.accessTokenSecret,
-          smugmugConfig.user.Uris.User
+          smugmugConfig.user.Uri
         );
 
         if (!albumsResult.success) {
