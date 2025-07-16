@@ -188,6 +188,35 @@
                     </div>
                 </div>
             </div>
+
+            <div class="admin-tools-section">
+                <div class="section-header">
+                    <h3>⚠️ Admin Tools</h3>
+                    <button id="toggleAdminTools" class="toggle-btn">Show</button>
+                </div>
+                
+                <div class="admin-controls" id="adminControls" style="display: none;">
+                    <div class="danger-zone">
+                        <div class="danger-zone-header">
+                            <h4>🗑️ Data Destruction (Testing Only)</h4>
+                            <p class="warning-text">This will permanently delete all image data. Use only for testing purposes.</p>
+                        </div>
+                        
+                        <div class="data-info">
+                            <span class="data-count">Current records: <span id="recordCount">Loading...</span></span>
+                        </div>
+                        
+                        <button id="destroyAllData" class="destroy-btn">Destroy All Image Data</button>
+                        
+                        <div class="destruction-status" id="destructionStatus" style="display: none;">
+                            <div class="status-message" id="destructionMessage"></div>
+                            <div class="backup-info" id="backupInfo" style="display: none;">
+                                <small>Backup saved: <span id="backupFilename"></span></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 

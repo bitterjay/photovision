@@ -1087,6 +1087,118 @@ async function handleAPIRoutes(req, res, parsedUrl) {
       }
     }
 
+    // Data count endpoint
+    if (pathname === '/api/data/count' && method === 'GET') {
+      log('Data count request received');
+      
+      try {
+        const images = await dataManager.getImages();
+        return sendSuccess(res, { count: images.length }, `Found ${images.length} image records`);
+      } catch (error) {
+        return sendError(res, 500, 'Failed to get data count', error);
+      }
+    }
+
+    // Admin destroy all data endpoint (frontend-compatible)
+    if (pathname === '/api/admin/destroy-all-data' && method === 'POST') {
+      log('ADMIN DESTROY ALL DATA request received - TESTING ONLY', 'WARN');
+      
+      try {
+        // Get current images count before destruction
+        const currentImages = await dataManager.getImages();
+        const imageCount = currentImages.length;
+        
+        log(`Starting destruction of ${imageCount} image records`, 'WARN');
+
+        // Create backup with timestamp
+        const timestamp = Date.now();
+        const backupFilename = `images_backup_${timestamp}.json`;
+        const backupPath = path.join('./data', backupFilename);
+        
+        try {
+          await fs.writeFile(backupPath, JSON.stringify(currentImages, null, 2));
+          log(`Backup created: ${backupFilename}`, 'INFO');
+        } catch (backupError) {
+          log(`Failed to create backup: ${backupError.message}`, 'ERROR');
+          return sendError(res, 500, 'Failed to create backup before destruction: ' + backupError.message);
+        }
+
+        // Destroy all data (set to empty array)
+        const imagesPath = path.join('./data', 'images.json');
+        try {
+          await fs.writeFile(imagesPath, JSON.stringify([], null, 2));
+          log(`Successfully destroyed ${imageCount} image records`, 'WARN');
+        } catch (destroyError) {
+          log(`Failed to destroy data: ${destroyError.message}`, 'ERROR');
+          return sendError(res, 500, 'Failed to destroy image data: ' + destroyError.message);
+        }
+
+        return sendSuccess(res, {
+          deletedCount: imageCount,
+          backupFile: backupFilename,
+          timestamp: new Date().toISOString(),
+          message: `Successfully destroyed ${imageCount} image records. Backup saved as ${backupFilename}`
+        }, `All image data destroyed - ${imageCount} records deleted`);
+
+      } catch (error) {
+        return sendError(res, 500, 'Failed to destroy image data', error);
+      }
+    }
+
+    // Destroy all images data endpoint (for testing)
+    if (pathname === '/api/images/destroy-all' && method === 'DELETE') {
+      log('DESTROY ALL DATA request received - TESTING ONLY', 'WARN');
+      
+      try {
+        const requestData = await parseJSON(req);
+        
+        // Safety check: require confirmation text
+        if (!requestData.confirmation || requestData.confirmation !== 'DELETE ALL DATA') {
+          log('Destroy all data request denied - invalid confirmation', 'WARN');
+          return sendError(res, 400, 'Invalid confirmation. Must provide exact text: "DELETE ALL DATA"');
+        }
+
+        // Get current images count before destruction
+        const currentImages = await dataManager.getImages();
+        const imageCount = currentImages.length;
+        
+        log(`Starting destruction of ${imageCount} image records`, 'WARN');
+
+        // Create backup with timestamp
+        const timestamp = Date.now();
+        const backupFilename = `images_backup_${timestamp}.json`;
+        const backupPath = path.join('./data', backupFilename);
+        
+        try {
+          await fs.writeFile(backupPath, JSON.stringify(currentImages, null, 2));
+          log(`Backup created: ${backupFilename}`, 'INFO');
+        } catch (backupError) {
+          log(`Failed to create backup: ${backupError.message}`, 'ERROR');
+          return sendError(res, 500, 'Failed to create backup before destruction: ' + backupError.message);
+        }
+
+        // Destroy all data (set to empty array)
+        const imagesPath = path.join('./data', 'images.json');
+        try {
+          await fs.writeFile(imagesPath, JSON.stringify([], null, 2));
+          log(`Successfully destroyed ${imageCount} image records`, 'WARN');
+        } catch (destroyError) {
+          log(`Failed to destroy data: ${destroyError.message}`, 'ERROR');
+          return sendError(res, 500, 'Failed to destroy image data: ' + destroyError.message);
+        }
+
+        return sendSuccess(res, {
+          deletedCount: imageCount,
+          backupFile: backupFilename,
+          timestamp: new Date().toISOString(),
+          message: `Successfully destroyed ${imageCount} image records. Backup saved as ${backupFilename}`
+        }, `All image data destroyed - ${imageCount} records deleted`);
+
+      } catch (error) {
+        return sendError(res, 500, 'Failed to destroy image data', error);
+      }
+    }
+
     // API route not found
     return sendError(res, 404, `API endpoint not found: ${pathname}`);
 
@@ -1160,6 +1272,8 @@ server.listen(PORT, () => {
   log('  POST /api/batch/cancel           - Cancel batch processing');
   log('  POST /api/batch/retry            - Retry failed jobs');
   log('  GET  /api/batch/details          - Get batch details');
+  log('  GET  /api/data/count             - Get image data count');
+  log('  POST /api/admin/destroy-all-data - Destroy all data (testing)');
   log('Press Ctrl+C to stop');
 });
 

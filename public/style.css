@@ -1520,3 +1520,151 @@ body {
     gap: 4px;
   }
 }
+
+/* Admin Tools Section */
+.admin-tools-section {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border: 2px solid #ff6b6b;
+}
+
+.admin-tools-section .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.admin-tools-section h3 {
+    color: #d63031;
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.toggle-btn {
+    background: #74b9ff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s;
+}
+
+.toggle-btn:hover {
+    background: #0984e3;
+}
+
+.admin-controls {
+    padding-top: 15px;
+    border-top: 1px solid #ddd;
+}
+
+.danger-zone {
+    background: #ffe6e6;
+    border: 2px solid #ff6b6b;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+}
+
+.danger-zone-header h4 {
+    color: #d63031;
+    margin: 0 0 10px 0;
+    font-size: 1.1em;
+}
+
+.warning-text {
+    color: #636e72;
+    font-size: 0.9em;
+    margin: 0 0 15px 0;
+    font-style: italic;
+}
+
+.data-info {
+    margin: 15px 0;
+    padding: 10px;
+    background: #fff;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.data-count {
+    font-weight: bold;
+    color: #2d3436;
+}
+
+.destroy-btn {
+    background: #d63031;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: all 0.3s;
+    margin-top: 10px;
+}
+
+.destroy-btn:hover {
+    background: #a71e20;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.destroy-btn:active {
+    transform: translateY(0);
+}
+
+.destroy-btn:disabled {
+    background: #b2bec3;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.destruction-status {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 6px;
+}
+
+.destruction-status.success {
+    background: #d1f2eb;
+    border: 1px solid #00b894;
+}
+
+.destruction-status.error {
+    background: #ffe6e6;
+    border: 1px solid #d63031;
+}
+
+.status-message {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.destruction-status.success .status-message {
+    color: #00b894;
+}
+
+.destruction-status.error .status-message {
+    color: #d63031;
+}
+
+.backup-info {
+    font-size: 0.9em;
+    color: #636e72;
+}
+
+.backup-info span {
+    font-family: monospace;
+    background: #f8f9fa;
+    padding: 2px 6px;
+    border-radius: 3px;
+}

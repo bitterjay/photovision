@@ -1506,3 +1506,126 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Expose for debugging
 window.PhotoVision = PhotoVision;
+
+// Admin Tools functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleAdminTools = document.getElementById('toggleAdminTools');
+    const adminControls = document.getElementById('adminControls');
+    const destroyAllDataBtn = document.getElementById('destroyAllData');
+    const recordCountElement = document.getElementById('recordCount');
+    const destructionStatus = document.getElementById('destructionStatus');
+    const destructionMessage = document.getElementById('destructionMessage');
+    const backupInfo = document.getElementById('backupInfo');
+    const backupFilename = document.getElementById('backupFilename');
+
+    // Toggle admin controls visibility
+    if (toggleAdminTools && adminControls) {
+        toggleAdminTools.addEventListener('click', function() {
+            const isHidden = adminControls.style.display === 'none';
+            adminControls.style.display = isHidden ? 'block' : 'none';
+            toggleAdminTools.textContent = isHidden ? 'Hide' : 'Show';
+            
+            // Load record count when showing
+            if (isHidden) {
+                loadRecordCount();
+            }
+        });
+    }
+
+    // Load record count
+    async function loadRecordCount() {
+        try {
+            const response = await fetch('/api/data/count');
+            const data = await response.json();
+            recordCountElement.textContent = data.data?.count || 0;
+        } catch (error) {
+            console.error('Error loading record count:', error);
+            recordCountElement.textContent = 'Error';
+        }
+    }
+
+    // Destroy all data button
+    if (destroyAllDataBtn) {
+        destroyAllDataBtn.addEventListener('click', async function() {
+            // Double confirmation for safety
+            const firstConfirm = confirm('⚠️ WARNING: This will permanently delete ALL image data!\n\nThis action cannot be undone. Are you sure you want to continue?');
+            
+            if (!firstConfirm) return;
+            
+            const secondConfirm = confirm('🗑️ FINAL WARNING: This will destroy all processed image data and create a backup.\n\nType "DELETE" in the next prompt to confirm.');
+            
+            if (!secondConfirm) return;
+            
+            const finalConfirm = prompt('Type "DELETE" to confirm data destruction:');
+            
+            if (finalConfirm !== 'DELETE') {
+                alert('Action cancelled. Data was not destroyed.');
+                return;
+            }
+
+            // Disable button and show loading state
+            destroyAllDataBtn.disabled = true;
+            destroyAllDataBtn.textContent = 'Destroying Data...';
+            
+            try {
+                const response = await fetch('/api/admin/destroy-all-data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Show success status
+                    destructionStatus.style.display = 'block';
+                    destructionStatus.className = 'destruction-status success';
+                    destructionMessage.textContent = result.message || 'All image data has been successfully destroyed.';
+                    
+                    if (result.backupFile) {
+                        backupInfo.style.display = 'block';
+                        backupFilename.textContent = result.backupFile;
+                    }
+                    
+                    // Update record count
+                    recordCountElement.textContent = '0';
+                    
+                } else {
+                    // Show error status
+                    destructionStatus.style.display = 'block';
+                    destructionStatus.className = 'destruction-status error';
+                    destructionMessage.textContent = result.error || 'Failed to destroy data.';
+                }
+
+            } catch (error) {
+                console.error('Error destroying data:', error);
+                destructionStatus.style.display = 'block';
+                destructionStatus.className = 'destruction-status error';
+                destructionMessage.textContent = 'Network error occurred while destroying data.';
+            } finally {
+                // Re-enable button
+                destroyAllDataBtn.disabled = false;
+                destroyAllDataBtn.textContent = 'Destroy All Image Data';
+            }
+        });
+    }
+
+    // Auto-hide destruction status after 10 seconds
+    if (destructionStatus) {
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                    if (destructionStatus.style.display === 'block') {
+                        setTimeout(() => {
+                            destructionStatus.style.display = 'none';
+                            backupInfo.style.display = 'none';
+                        }, 10000); // Hide after 10 seconds
+                    }
+                }
+            });
+        });
+        
+        observer.observe(destructionStatus, { attributes: true });
+    }
+});

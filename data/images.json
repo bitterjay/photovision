@@ -843,5 +843,123 @@
       "batchId": "batch_1752643754441_25s30fvas",
       "jobId": "img_NKgD8x_LwcvqCn"
     }
+  },
+  {
+    "id": "md5jn9dd4k6128lgel5",
+    "timestamp": "2025-07-16T05:51:49.298Z",
+    "filename": "DSC04815.jpg",
+    "smugmugImageKey": "LwcvqCn",
+    "smugmugUrl": "https://photos.smugmug.com/2025/Arizona-Cup/Friday-AM-U21U18/i-LwcvqCn/0/LZ9sFbZ9pVQ3Jw7WxMMs3H6X6btFbsFCTx7NC5kvb/D/DSC04815-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "NKgD8x",
+    "albumName": "Friday AM - U21/U18",
+    "albumPath": "2025 > Arizona Cup > Friday AM - U21/U18",
+    "albumHierarchy": [
+      "2025",
+      "Arizona Cup",
+      "Friday AM - U21/U18"
+    ],
+    "description": "The image depicts an outdoor market or festival setting at dusk or twilight. The scene shows a large open space with several white canopy tents set up, likely containing various vendors or exhibits. The tents and open area are surrounded by dark, hilly terrain, creating a dramatic backdrop against the cloudy, dimly lit sky. The lighting is soft and atmospheric, with a warm, golden glow from the setting sun filtering through the clouds. The composition features a sense of depth, with the tents and open space in the foreground and the shadowy hills rising up in the background. There are no people visible in the frame, but the presence of the tents and temporary structures suggests this is a lively, populated area, perhaps preparing for or winding down from an event or festival. The overall mood is one of tranquility and anticipation, with the natural scenery and atmospheric lighting creating a serene yet vibrant ambiance.",
+    "keywords": [
+      "outdoor market",
+      "festival",
+      "dusk",
+      "twilight",
+      "canopy tents",
+      "hilly terrain",
+      "dramatic backdrop",
+      "cloudy sky",
+      "warm lighting",
+      "atmospheric",
+      "depth",
+      "serene",
+      "anticipation"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-16T05:51:49.297Z",
+      "batchId": "batch_1752645104243_bon1hyb4u",
+      "jobId": "img_NKgD8x_LwcvqCn"
+    }
+  },
+  {
+    "id": "md5jp7jaf9fikygjyxd",
+    "timestamp": "2025-07-16T05:53:20.230Z",
+    "filename": "DSC04815.jpg",
+    "smugmugImageKey": "LwcvqCn",
+    "smugmugUrl": "https://photos.smugmug.com/2025/Arizona-Cup/Friday-AM-U21U18/i-LwcvqCn/0/LZ9sFbZ9pVQ3Jw7WxMMs3H6X6btFbsFCTx7NC5kvb/D/DSC04815-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "NKgD8x",
+    "albumName": "Friday AM - U21/U18",
+    "albumPath": "2025 > Arizona Cup > Friday AM - U21/U18",
+    "albumHierarchy": [
+      "2025",
+      "Arizona Cup",
+      "Friday AM - U21/U18"
+    ],
+    "description": "The image depicts an outdoor setting at what appears to be a festival or event. In the foreground, there are rows of white tents or canopies set up, likely serving as vendor or activity booths. The ground is paved or covered in a hard surface, creating a large open area. In the background, there are hills or mountains rising up, creating a picturesque natural setting. The sky is filled with dramatic clouds, casting a warm, golden glow over the scene as the sun is setting or rising. The overall mood is one of anticipation and activity, with the empty space suggesting that people or crowds have just left or are about to arrive. The visual elements, from the silhouetted hills to the dramatic sky, create a sense of tranquility and beauty despite the utilitarian nature of the event space.",
+    "keywords": [
+      "outdoor event",
+      "festival",
+      "vendor tents",
+      "mountains",
+      "sunset",
+      "dramatic clouds",
+      "open space",
+      "anticipation",
+      "natural setting",
+      "silhouette",
+      "tranquil",
+      "scenic"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-16T05:53:20.230Z",
+      "batchId": "batch_1752645195865_j0i4r9vx1",
+      "jobId": "img_NKgD8x_LwcvqCn"
+    }
+  },
+  {
+    "id": "md5js696nu3mt7dp7zl",
+    "timestamp": "2025-07-16T05:55:38.540Z",
+    "filename": "DSC04815.jpg",
+    "smugmugImageKey": "LwcvqCn",
+    "smugmugUrl": "https://photos.smugmug.com/2025/Arizona-Cup/Friday-AM-U21U18/i-LwcvqCn/0/LZ9sFbZ9pVQ3Jw7WxMMs3H6X6btFbsFCTx7NC5kvb/D/DSC04815-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "NKgD8x",
+    "albumName": "Friday AM - U21/U18",
+    "albumPath": "2025 > Arizona Cup > Friday AM - U21/U18",
+    "albumHierarchy": [
+      "2025",
+      "Arizona Cup",
+      "Friday AM - U21/U18"
+    ],
+    "description": "The image depicts an outdoor setting at twilight, with a hilly, mountainous landscape in the background and a series of white tents or canopies in the foreground. The tents appear to be part of some type of event or gathering, with tables and chairs set up underneath them. The sky is filled with dramatic, cloudy formations, creating a moody, atmospheric scene. The overall mood feels contemplative and serene, with the setting sun casting a warm, golden glow over the landscape. There are no visible human figures in the image, though the tents suggest the recent presence of people. The composition emphasizes the juxtaposition between the natural, rugged terrain and the temporary, human-made structures, creating a sense of contrast between the natural and the artificial.",
+    "keywords": [
+      "outdoor",
+      "landscape",
+      "mountains",
+      "tents",
+      "canopies",
+      "event",
+      "gathering",
+      "twilight",
+      "sunset",
+      "clouds",
+      "atmosphere",
+      "serene",
+      "peaceful",
+      "natural",
+      "artificial"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-16T05:55:38.538Z",
+      "batchId": "batch_1752645334309_8jzo3xpg6",
+      "jobId": "img_NKgD8x_LwcvqCn"
+    }
   }
 ]
