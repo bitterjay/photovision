@@ -1093,6 +1093,10 @@ class PhotoVision {
             return;
         }
 
+        const newImages = totalImages - processedImages;
+        const duplicateInfo = status.duplicateStatistics || {};
+        const duplicateDetectionEnabled = status.duplicateDetectionEnabled || false;
+
         let statusHTML = '';
         
         if (isCompletelyProcessed) {
@@ -1100,23 +1104,38 @@ class PhotoVision {
                 <div class="processing-complete">
                     <span class="status-icon">✅</span>
                     <span class="status-text">All ${totalImages} images processed</span>
+                    ${duplicateDetectionEnabled ? `
+                        <div class="duplicate-info">
+                            <small>Duplicate detection: Active</small>
+                        </div>
+                    ` : ''}
                 </div>
             `;
         } else if (processedImages === 0) {
             statusHTML = `
                 <div class="processing-none">
                     <span class="status-icon">⏳</span>
-                    <span class="status-text">0 of ${totalImages} images processed</span>
+                    <span class="status-text">0 processed, ${totalImages} new images</span>
+                    ${duplicateDetectionEnabled ? `
+                        <div class="duplicate-info">
+                            <small>Ready for duplicate-aware processing</small>
+                        </div>
+                    ` : ''}
                 </div>
             `;
         } else {
             statusHTML = `
                 <div class="processing-partial">
                     <span class="status-icon">🔄</span>
-                    <span class="status-text">${processedImages} of ${totalImages} images processed (${processingProgress}%)</span>
+                    <span class="status-text">${processedImages} processed, ${newImages} new images (${processingProgress}%)</span>
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: ${processingProgress}%"></div>
                     </div>
+                    ${duplicateDetectionEnabled ? `
+                        <div class="duplicate-info">
+                            <small>Duplicate detection: ${duplicateInfo.skippedDuplicates || 0} duplicates detected</small>
+                        </div>
+                    ` : ''}
                 </div>
             `;
         }
@@ -1149,6 +1168,138 @@ class PhotoVision {
         const albumName = albumItem?.querySelector('.album-name')?.textContent;
         if (batchNameInput && !batchNameInput.value && albumName) {
             batchNameInput.value = albumName;
+        }
+
+        // Load and display duplicate statistics for selected album
+        this.loadDuplicateStatistics(albumKey);
+    }
+
+    async loadDuplicateStatistics(albumKey) {
+        const statisticsSection = document.getElementById('duplicateStatistics');
+        const refreshStatsBtn = document.getElementById('refreshStats');
+        
+        if (!statisticsSection) return;
+
+        // Show loading state
+        statisticsSection.style.display = 'block';
+        this.updateDuplicateStatistics({
+            totalImages: 0,
+            processedImages: 0,
+            newImages: 0,
+            duplicates: 0
+        }, 'Loading duplicate statistics...');
+
+        try {
+            const response = await fetch(`/api/smugmug/album/${albumKey}/processing-status`);
+            const data = await response.json();
+
+            if (data.success) {
+                const status = data.data;
+                const stats = status.imageBreakdown || {};
+                
+                // Display comprehensive duplicate statistics
+                this.updateDuplicateStatistics(stats, null, status);
+                
+                // Update processing recommendation
+                this.updateProcessingRecommendation(status.processingRecommendation);
+                
+            } else {
+                this.updateDuplicateStatistics({
+                    totalImages: 0,
+                    processedImages: 0,
+                    newImages: 0,
+                    duplicates: 0
+                }, 'Unable to load duplicate statistics');
+            }
+        } catch (error) {
+            console.error('Error loading duplicate statistics:', error);
+            this.updateDuplicateStatistics({
+                totalImages: 0,
+                processedImages: 0,
+                newImages: 0,
+                duplicates: 0
+            }, 'Error loading duplicate statistics');
+        }
+    }
+
+    updateDuplicateStatistics(stats, errorMessage = null, fullStatus = null) {
+        const totalImagesCount = document.getElementById('totalImagesCount');
+        const processedImagesCount = document.getElementById('processedImagesCount');
+        const newImagesCount = document.getElementById('newImagesCount');
+        const duplicatesCount = document.getElementById('duplicatesCount');
+
+        if (errorMessage) {
+            // Show error state
+            [totalImagesCount, processedImagesCount, newImagesCount, duplicatesCount].forEach(el => {
+                if (el) el.textContent = '—';
+            });
+            
+            const recommendationText = document.getElementById('recommendationText');
+            if (recommendationText) {
+                recommendationText.textContent = errorMessage;
+            }
+            return;
+        }
+
+        // Update statistics display
+        if (totalImagesCount) totalImagesCount.textContent = stats.totalImages || 0;
+        if (processedImagesCount) processedImagesCount.textContent = stats.processedImages || 0;
+        if (newImagesCount) newImagesCount.textContent = stats.newImages || 0;
+        if (duplicatesCount) duplicatesCount.textContent = stats.duplicates || 0;
+
+        // Update duplicate handling settings based on statistics
+        if (fullStatus && fullStatus.duplicateStatistics) {
+            const duplicateHandlingSelect = document.getElementById('duplicateHandling');
+            const forceReprocessingCheckbox = document.getElementById('forceReprocessing');
+            
+            // Set recommended duplicate handling
+            if (duplicateHandlingSelect && fullStatus.processingRecommendation) {
+                const suggestion = fullStatus.processingRecommendation.duplicateHandlingSuggestion;
+                if (suggestion && ['skip', 'update', 'replace'].includes(suggestion)) {
+                    duplicateHandlingSelect.value = suggestion;
+                }
+            }
+            
+            // Set recommended processing mode
+            if (forceReprocessingCheckbox && fullStatus.processingRecommendation) {
+                const suggestedMode = fullStatus.processingRecommendation.suggestedMode;
+                forceReprocessingCheckbox.checked = suggestedMode === 'force_reprocessing';
+            }
+        }
+    }
+
+    updateProcessingRecommendation(recommendation) {
+        const recommendationText = document.getElementById('recommendationText');
+        const recommendationMode = document.getElementById('recommendationMode');
+        
+        if (!recommendation) return;
+
+        if (recommendationText) {
+            let message = recommendation.reason || 'No specific recommendation available';
+            
+            // Add estimated time if available
+            if (recommendation.estimatedTime && recommendation.estimatedTime > 0) {
+                message += ` (Est. ${recommendation.estimatedTime} min)`;
+            }
+            
+            recommendationText.textContent = message;
+            
+            // Style based on recommendation
+            if (recommendation.shouldProcess) {
+                recommendationText.className = 'recommendation-text should-process';
+            } else {
+                recommendationText.className = 'recommendation-text fully-processed';
+            }
+        }
+
+        if (recommendationMode) {
+            const mode = recommendation.suggestedMode || 'normal';
+            const modeDescription = mode === 'force_reprocessing' ? 
+                'Force reprocessing recommended' : 
+                'Normal processing recommended';
+            
+            recommendationMode.textContent = modeDescription;
+            recommendationMode.className = `recommendation-mode ${mode}`;
         }
     }
 

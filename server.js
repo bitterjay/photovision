@@ -656,7 +656,72 @@ async function handleAPIRoutes(req, res, parsedUrl) {
         // Get processed images for this album
         const albumProcessingStatus = await dataManager.getAlbumProcessingStatus(albumKey, imagesResult.images);
 
-        return sendSuccess(res, albumProcessingStatus, `Retrieved processing status for album ${albumKey}`);
+        // Get actual duplicate statistics by checking individual images
+        const processedImageKeys = new Set(albumProcessingStatus.processedImageKeys);
+        const duplicateAnalysis = imagesResult.images.map(img => ({
+          imageKey: img.ImageKey,
+          filename: img.FileName || 'unknown',
+          isProcessed: processedImageKeys.has(img.ImageKey),
+          duplicateStatus: processedImageKeys.has(img.ImageKey) ? 'duplicate' : 'new'
+        }));
+
+        // Calculate accurate duplicate statistics
+        const duplicateStats = duplicateAnalysis.reduce((stats, img) => {
+          if (img.isProcessed) {
+            stats.duplicatesFound++;
+          } else {
+            stats.newImagesAvailable++;
+          }
+          return stats;
+        }, {
+          duplicatesFound: 0,
+          newImagesAvailable: 0,
+          skippedDuplicates: 0,
+          updatedDuplicates: 0,
+          replacedDuplicates: 0
+        });
+
+        // Enhanced response with detailed duplicate detection statistics
+        const enhancedStatus = {
+          ...albumProcessingStatus,
+          duplicateHandlingOptions: ['skip', 'update', 'replace'],
+          duplicateStatistics: {
+            ...duplicateStats,
+            totalDuplicatesDetected: duplicateStats.duplicatesFound,
+            duplicatePercentage: albumProcessingStatus.totalImages > 0 ? 
+              Math.round((duplicateStats.duplicatesFound / albumProcessingStatus.totalImages) * 100) : 0,
+            processingEfficiency: albumProcessingStatus.totalImages > 0 ? 
+              Math.round((duplicateStats.newImagesAvailable / albumProcessingStatus.totalImages) * 100) : 100
+          },
+          processingModes: {
+            available: ['normal', 'force_reprocessing'],
+            recommended: albumProcessingStatus.isCompletelyProcessed ? 'force_reprocessing' : 'normal',
+            descriptions: {
+              normal: 'Skip already processed images (recommended for regular processing)',
+              force_reprocessing: 'Reprocess all images regardless of duplicates (use for updating analysis)'
+            }
+          },
+          duplicateDetectionEnabled: true,
+          processingRecommendation: {
+            shouldProcess: !albumProcessingStatus.isCompletelyProcessed || duplicateStats.newImagesAvailable > 0,
+            reason: albumProcessingStatus.isCompletelyProcessed ? 
+              'All images have been processed - use force reprocessing to update analysis' : 
+              `${duplicateStats.newImagesAvailable} new images available for processing`,
+            suggestedMode: albumProcessingStatus.isCompletelyProcessed ? 'force_reprocessing' : 'normal',
+            estimatedTime: Math.ceil(duplicateStats.newImagesAvailable * 0.5), // Estimated minutes (30 seconds per image)
+            duplicateHandlingSuggestion: duplicateStats.duplicatesFound > 0 ? 'skip' : 'update'
+          },
+          // Detailed breakdown for UI display
+          imageBreakdown: {
+            totalImages: albumProcessingStatus.totalImages,
+            processedImages: albumProcessingStatus.processedImages,
+            newImages: duplicateStats.newImagesAvailable,
+            duplicates: duplicateStats.duplicatesFound,
+            processingProgress: albumProcessingStatus.processingProgress
+          }
+        };
+
+        return sendSuccess(res, enhancedStatus, `Retrieved enhanced processing status for album ${albumKey}`);
 
       } catch (error) {
         return sendError(res, 500, 'Album processing status request failed', error);
@@ -672,13 +737,28 @@ async function handleAPIRoutes(req, res, parsedUrl) {
       try {
         const requestData = await parseJSON(req);
         
+        // Extract duplicate handling parameters
+        const {
+          albumKey,
+          duplicateHandling = 'skip',
+          forceReprocessing = false,
+          maxImages = 50,
+          batchName
+        } = requestData;
+        
         // Debug logging
         log(`Batch start request body: ${JSON.stringify(requestData)}`, 'DEBUG');
-        log(`Request headers: ${JSON.stringify(req.headers)}`, 'DEBUG');
+        log(`Duplicate handling: ${duplicateHandling}, Force reprocessing: ${forceReprocessing}`, 'DEBUG');
         
-        if (!requestData.albumKey) {
+        if (!albumKey) {
           log(`Missing albumKey in request: ${JSON.stringify(requestData)}`, 'ERROR');
           return sendError(res, 400, 'Album key is required');
+        }
+
+        // Validate duplicate handling parameter
+        const validHandlingOptions = ['skip', 'update', 'replace'];
+        if (!validHandlingOptions.includes(duplicateHandling)) {
+          return sendError(res, 400, `Invalid duplicateHandling option. Must be one of: ${validHandlingOptions.join(', ')}`);
         }
 
         // Check SmugMug connection
@@ -690,11 +770,11 @@ async function handleAPIRoutes(req, res, parsedUrl) {
         }
 
         // Get album details first to include hierarchy information
-        log(`Fetching album details for album key: ${requestData.albumKey}`, 'DEBUG');
+        log(`Fetching album details for album key: ${albumKey}`, 'DEBUG');
         const albumDetailsResult = await smugmugClient.getAlbumDetails(
           smugmugConfig.accessToken,
           smugmugConfig.accessTokenSecret,
-          requestData.albumKey
+          albumKey
         );
 
         if (!albumDetailsResult.success) {
@@ -706,19 +786,19 @@ async function handleAPIRoutes(req, res, parsedUrl) {
         
         // Validate that we have the required album information
         if (!albumDetails || !albumDetails.Name) {
-          log(`Album details missing or incomplete for album ${requestData.albumKey}`, 'ERROR');
+          log(`Album details missing or incomplete for album ${albumKey}`, 'ERROR');
           return sendError(res, 500, 'Album details incomplete - missing album name');
         }
 
         // Validate hierarchy information
         if (!albumDetails.PathHierarchy || !Array.isArray(albumDetails.PathHierarchy) || albumDetails.PathHierarchy.length === 0) {
-          log(`Album hierarchy information missing for album ${requestData.albumKey}. Album details:`, 'WARN');
+          log(`Album hierarchy information missing for album ${albumKey}. Album details:`, 'WARN');
           log(JSON.stringify(albumDetails, null, 2), 'DEBUG');
           return sendError(res, 500, 'Album hierarchy information missing - cannot process without path information');
         }
 
         if (!albumDetails.FullDisplayPath) {
-          log(`Album display path missing for album ${requestData.albumKey}`, 'WARN');
+          log(`Album display path missing for album ${albumKey}`, 'WARN');
           return sendError(res, 500, 'Album display path missing - cannot process without path information');
         }
 
@@ -727,8 +807,8 @@ async function handleAPIRoutes(req, res, parsedUrl) {
         log(`  - Path: ${albumDetails.FullDisplayPath}`, 'DEBUG');
         log(`  - Hierarchy: [${albumDetails.PathHierarchy.join(', ')}]`, 'DEBUG');
 
-        // Get album images
-        const albumUri = `/api/v2/album/${requestData.albumKey}`;
+        // Get album images from SmugMug
+        const albumUri = `/api/v2/album/${albumKey}`;
         const imagesResult = await smugmugClient.getAlbumImages(
           smugmugConfig.accessToken,
           smugmugConfig.accessTokenSecret,
@@ -743,13 +823,60 @@ async function handleAPIRoutes(req, res, parsedUrl) {
           return sendError(res, 400, 'No images found in album');
         }
 
-        // Create jobs for each image with album information
-        const jobs = imagesResult.images
+        // Get processing status to identify duplicates
+        log(`Getting album processing status for duplicate detection`, 'DEBUG');
+        const processingStatus = await dataManager.getAlbumProcessingStatus(albumKey, imagesResult.images);
+        
+        log(`Processing status: ${processingStatus.processedImages}/${processingStatus.totalImages} images processed`, 'DEBUG');
+
+        // Filter images based on duplicate detection and force reprocessing
+        let imagesToProcess = imagesResult.images;
+        let skippedImages = [];
+
+        if (!forceReprocessing) {
+          // Filter out already processed images
+          imagesToProcess = imagesResult.images.filter(img => 
+            !processingStatus.processedImageKeys.includes(img.ImageKey)
+          );
+          
+          // Track skipped images
+          skippedImages = imagesResult.images.filter(img => 
+            processingStatus.processedImageKeys.includes(img.ImageKey)
+          );
+          
+          log(`Filtered ${imagesToProcess.length} unprocessed images, skipped ${skippedImages.length} duplicates`, 'DEBUG');
+        } else {
+          log('Force reprocessing enabled - processing all images regardless of duplicates', 'DEBUG');
+        }
+
+        // Create comprehensive statistics
+        const statistics = {
+          totalImages: imagesResult.images.length,
+          processedImages: processingStatus.processedImages,
+          newImages: imagesToProcess.length,
+          skippedImages: skippedImages.length,
+          duplicateHandling: duplicateHandling,
+          forceReprocessing: forceReprocessing,
+          processingProgress: processingStatus.processingProgress,
+          albumName: albumDetails.Name,
+          albumPath: albumDetails.FullDisplayPath
+        };
+
+        log(`Batch statistics:`, 'INFO');
+        log(`  Total images: ${statistics.totalImages}`, 'INFO');
+        log(`  Already processed: ${statistics.processedImages}`, 'INFO');
+        log(`  New to process: ${statistics.newImages}`, 'INFO');
+        log(`  Skipped duplicates: ${statistics.skippedImages}`, 'INFO');
+        log(`  Duplicate handling: ${statistics.duplicateHandling}`, 'INFO');
+        log(`  Force reprocessing: ${statistics.forceReprocessing}`, 'INFO');
+
+        // Create jobs for filtered images with album information and duplicate handling context
+        const jobs = imagesToProcess
           .filter(img => img.ArchivedUri || (img.Uris && img.Uris.LargestImage))
-          .slice(0, requestData.maxImages || 50) // Limit batch size
+          .slice(0, maxImages) // Limit batch size
           .map((image, index) => {
             const job = {
-              id: `img_${requestData.albumKey}_${image.ImageKey}`,
+              id: `img_${albumKey}_${image.ImageKey}`,
               type: 'image_analysis',
               data: {
                 imageUrl: image.ArchivedUri, // Use ArchivedUri for full-resolution image
@@ -758,11 +885,14 @@ async function handleAPIRoutes(req, res, parsedUrl) {
                 title: image.Title || '',
                 caption: image.Caption || ''
               },
-              albumKey: requestData.albumKey,
+              albumKey: albumKey,
               albumName: albumDetails.Name,
               albumPath: albumDetails.FullDisplayPath,
               albumHierarchy: albumDetails.PathHierarchy,
-              imageName: image.FileName || `image_${index + 1}`
+              imageName: image.FileName || `image_${index + 1}`,
+              // Add duplicate handling context
+              duplicateHandling: duplicateHandling,
+              forceReprocessing: forceReprocessing
             };
             
             // Validate that album information is present in each job
@@ -777,11 +907,21 @@ async function handleAPIRoutes(req, res, parsedUrl) {
           });
 
         if (jobs.length === 0) {
+          // Check if all images were already processed
+          if (imagesToProcess.length === 0 && !forceReprocessing) {
+            return sendSuccess(res, {
+              message: 'All images in this album have already been processed',
+              statistics: statistics,
+              batchId: null,
+              jobCount: 0
+            }, 'No new images to process');
+          }
+          
           return sendError(res, 400, 'No processable images found in album');
         }
 
         // Add jobs to queue
-        const batchInfo = jobQueue.addBatch(jobs, requestData.batchName || `Album ${requestData.albumKey}`);
+        const batchInfo = jobQueue.addBatch(jobs, batchName || `Album ${albumKey}`, statistics);
 
         // Define progress callback for real-time updates
         const onProgress = (progress) => {
@@ -798,10 +938,10 @@ async function handleAPIRoutes(req, res, parsedUrl) {
           log(`Batch processing error: ${error.message}`, 'ERROR');
         };
 
-        // Create image analysis processor
+        // Create image analysis processor with duplicate handling
         const processors = {
           image_analysis: async (imageData, job) => {
-            log(`Processing image: ${imageData.filename}`);
+            log(`Processing image: ${imageData.filename} (duplicate handling: ${job.duplicateHandling})`);
             
             // Validate that job has complete album information before processing
             if (!job.albumKey || !job.albumName || !job.albumPath || !job.albumHierarchy) {
@@ -844,7 +984,7 @@ async function handleAPIRoutes(req, res, parsedUrl) {
               throw new Error(analysisResult.error);
             }
 
-            // Store the result with album information
+            // Store the result with album information and duplicate handling
             const imageRecord = {
               id: generateUniqueId(),
               filename: imageData.filename,
@@ -876,16 +1016,21 @@ async function handleAPIRoutes(req, res, parsedUrl) {
               throw new Error(errorMsg);
             }
             
-            log(`Saving image record with complete album information for: ${imageData.filename}`, 'DEBUG');
+            log(`Saving image record with duplicate handling: ${job.duplicateHandling}`, 'DEBUG');
 
-            // Save to data storage
-            await dataManager.addImage(imageRecord);
+            // Save to data storage with duplicate handling options
+            const saveResult = await dataManager.addImage(imageRecord, {
+              duplicateHandling: job.duplicateHandling
+            });
             
             return {
               imageKey: imageData.imageKey,
               description: analysisResult.description,
               keywords: analysisResult.keywords,
-              saved: true
+              saved: true,
+              duplicateAction: saveResult.wasSkipped ? 'skipped' : 
+                             saveResult.wasUpdated ? 'updated' : 
+                             saveResult.wasReplaced ? 'replaced' : 'added'
             };
           }
         };
@@ -899,8 +1044,9 @@ async function handleAPIRoutes(req, res, parsedUrl) {
         return sendSuccess(res, {
           batchId: batchInfo.batchId,
           jobCount: batchInfo.jobCount,
-          albumKey: requestData.albumKey,
-          message: `Started processing ${batchInfo.jobCount} images`
+          albumKey: albumKey,
+          statistics: statistics,
+          message: `Started processing ${batchInfo.jobCount} images${statistics.skippedImages > 0 ? ` (${statistics.skippedImages} duplicates skipped)` : ''}`
         }, 'Batch processing started');
 
       } catch (error) {
@@ -937,7 +1083,10 @@ async function handleAPIRoutes(req, res, parsedUrl) {
           
           // Additional properties for frontend
           startTime: rawStatus.startTime,
-          estimatedCompletion: rawStatus.estimatedCompletion
+          estimatedCompletion: rawStatus.estimatedCompletion,
+          
+          // Include duplicate detection statistics
+          duplicateStatistics: rawStatus.duplicateStatistics || null
         };
         
         return sendSuccess(res, transformedStatus, 'Batch status retrieved');
@@ -963,10 +1112,10 @@ async function handleAPIRoutes(req, res, parsedUrl) {
       log('Batch resume request');
       
       try {
-        // Create processors again for resume
+        // Create processors again for resume with duplicate handling
         const processors = {
           image_analysis: async (imageData, job) => {
-            log(`Processing image: ${imageData.filename}`);
+            log(`Resuming processing for image: ${imageData.filename} (duplicate handling: ${job.duplicateHandling || 'skip'})`);
             
             // Validate that job has complete album information before processing
             if (!job.albumKey || !job.albumName || !job.albumPath || !job.albumHierarchy) {
@@ -1033,13 +1182,19 @@ async function handleAPIRoutes(req, res, parsedUrl) {
               throw new Error(errorMsg);
             }
 
-            await dataManager.addImage(imageRecord);
+            // Save with duplicate handling (default to 'skip' if not specified)
+            const saveResult = await dataManager.addImage(imageRecord, {
+              duplicateHandling: job.duplicateHandling || 'skip'
+            });
             
             return {
               imageKey: imageData.imageKey,
               description: analysisResult.description,
               keywords: analysisResult.keywords,
-              saved: true
+              saved: true,
+              duplicateAction: saveResult.wasSkipped ? 'skipped' : 
+                             saveResult.wasUpdated ? 'updated' : 
+                             saveResult.wasReplaced ? 'replaced' : 'added'
             };
           }
         };

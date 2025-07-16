@@ -128,6 +128,21 @@
                         
                         <label for="batchName">Batch Name:</label>
                         <input type="text" id="batchName" placeholder="Optional batch name">
+                        
+                        <div class="duplicate-settings">
+                            <label for="duplicateHandling">Duplicate Handling:</label>
+                            <select id="duplicateHandling">
+                                <option value="skip">Skip duplicates (recommended)</option>
+                                <option value="update">Update existing records</option>
+                                <option value="replace">Replace existing records</option>
+                            </select>
+                            
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="forceReprocessing">
+                                <span class="checkmark"></span>
+                                Force reprocess all images
+                            </label>
+                        </div>
                     </div>
                     
                     <div class="control-buttons">
@@ -136,6 +151,37 @@
                         <button id="resumeBatch" class="resume-btn" disabled>▶️ Resume</button>
                         <button id="cancelBatch" class="cancel-btn" disabled>❌ Cancel</button>
                         <button id="retryFailed" class="retry-btn" disabled>🔄 Retry Failed</button>
+                    </div>
+                </div>
+                
+                <div class="duplicate-statistics" id="duplicateStatistics" style="display: none;">
+                    <div class="statistics-header">
+                        <h4>📊 Duplicate Detection Statistics</h4>
+                        <button id="refreshStats" class="refresh-btn">🔄</button>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value" id="totalImagesCount">0</div>
+                            <div class="stat-label">Total Images</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="processedImagesCount">0</div>
+                            <div class="stat-label">Already Processed</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="newImagesCount">0</div>
+                            <div class="stat-label">New Images</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="duplicatesCount">0</div>
+                            <div class="stat-label">Duplicates Found</div>
+                        </div>
+                    </div>
+                    
+                    <div class="processing-recommendation" id="processingRecommendation">
+                        <div class="recommendation-text" id="recommendationText"></div>
+                        <div class="recommendation-mode" id="recommendationMode"></div>
                     </div>
                 </div>
                 
