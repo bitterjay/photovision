@@ -34,6 +34,105 @@ class PhotoVision {
         console.log('PhotoVision initialized');
     }
 
+    initializeThemeSystem() {
+        // Initialize theme system
+        const themeToggle = document.getElementById('themeToggle');
+        const themeButtons = themeToggle?.querySelectorAll('.theme-btn');
+        
+        if (!themeButtons) return;
+
+        // Load saved theme or default to auto
+        const savedTheme = localStorage.getItem('photovision-theme') || 'auto';
+        this.setTheme(savedTheme);
+
+        // Add click handlers for theme buttons
+        themeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const theme = btn.dataset.theme;
+                this.setTheme(theme);
+                localStorage.setItem('photovision-theme', theme);
+            });
+        });
+
+        // Listen for system theme changes when in auto mode
+        if (window.matchMedia) {
+            const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            mediaQuery.addEventListener('change', () => {
+                if (this.currentTheme === 'auto') {
+                    this.applyTheme('auto');
+                }
+            });
+        }
+    }
+
+    setTheme(theme) {
+        this.currentTheme = theme;
+        
+        // Update button states
+        const themeButtons = document.querySelectorAll('.theme-btn');
+        themeButtons.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.theme === theme);
+        });
+
+        // Apply theme
+        this.applyTheme(theme);
+    }
+
+    applyTheme(theme) {
+        const root = document.documentElement;
+        
+        if (theme === 'auto') {
+            // Use system preference
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            root.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+        } else {
+            root.setAttribute('data-theme', theme);
+        }
+    }
+
+    initializeTabSystem() {
+        // Initialize tab system
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabPanels = document.querySelectorAll('.tab-panel');
+        
+        if (!tabButtons.length || !tabPanels.length) return;
+
+        // Load saved active tab or default to chat
+        const savedTab = localStorage.getItem('photovision-active-tab') || 'chat';
+        this.setActiveTab(savedTab);
+
+        // Add click handlers for tab buttons
+        tabButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+                this.setActiveTab(tabId);
+                localStorage.setItem('photovision-active-tab', tabId);
+            });
+        });
+    }
+
+    setActiveTab(tabId) {
+        // Update button states
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        tabButtons.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.tab === tabId);
+        });
+
+        // Update panel visibility
+        const tabPanels = document.querySelectorAll('.tab-panel');
+        tabPanels.forEach(panel => {
+            const panelId = panel.id.replace('Tab', '');
+            panel.classList.toggle('active', panelId === tabId);
+        });
+
+        // Load content for specific tabs when they become active
+        if (tabId === 'batch') {
+            this.loadAlbums();
+        } else if (tabId === 'dashboard') {
+            this.checkAllConnections();
+        }
+    }
+
     setupEventListeners() {
         // Send button click
         this.sendButton.addEventListener('click', () => {
