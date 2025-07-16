@@ -242,6 +242,91 @@
                 </div>
                 
                 <div class="admin-controls" id="adminControls" style="display: none;">
+                    <div class="duplicate-management">
+                        <div class="duplicate-management-header">
+                            <h4>🔍 Duplicate Detection & Cleanup</h4>
+                            <p class="info-text">Manage duplicate image records in the database</p>
+                        </div>
+                        
+                        <div class="duplicate-controls">
+                            <div class="control-group">
+                                <button id="analyzeDuplicates" class="analyze-btn">🔍 Analyze Duplicates</button>
+                                <button id="refreshDuplicateInfo" class="refresh-btn">🔄 Refresh</button>
+                            </div>
+                            
+                            <div class="duplicate-analysis" id="duplicateAnalysis" style="display: none;">
+                                <div class="analysis-header">
+                                    <h5>Analysis Results</h5>
+                                    <span class="analysis-timestamp" id="analysisTimestamp"></span>
+                                </div>
+                                
+                                <div class="analysis-stats">
+                                    <div class="stat-item">
+                                        <div class="stat-value" id="totalImagesAnalyzed">0</div>
+                                        <div class="stat-label">Total Images</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value" id="duplicateGroupsFound">0</div>
+                                        <div class="stat-label">Duplicate Groups</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value" id="recordsToRemove">0</div>
+                                        <div class="stat-label">Records to Remove</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value" id="cleanDataSize">0</div>
+                                        <div class="stat-label">Final Clean Size</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="recommendations" id="recommendations">
+                                    <h6>Recommendations</h6>
+                                    <ul class="recommendation-list" id="recommendationList"></ul>
+                                </div>
+                                
+                                <div class="cleanup-actions">
+                                    <div class="action-group">
+                                        <button id="dryRunCleanup" class="dry-run-btn">🧪 Dry Run</button>
+                                        <button id="executeCleanup" class="cleanup-btn" disabled>🧹 Execute Cleanup</button>
+                                    </div>
+                                    
+                                    <div class="cleanup-options">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="confirmCleanup">
+                                            <span class="checkmark"></span>
+                                            I understand this will permanently remove duplicate records
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="cleanup-results" id="cleanupResults" style="display: none;">
+                                <div class="results-header">
+                                    <h5>Cleanup Results</h5>
+                                    <button id="clearCleanupResults" class="clear-btn">Clear</button>
+                                </div>
+                                
+                                <div class="results-content" id="cleanupResultsContent"></div>
+                                
+                                <div class="backup-info" id="cleanupBackupInfo" style="display: none;">
+                                    <p><strong>Backup created:</strong> <span id="cleanupBackupPath"></span></p>
+                                    <button id="rollbackCleanup" class="rollback-btn">🔄 Rollback</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="backup-management">
+                            <div class="backup-header">
+                                <h5>📁 Backup Management</h5>
+                                <button id="refreshBackups" class="refresh-btn">🔄</button>
+                            </div>
+                            
+                            <div class="backup-list" id="backupList">
+                                <div class="loading-backups">Loading backups...</div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="danger-zone">
                         <div class="danger-zone-header">
                             <h4>🗑️ Data Destruction (Testing Only)</h4>

@@ -1,0 +1,54 @@
+{
+  "timestamp": "2025-07-16T14:17:07.088Z",
+  "success": true,
+  "originalImageCount": 27,
+  "duplicateGroups": 3,
+  "duplicatesRemoved": 3,
+  "finalImageCount": 24,
+  "backupPath": "/Users/shelbyklein/Sites/image-search/data/images_backup_1752675427086.json",
+  "validationPassed": true,
+  "recommendations": [
+    {
+      "type": "warning",
+      "message": "Found 3 duplicate groups - cleanup recommended"
+    }
+  ],
+  "cleanupDetails": [
+    {
+      "action": "removed",
+      "smugmugImageKey": "wLKKf67",
+      "filename": "DSC05704.jpg",
+      "reason": "Duplicate record with lower quality/completeness"
+    },
+    {
+      "action": "removed",
+      "smugmugImageKey": "f2HrtCF",
+      "filename": "DSC05709.jpg",
+      "reason": "Duplicate record with lower quality/completeness"
+    },
+    {
+      "action": "removed",
+      "smugmugImageKey": "8qmjd9T",
+      "filename": "DSC05712.jpg",
+      "reason": "Duplicate record with lower quality/completeness"
+    },
+    {
+      "action": "kept",
+      "smugmugImageKey": "wLKKf67",
+      "filename": "DSC05704.jpg",
+      "reason": "Best quality record in duplicate group"
+    },
+    {
+      "action": "kept",
+      "smugmugImageKey": "f2HrtCF",
+      "filename": "DSC05709.jpg",
+      "reason": "Best quality record in duplicate group"
+    },
+    {
+      "action": "kept",
+      "smugmugImageKey": "8qmjd9T",
+      "filename": "DSC05712.jpg",
+      "reason": "Best quality record in duplicate group"
+    }
+  ]
+}

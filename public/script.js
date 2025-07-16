@@ -1669,6 +1669,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const backupInfo = document.getElementById('backupInfo');
     const backupFilename = document.getElementById('backupFilename');
 
+    // Duplicate detection elements
+    const analyzeDuplicatesBtn = document.getElementById('analyzeDuplicates');
+    const refreshDuplicateInfoBtn = document.getElementById('refreshDuplicateInfo');
+    const dryRunCleanupBtn = document.getElementById('dryRunCleanup');
+    const executeCleanupBtn = document.getElementById('executeCleanup');
+    const rollbackCleanupBtn = document.getElementById('rollbackCleanup');
+    const refreshBackupsBtn = document.getElementById('refreshBackups');
+    const confirmCleanupCheckbox = document.getElementById('confirmCleanup');
+    const duplicateAnalysisSection = document.getElementById('duplicateAnalysis');
+    const cleanupResultsSection = document.getElementById('cleanupResults');
+
     // Toggle admin controls visibility
     if (toggleAdminTools && adminControls) {
         toggleAdminTools.addEventListener('click', function() {
@@ -1779,4 +1790,395 @@ document.addEventListener('DOMContentLoaded', function() {
         
         observer.observe(destructionStatus, { attributes: true });
     }
+
+    // ===== DUPLICATE DETECTION EVENT LISTENERS =====
+    
+    // Analyze duplicates button
+    if (analyzeDuplicatesBtn) {
+        analyzeDuplicatesBtn.addEventListener('click', async function() {
+            await analyzeDuplicates();
+        });
+    }
+
+    // Refresh duplicate info button
+    if (refreshDuplicateInfoBtn) {
+        refreshDuplicateInfoBtn.addEventListener('click', async function() {
+            await refreshDuplicateInfo();
+        });
+    }
+
+    // Dry run cleanup button
+    if (dryRunCleanupBtn) {
+        dryRunCleanupBtn.addEventListener('click', async function() {
+            await performDryRunCleanup();
+        });
+    }
+
+    // Execute cleanup button
+    if (executeCleanupBtn) {
+        executeCleanupBtn.addEventListener('click', async function() {
+            await executeCleanup();
+        });
+    }
+
+    // Rollback cleanup button
+    if (rollbackCleanupBtn) {
+        rollbackCleanupBtn.addEventListener('click', async function() {
+            await rollbackCleanup();
+        });
+    }
+
+    // Refresh backups button
+    if (refreshBackupsBtn) {
+        refreshBackupsBtn.addEventListener('click', async function() {
+            await refreshBackups();
+        });
+    }
+
+    // Clear cleanup results button
+    const clearCleanupResultsBtn = document.getElementById('clearCleanupResults');
+    if (clearCleanupResultsBtn) {
+        clearCleanupResultsBtn.addEventListener('click', function() {
+            clearCleanupResults();
+        });
+    }
+
+    // Confirm cleanup checkbox - enables/disables execute button
+    if (confirmCleanupCheckbox) {
+        confirmCleanupCheckbox.addEventListener('change', function() {
+            if (executeCleanupBtn) {
+                executeCleanupBtn.disabled = !this.checked;
+            }
+        });
+    }
+
+    // ===== DUPLICATE DETECTION FUNCTIONS =====
+
+    async function analyzeDuplicates() {
+        // Disable button and show loading
+        analyzeDuplicatesBtn.disabled = true;
+        analyzeDuplicatesBtn.textContent = '🔍 Analyzing...';
+        
+        // Hide previous results
+        duplicateAnalysisSection.style.display = 'none';
+        cleanupResultsSection.style.display = 'none';
+
+        try {
+            const response = await fetch('/api/admin/duplicates/detect', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                displayAnalysisResults(result.data);
+                duplicateAnalysisSection.style.display = 'block';
+            } else {
+                alert(`Analysis failed: ${result.error || 'Unknown error'}`);
+            }
+        } catch (error) {
+            console.error('Error analyzing duplicates:', error);
+            alert('Network error occurred while analyzing duplicates.');
+        } finally {
+            // Re-enable button
+            analyzeDuplicatesBtn.disabled = false;
+            analyzeDuplicatesBtn.textContent = '🔍 Analyze Duplicates';
+        }
+    }
+
+    async function refreshDuplicateInfo() {
+        try {
+            const response = await fetch('/api/admin/duplicates/utility');
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                // Update any utility information displays
+                console.log('Duplicate utility info refreshed:', result.data);
+            } else {
+                console.error('Failed to refresh duplicate info:', result.error);
+            }
+        } catch (error) {
+            console.error('Error refreshing duplicate info:', error);
+        }
+    }
+
+    async function performDryRunCleanup() {
+        // Disable button and show loading
+        dryRunCleanupBtn.disabled = true;
+        dryRunCleanupBtn.textContent = '🧪 Running Dry Run...';
+
+        try {
+            const response = await fetch('/api/admin/duplicates/cleanup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    dryRun: true 
+                })
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                displayCleanupResults(result.data, true);
+                cleanupResultsSection.style.display = 'block';
+            } else {
+                alert(`Dry run failed: ${result.error || 'Unknown error'}`);
+            }
+        } catch (error) {
+            console.error('Error performing dry run:', error);
+            alert('Network error occurred during dry run.');
+        } finally {
+            // Re-enable button
+            dryRunCleanupBtn.disabled = false;
+            dryRunCleanupBtn.textContent = '🧪 Dry Run';
+        }
+    }
+
+    async function executeCleanup() {
+        // Double confirmation for safety
+        const confirmExecution = confirm('⚠️ WARNING: This will permanently remove duplicate records!\\n\\nThis action cannot be undone without a rollback. Are you sure you want to continue?');
+        
+        if (!confirmExecution) return;
+
+        // Disable button and show loading
+        executeCleanupBtn.disabled = true;
+        executeCleanupBtn.textContent = '🧹 Executing Cleanup...';
+
+        try {
+            const response = await fetch('/api/admin/duplicates/cleanup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    dryRun: false 
+                })
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                displayCleanupResults(result.data, false);
+                cleanupResultsSection.style.display = 'block';
+                
+                // Show backup info if available
+                if (result.data.backupFile) {
+                    showBackupInfo(result.data.backupFile);
+                }
+                
+                // Refresh backups list
+                await refreshBackups();
+                
+                // Update record count
+                loadRecordCount();
+            } else {
+                alert(`Cleanup execution failed: ${result.error || 'Unknown error'}`);
+            }
+        } catch (error) {
+            console.error('Error executing cleanup:', error);
+            alert('Network error occurred during cleanup execution.');
+        } finally {
+            // Re-enable button
+            executeCleanupBtn.disabled = false;
+            executeCleanupBtn.textContent = '🧹 Execute Cleanup';
+            
+            // Reset confirmation checkbox
+            if (confirmCleanupCheckbox) {
+                confirmCleanupCheckbox.checked = false;
+            }
+        }
+    }
+
+    async function rollbackCleanup() {
+        // Get the backup file path (you might want to implement a backup selection UI)
+        const backupPath = prompt('Enter the backup file path to rollback to:');
+        
+        if (!backupPath) return;
+
+        // Disable button and show loading
+        rollbackCleanupBtn.disabled = true;
+        rollbackCleanupBtn.textContent = '🔄 Rolling Back...';
+
+        try {
+            const response = await fetch('/api/admin/duplicates/rollback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    backupPath: backupPath 
+                })
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                displayRollbackResults(result.data);
+                alert('Rollback completed successfully!');
+                
+                // Refresh displays
+                await refreshDuplicateInfo();
+                loadRecordCount();
+            } else {
+                alert(`Rollback failed: ${result.error || 'Unknown error'}`);
+            }
+        } catch (error) {
+            console.error('Error performing rollback:', error);
+            alert('Network error occurred during rollback.');
+        } finally {
+            // Re-enable button
+            rollbackCleanupBtn.disabled = false;
+            rollbackCleanupBtn.textContent = '🔄 Rollback';
+        }
+    }
+
+    async function refreshBackups() {
+        const backupList = document.getElementById('backupList');
+        if (!backupList) return;
+
+        backupList.innerHTML = '<div class="loading-backups">Loading backups...</div>';
+
+        try {
+            const response = await fetch('/api/admin/duplicates/backups');
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                displayBackupsList(result.data.backups);
+            } else {
+                backupList.innerHTML = '<div class="error-message">Failed to load backups</div>';
+            }
+        } catch (error) {
+            console.error('Error refreshing backups:', error);
+            backupList.innerHTML = '<div class="error-message">Error loading backups</div>';
+        }
+    }
+
+    // ===== DISPLAY FUNCTIONS =====
+
+    function displayAnalysisResults(data) {
+        // Update analysis timestamp
+        const analysisTimestamp = document.getElementById('analysisTimestamp');
+        if (analysisTimestamp) {
+            analysisTimestamp.textContent = new Date().toLocaleString();
+        }
+
+        // Update statistics
+        const totalImagesAnalyzed = document.getElementById('totalImagesAnalyzed');
+        const duplicateGroupsFound = document.getElementById('duplicateGroupsFound');
+        const recordsToRemove = document.getElementById('recordsToRemove');
+        const cleanDataSize = document.getElementById('cleanDataSize');
+
+        if (totalImagesAnalyzed) totalImagesAnalyzed.textContent = data.totalImages || 0;
+        if (duplicateGroupsFound) duplicateGroupsFound.textContent = data.duplicateGroups || 0;
+        if (recordsToRemove) recordsToRemove.textContent = data.recordsToRemove || 0;
+        if (cleanDataSize) cleanDataSize.textContent = data.finalCleanSize || 0;
+
+        // Update recommendations
+        const recommendationList = document.getElementById('recommendationList');
+        if (recommendationList && data.recommendations) {
+            recommendationList.innerHTML = data.recommendations.map(rec => `<li>${rec}</li>`).join('');
+        }
+
+        // Enable dry run button
+        if (dryRunCleanupBtn) {
+            dryRunCleanupBtn.disabled = false;
+        }
+    }
+
+    function displayCleanupResults(data, isDryRun) {
+        const cleanupResultsContent = document.getElementById('cleanupResultsContent');
+        if (!cleanupResultsContent) return;
+
+        const resultType = isDryRun ? 'Dry Run' : 'Cleanup Execution';
+        
+        cleanupResultsContent.innerHTML = `
+            <div class="${isDryRun ? 'dry-run' : 'cleanup'}-summary">
+                <h6>${resultType} Results</h6>
+                <p><strong>Total Images Processed:</strong> ${data.totalProcessed || 0}</p>
+                <p><strong>Records ${isDryRun ? 'Would Be' : ''} Removed:</strong> ${data.recordsRemoved || 0}</p>
+                <p><strong>Final Clean Size:</strong> ${data.finalCleanSize || 0}</p>
+                ${data.processingTime ? `<p><strong>Processing Time:</strong> ${data.processingTime}ms</p>` : ''}
+                ${data.backupFile && !isDryRun ? `<p><strong>Backup Created:</strong> ${data.backupFile}</p>` : ''}
+            </div>
+        `;
+
+        // Enable execute button after successful dry run
+        if (isDryRun && executeCleanupBtn) {
+            executeCleanupBtn.disabled = false;
+        }
+    }
+
+    function displayRollbackResults(data) {
+        const cleanupResultsContent = document.getElementById('cleanupResultsContent');
+        if (!cleanupResultsContent) return;
+
+        cleanupResultsContent.innerHTML = `
+            <div class="rollback-summary">
+                <h6>Rollback Results</h6>
+                <p><strong>Records Restored:</strong> ${data.recordsRestored || 0}</p>
+                <p><strong>Backup File Used:</strong> ${data.backupFile || 'Unknown'}</p>
+                ${data.processingTime ? `<p><strong>Processing Time:</strong> ${data.processingTime}ms</p>` : ''}
+            </div>
+        `;
+    }
+
+    function displayBackupsList(backups) {
+        const backupList = document.getElementById('backupList');
+        if (!backupList) return;
+
+        if (!backups || backups.length === 0) {
+            backupList.innerHTML = '<div class="no-backups">No backups found</div>';
+            return;
+        }
+
+        backupList.innerHTML = backups.map(backup => `
+            <div class="backup-item">
+                <div class="backup-info">
+                    <div class="backup-filename">${backup.filename}</div>
+                    <div class="backup-timestamp">${new Date(backup.timestamp).toLocaleString()}</div>
+                </div>
+                <button class="backup-action-btn" onclick="selectBackupForRollback('${backup.path}')">
+                    Select for Rollback
+                </button>
+            </div>
+        `).join('');
+    }
+
+    function showBackupInfo(backupFile) {
+        const cleanupBackupInfo = document.getElementById('cleanupBackupInfo');
+        const cleanupBackupPath = document.getElementById('cleanupBackupPath');
+        
+        if (cleanupBackupInfo && cleanupBackupPath) {
+            cleanupBackupPath.textContent = backupFile;
+            cleanupBackupInfo.style.display = 'block';
+        }
+    }
+
+    function clearCleanupResults() {
+        if (cleanupResultsSection) {
+            cleanupResultsSection.style.display = 'none';
+        }
+        
+        const cleanupBackupInfo = document.getElementById('cleanupBackupInfo');
+        if (cleanupBackupInfo) {
+            cleanupBackupInfo.style.display = 'none';
+        }
+    }
+
+    // Helper function for backup selection
+    window.selectBackupForRollback = function(backupPath) {
+        if (rollbackCleanupBtn) {
+            rollbackCleanupBtn.dataset.backupPath = backupPath;
+            rollbackCleanupBtn.disabled = false;
+            rollbackCleanupBtn.textContent = '🔄 Rollback to Selected';
+        }
+    };
+
+    // Initialize duplicate detection on page load
+    refreshBackups();
 });

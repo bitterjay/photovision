@@ -1254,6 +1254,217 @@ async function handleAPIRoutes(req, res, parsedUrl) {
       }
     }
 
+    // Admin duplicate detection endpoint
+    if (pathname === '/api/admin/duplicates/detect' && method === 'POST') {
+      log('Admin duplicate detection request received');
+      
+      try {
+        const DuplicateDetector = require('./utilities/duplicateDetector');
+        const detector = new DuplicateDetector();
+        
+        // Run duplicate detection analysis
+        const report = await detector.findExistingDuplicates();
+        
+        log(`Duplicate detection completed: ${report.duplicateGroups.length} groups found`);
+        
+        return sendSuccess(res, {
+          analysis: report.analysis,
+          duplicateGroups: report.duplicateGroups,
+          recommendations: report.recommendations,
+          reportPaths: {
+            jsonReport: report.jsonReportPath,
+            textReport: report.textReportPath
+          }
+        }, `Duplicate detection completed - found ${report.duplicateGroups.length} duplicate groups`);
+        
+      } catch (error) {
+        return sendError(res, 500, 'Failed to detect duplicates', error);
+      }
+    }
+
+    // Admin duplicate cleanup endpoint
+    if (pathname === '/api/admin/duplicates/cleanup' && method === 'POST') {
+      log('Admin duplicate cleanup request received');
+      
+      try {
+        const requestData = await parseJSON(req);
+        const { dryRun = false, confirmationRequired = false } = requestData;
+        
+        // Safety check: require confirmation for actual cleanup
+        if (!dryRun && confirmationRequired && requestData.confirmation !== 'CLEANUP_DUPLICATES') {
+          return sendError(res, 400, 'Invalid confirmation. Must provide exact text: "CLEANUP_DUPLICATES"');
+        }
+        
+        const DataMigration = require('./utilities/dataMigration');
+        const migration = new DataMigration();
+        
+        // Perform cleanup with specified options
+        const result = await migration.performCleanup({
+          dryRun: dryRun,
+          confirmationRequired: false, // We handle confirmation here
+          preserveBackups: true
+        });
+        
+        log(`Duplicate cleanup ${dryRun ? 'dry run' : 'completed'}: ${result.duplicatesRemoved} duplicates removed`);
+        
+        return sendSuccess(res, {
+          success: result.success,
+          duplicatesRemoved: result.duplicatesRemoved,
+          finalImageCount: result.finalImageCount,
+          backupPath: result.backupPath,
+          dryRun: dryRun,
+          validationPassed: result.validationPassed,
+          message: result.message
+        }, `Duplicate cleanup ${dryRun ? 'simulation' : 'completed'} - ${result.duplicatesRemoved} duplicates ${dryRun ? 'would be' : 'were'} removed`);
+        
+      } catch (error) {
+        return sendError(res, 500, 'Failed to cleanup duplicates', error);
+      }
+    }
+
+    // Admin duplicate validation endpoint
+    if (pathname === '/api/admin/duplicates/validate' && method === 'POST') {
+      log('Admin duplicate validation request received');
+      
+      try {
+        const DataMigration = require('./utilities/dataMigration');
+        const migration = new DataMigration();
+        
+        // Run validation
+        const validationResult = await migration.validateCleanup();
+        
+        log(`Duplicate validation completed: ${validationResult.isValid ? 'PASSED' : 'FAILED'}`);
+        
+        return sendSuccess(res, {
+          isValid: validationResult.isValid,
+          totalImages: validationResult.totalImages,
+          issues: validationResult.issues || []
+        }, `Validation ${validationResult.isValid ? 'passed' : 'failed'} - ${validationResult.issues?.length || 0} issues found`);
+        
+      } catch (error) {
+        return sendError(res, 500, 'Failed to validate duplicates', error);
+      }
+    }
+
+    // Admin duplicate rollback endpoint
+    if (pathname === '/api/admin/duplicates/rollback' && method === 'POST') {
+      log('Admin duplicate rollback request received');
+      
+      try {
+        const requestData = await parseJSON(req);
+        const { backupPath } = requestData;
+        
+        if (!backupPath) {
+          return sendError(res, 400, 'Backup path is required');
+        }
+        
+        // Safety check: require confirmation
+        if (requestData.confirmation !== 'ROLLBACK_TO_BACKUP') {
+          return sendError(res, 400, 'Invalid confirmation. Must provide exact text: "ROLLBACK_TO_BACKUP"');
+        }
+        
+        const DataMigration = require('./utilities/dataMigration');
+        const migration = new DataMigration();
+        
+        // Perform rollback
+        const result = await migration.rollback(backupPath);
+        
+        log(`Duplicate rollback completed to: ${backupPath}`);
+        
+        return sendSuccess(res, {
+          success: result.success,
+          backupPath: result.backupPath,
+          message: result.message
+        }, `Rollback completed to backup: ${backupPath}`);
+        
+      } catch (error) {
+        return sendError(res, 500, 'Failed to rollback duplicates', error);
+      }
+    }
+
+    // Admin duplicate detection utility endpoint
+    if (pathname === '/api/admin/duplicates/utility' && method === 'GET') {
+      log('Admin duplicate utility info request received');
+      
+      try {
+        const fs = require('fs').promises;
+        const path = require('path');
+        
+        // Get list of backup files
+        const dataDir = path.join(__dirname, 'data');
+        const files = await fs.readdir(dataDir);
+        
+        const backupFiles = files
+          .filter(file => file.startsWith('images_backup_') && file.endsWith('.json'))
+          .map(file => ({
+            filename: file,
+            path: path.join(dataDir, file),
+            timestamp: file.match(/images_backup_(\d+)\.json/)?.[1] || '0'
+          }))
+          .sort((a, b) => parseInt(b.timestamp) - parseInt(a.timestamp));
+        
+        const reportFiles = files
+          .filter(file => 
+            (file.startsWith('duplicate_analysis_') || file.startsWith('duplicate_report_') || file.startsWith('migration_report_')) &&
+            (file.endsWith('.json') || file.endsWith('.txt'))
+          )
+          .map(file => ({
+            filename: file,
+            path: path.join(dataDir, file),
+            type: file.startsWith('duplicate_analysis_') ? 'analysis' : 
+                  file.startsWith('duplicate_report_') ? 'report' : 'migration',
+            timestamp: file.match(/_(\d+)\./)?.[1] || '0'
+          }))
+          .sort((a, b) => parseInt(b.timestamp) - parseInt(a.timestamp));
+        
+        return sendSuccess(res, {
+          backupFiles: backupFiles,
+          reportFiles: reportFiles,
+          utilityInfo: {
+            duplicateDetectorAvailable: true,
+            dataMigrationAvailable: true,
+            validationAvailable: true,
+            rollbackAvailable: true
+          }
+        }, 'Duplicate utility information retrieved');
+        
+      } catch (error) {
+        return sendError(res, 500, 'Failed to get duplicate utility info', error);
+      }
+    }
+
+    // Admin duplicate backups endpoint
+    if (pathname === '/api/admin/duplicates/backups' && method === 'GET') {
+      log('Admin duplicate backups request received');
+      
+      try {
+        const fs = require('fs').promises;
+        const path = require('path');
+        
+        // Get list of backup files
+        const dataDir = path.join(__dirname, 'data');
+        const files = await fs.readdir(dataDir);
+        
+        const backupFiles = files
+          .filter(file => file.startsWith('images_backup_') && file.endsWith('.json'))
+          .map(file => ({
+            filename: file,
+            path: path.join(dataDir, file),
+            timestamp: file.match(/images_backup_(\d+)\.json/)?.[1] || '0',
+            date: new Date(parseInt(file.match(/images_backup_(\d+)\.json/)?.[1] || '0')).toLocaleString()
+          }))
+          .sort((a, b) => parseInt(b.timestamp) - parseInt(a.timestamp));
+        
+        return sendSuccess(res, {
+          backups: backupFiles,
+          count: backupFiles.length
+        }, `Retrieved ${backupFiles.length} backup files`);
+        
+      } catch (error) {
+        return sendError(res, 500, 'Failed to get backup files', error);
+      }
+    }
+
     // Admin destroy all data endpoint (frontend-compatible)
     if (pathname === '/api/admin/destroy-all-data' && method === 'POST') {
       log('ADMIN DESTROY ALL DATA request received - TESTING ONLY', 'WARN');
@@ -1429,6 +1640,12 @@ server.listen(PORT, () => {
   log('  GET  /api/batch/details          - Get batch details');
   log('  GET  /api/data/count             - Get image data count');
   log('  POST /api/admin/destroy-all-data - Destroy all data (testing)');
+  log('  POST /api/admin/duplicates/detect   - Detect duplicate images');
+  log('  POST /api/admin/duplicates/cleanup  - Clean up duplicate images');
+  log('  POST /api/admin/duplicates/validate - Validate duplicate cleanup');
+  log('  POST /api/admin/duplicates/rollback - Rollback duplicate cleanup');
+  log('  GET  /api/admin/duplicates/utility  - Get duplicate utility info');
+  log('  GET  /api/admin/duplicates/backups  - Get backup files');
   log('Press Ctrl+C to stop');
 });
 

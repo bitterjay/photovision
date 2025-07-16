@@ -1,0 +1,36 @@
+
+=== DUPLICATE DETECTION REPORT ===
+Generated: 2025-07-16T14:14:46.319Z
+Backup: /Users/shelbyklein/Sites/image-search/data/images_backup_1752675286317.json
+
+=== SUMMARY ===
+Total Images: 27
+Valid Images: 27
+Invalid Images: 0
+Duplicate Groups: 3
+Total Duplicates: 6
+Records to Remove: 3
+Final Clean Size: 24
+
+=== RECOMMENDATIONS ===
+[WARNING] Found 3 duplicate groups - cleanup recommended
+
+=== DUPLICATE GROUPS ===
+Group 1: wLKKf67 (2 duplicates)
+  Recommended Keep: DSC05704.jpg
+  Timestamp: 2025-07-16T07:20:35.739Z
+  Completeness Score: 63
+  To Remove: 1 records
+
+Group 2: f2HrtCF (2 duplicates)
+  Recommended Keep: DSC05709.jpg
+  Timestamp: 2025-07-16T07:20:47.234Z
+  Completeness Score: 63
+  To Remove: 1 records
+
+Group 3: 8qmjd9T (2 duplicates)
+  Recommended Keep: DSC05712.jpg
+  Timestamp: 2025-07-16T07:20:58.619Z
+  Completeness Score: 63
+  To Remove: 1 records
+
