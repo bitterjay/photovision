@@ -435,6 +435,7 @@ class PhotoVision {
                                  alt="${photo.description || photo.filename || 'Image'}" 
                                  class="card-image"
                                  loading="lazy"
+                                 data-photo-id="${photoId}"
                                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                             <div style="display: none; height: 120px; background: #f8f9fa; align-items: center; justify-content: center; color: #666; font-size: 0.9em;">
                                 <span>⚠️ Image unavailable</span>
@@ -446,22 +447,22 @@ class PhotoVision {
                         `}
                         <div class="card-actions">
                             <button class="card-btn info-btn" onclick="window.photoVision.showMetadataModal('${photoId}')">
-                                ℹ️ Details
+                                Details
                             </button>
                             ${photo.smugmugUrl ? `
-                                <a href="${photo.smugmugUrl}" target="_blank" class="card-btn smugmug-btn">
-                                    📸 View
+                                <a href="${photo.smugmugUrl}" target="_blank" class="card-btn download-btn" download>
+                                    Download
                                 </a>
                             ` : `
                                 <span class="card-btn" style="background: #e9ecef; color: #6c757d; cursor: not-allowed;">
-                                    📸 No Link
+                                    � No Link
                                 </span>
                             `}
                         </div>
                     </div>
                 `;
                 
-                // Store photo data for modal
+                // Store photo data for modal and lightbox
                 this.storePhotoData(photoId, photo);
             });
 
@@ -483,6 +484,9 @@ class PhotoVision {
         
         messageDiv.appendChild(contentDiv);
         this.messagesContainer.appendChild(messageDiv);
+        
+        // Add click handlers for lightbox after content is added
+        this.addLightboxHandlers(contentDiv, data.results);
         
         // Scroll to bottom
         this.scrollToBottom();
@@ -641,6 +645,161 @@ class PhotoVision {
 
         // Add modal to page
         document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
+    addLightboxHandlers(contentDiv, results) {
+        if (!results || results.length === 0) return;
+        
+        const images = contentDiv.querySelectorAll('.card-image[data-photo-id]');
+        images.forEach(img => {
+            img.addEventListener('click', (e) => {
+                e.preventDefault();
+                const photoId = img.dataset.photoId;
+                const startIndex = Array.from(images).indexOf(img);
+                this.openLightbox(results, startIndex);
+            });
+        });
+    }
+
+    openLightbox(results, startIndex = 0) {
+        // Filter results to only include those with images
+        const validResults = results.filter(result => result.smugmugUrl);
+        
+        if (validResults.length === 0) {
+            console.warn('No valid images to display in lightbox');
+            return;
+        }
+        
+        // Adjust start index for filtered results
+        const adjustedStartIndex = Math.min(startIndex, validResults.length - 1);
+        
+        // Create lightbox HTML
+        const lightboxHTML = `
+            <div id="imageLightbox" class="image-modal">
+                <div class="modal-overlay"></div>
+                <div class="modal-container">
+                    <button class="modal-close" id="closeLightbox">&times;</button>
+                    <div class="swiper-container" id="lightboxSwiper">
+                        <div class="swiper-wrapper">
+                            ${validResults.map((result, index) => `
+                                <div class="swiper-slide">
+                                    <img src="${result.smugmugUrl}" 
+                                         alt="${result.description || result.filename || 'Image'}" 
+                                         loading="lazy"
+                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <div style="display: none; height: 200px; background: #f8f9fa; align-items: center; justify-content: center; color: #666; font-size: 1em;">
+                                        <span>⚠️ Image failed to load</span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="swiper-pagination"></div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                    </div>
+                    <div class="image-info">
+                        <div class="image-counter" id="lightboxCounter">1 / ${validResults.length}</div>
+                        <div class="image-title" id="lightboxTitle">${validResults[adjustedStartIndex]?.description || validResults[adjustedStartIndex]?.filename || 'Image'}</div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Add to DOM
+        document.body.insertAdjacentHTML('beforeend', lightboxHTML);
+        
+        // Initialize Swiper
+        this.initializeLightboxSwiper(validResults, adjustedStartIndex);
+        
+        // Add event listeners
+        this.addLightboxEventListeners();
+    }
+
+    initializeLightboxSwiper(results, startIndex) {
+        // Initialize Swiper
+        this.lightboxSwiper = new Swiper('#lightboxSwiper', {
+            initialSlide: startIndex,
+            loop: results.length > 1,
+            keyboard: {
+                enabled: true,
+                onlyInViewport: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+                dynamicBullets: true,
+            },
+            on: {
+                slideChange: (swiper) => {
+                    // Use the swiper parameter or activeIndex directly
+                    const activeIndex = swiper.realIndex || swiper.activeIndex;
+                    const currentResult = results[activeIndex];
+                    
+                    // Update counter
+                    const counter = document.getElementById('lightboxCounter');
+                    if (counter) {
+                        counter.textContent = `${activeIndex + 1} / ${results.length}`;
+                    }
+                    
+                    // Update title
+                    const title = document.getElementById('lightboxTitle');
+                    if (title) {
+                        title.textContent = currentResult?.description || currentResult?.filename || 'Image';
+                    }
+                }
+            }
+        });
+    }
+
+    addLightboxEventListeners() {
+        const lightbox = document.getElementById('imageLightbox');
+        const closeBtn = document.getElementById('closeLightbox');
+        const overlay = lightbox.querySelector('.modal-overlay');
+        
+        // Close button
+        closeBtn.addEventListener('click', () => {
+            this.closeLightbox();
+        });
+        
+        // Overlay click
+        overlay.addEventListener('click', () => {
+            this.closeLightbox();
+        });
+        
+        // Escape key
+        const escapeHandler = (e) => {
+            if (e.key === 'Escape') {
+                this.closeLightbox();
+            }
+        };
+        document.addEventListener('keydown', escapeHandler);
+        
+        // Store escape handler for cleanup (as a property, not dataset)
+        this.currentLightboxEscapeHandler = escapeHandler;
+    }
+
+    closeLightbox() {
+        const lightbox = document.getElementById('imageLightbox');
+        if (!lightbox) return;
+        
+        // Clean up Swiper
+        if (this.lightboxSwiper) {
+            this.lightboxSwiper.destroy(true, true);
+            this.lightboxSwiper = null;
+        }
+        
+        // Remove escape key handler
+        if (this.currentLightboxEscapeHandler) {
+            document.removeEventListener('keydown', this.currentLightboxEscapeHandler);
+            this.currentLightboxEscapeHandler = null;
+        }
+        
+        // Remove from DOM
+        lightbox.remove();
     }
 
     formatFileSize(bytes) {

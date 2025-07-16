@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PhotoVision - Conversational Image Discovery</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 </head>
 <body>
     <div class="container">
@@ -397,6 +398,27 @@
         </main>
     </div>
 
+    <!-- Lightbox Modal -->
+    <div id="imageModal" class="image-modal" style="display: none;">
+        <div class="modal-overlay"></div>
+        <div class="modal-container">
+            <button class="modal-close" id="closeModal">&times;</button>
+            <div class="swiper-container" id="imageSwiper">
+                <div class="swiper-wrapper" id="swiperWrapper">
+                    <!-- Slides will be populated dynamically -->
+                </div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+            <div class="image-info" id="imageInfo">
+                <div class="image-counter" id="imageCounter">1 / 1</div>
+                <div class="image-title" id="imageTitle">Image Title</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
