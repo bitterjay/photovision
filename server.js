@@ -690,6 +690,7 @@ async function handleAPIRoutes(req, res, parsedUrl) {
         }
 
         // Get album details first to include hierarchy information
+        log(`Fetching album details for album key: ${requestData.albumKey}`, 'DEBUG');
         const albumDetailsResult = await smugmugClient.getAlbumDetails(
           smugmugConfig.accessToken,
           smugmugConfig.accessTokenSecret,
@@ -697,10 +698,34 @@ async function handleAPIRoutes(req, res, parsedUrl) {
         );
 
         if (!albumDetailsResult.success) {
+          log(`Failed to get album details: ${albumDetailsResult.error}`, 'ERROR');
           return sendError(res, 500, 'Failed to get album details: ' + albumDetailsResult.error);
         }
 
         const albumDetails = albumDetailsResult.album;
+        
+        // Validate that we have the required album information
+        if (!albumDetails || !albumDetails.Name) {
+          log(`Album details missing or incomplete for album ${requestData.albumKey}`, 'ERROR');
+          return sendError(res, 500, 'Album details incomplete - missing album name');
+        }
+
+        // Validate hierarchy information
+        if (!albumDetails.PathHierarchy || !Array.isArray(albumDetails.PathHierarchy) || albumDetails.PathHierarchy.length === 0) {
+          log(`Album hierarchy information missing for album ${requestData.albumKey}. Album details:`, 'WARN');
+          log(JSON.stringify(albumDetails, null, 2), 'DEBUG');
+          return sendError(res, 500, 'Album hierarchy information missing - cannot process without path information');
+        }
+
+        if (!albumDetails.FullDisplayPath) {
+          log(`Album display path missing for album ${requestData.albumKey}`, 'WARN');
+          return sendError(res, 500, 'Album display path missing - cannot process without path information');
+        }
+
+        log(`Album details validated successfully:`, 'DEBUG');
+        log(`  - Name: ${albumDetails.Name}`, 'DEBUG');
+        log(`  - Path: ${albumDetails.FullDisplayPath}`, 'DEBUG');
+        log(`  - Hierarchy: [${albumDetails.PathHierarchy.join(', ')}]`, 'DEBUG');
 
         // Get album images
         const albumUri = `/api/v2/album/${requestData.albumKey}`;
@@ -722,22 +747,34 @@ async function handleAPIRoutes(req, res, parsedUrl) {
         const jobs = imagesResult.images
           .filter(img => img.ArchivedUri || (img.Uris && img.Uris.LargestImage))
           .slice(0, requestData.maxImages || 50) // Limit batch size
-          .map((image, index) => ({
-            id: `img_${requestData.albumKey}_${image.ImageKey}`,
-            type: 'image_analysis',
-            data: {
-              imageUrl: image.ArchivedUri, // Use ArchivedUri for full-resolution image
-              imageKey: image.ImageKey,
-              filename: image.FileName || `image_${index + 1}`,
-              title: image.Title || '',
-              caption: image.Caption || ''
-            },
-            albumKey: requestData.albumKey,
-            albumName: albumDetails.Name,
-            albumPath: albumDetails.FullDisplayPath,
-            albumHierarchy: albumDetails.PathHierarchy,
-            imageName: image.FileName || `image_${index + 1}`
-          }));
+          .map((image, index) => {
+            const job = {
+              id: `img_${requestData.albumKey}_${image.ImageKey}`,
+              type: 'image_analysis',
+              data: {
+                imageUrl: image.ArchivedUri, // Use ArchivedUri for full-resolution image
+                imageKey: image.ImageKey,
+                filename: image.FileName || `image_${index + 1}`,
+                title: image.Title || '',
+                caption: image.Caption || ''
+              },
+              albumKey: requestData.albumKey,
+              albumName: albumDetails.Name,
+              albumPath: albumDetails.FullDisplayPath,
+              albumHierarchy: albumDetails.PathHierarchy,
+              imageName: image.FileName || `image_${index + 1}`
+            };
+            
+            // Validate that album information is present in each job
+            if (!job.albumName || !job.albumPath || !job.albumHierarchy || !Array.isArray(job.albumHierarchy)) {
+              log(`Warning: Job ${job.id} missing album information:`, 'WARN');
+              log(`  - albumName: ${job.albumName}`, 'DEBUG');
+              log(`  - albumPath: ${job.albumPath}`, 'DEBUG');
+              log(`  - albumHierarchy: ${JSON.stringify(job.albumHierarchy)}`, 'DEBUG');
+            }
+            
+            return job;
+          });
 
         if (jobs.length === 0) {
           return sendError(res, 400, 'No processable images found in album');
@@ -765,6 +802,31 @@ async function handleAPIRoutes(req, res, parsedUrl) {
         const processors = {
           image_analysis: async (imageData, job) => {
             log(`Processing image: ${imageData.filename}`);
+            
+            // Validate that job has complete album information before processing
+            if (!job.albumKey || !job.albumName || !job.albumPath || !job.albumHierarchy) {
+              const missingFields = [];
+              if (!job.albumKey) missingFields.push('albumKey');
+              if (!job.albumName) missingFields.push('albumName');
+              if (!job.albumPath) missingFields.push('albumPath');
+              if (!job.albumHierarchy) missingFields.push('albumHierarchy');
+              
+              const errorMsg = `Job ${job.id} missing required album information: ${missingFields.join(', ')}`;
+              log(errorMsg, 'ERROR');
+              throw new Error(errorMsg);
+            }
+            
+            // Additional validation for albumHierarchy
+            if (!Array.isArray(job.albumHierarchy) || job.albumHierarchy.length === 0) {
+              const errorMsg = `Job ${job.id} has invalid album hierarchy: ${JSON.stringify(job.albumHierarchy)}`;
+              log(errorMsg, 'ERROR');
+              throw new Error(errorMsg);
+            }
+            
+            log(`Album info for ${imageData.filename}:`, 'DEBUG');
+            log(`  - Album: ${job.albumName}`, 'DEBUG');
+            log(`  - Path: ${job.albumPath}`, 'DEBUG');
+            log(`  - Hierarchy: [${job.albumHierarchy.join(', ')}]`, 'DEBUG');
             
             // Fetch image from SmugMug
             const imageResponse = await fetch(imageData.imageUrl);
@@ -803,6 +865,18 @@ async function handleAPIRoutes(req, res, parsedUrl) {
                 jobId: job.id
               }
             };
+
+            // Final validation before saving
+            const requiredFields = ['albumKey', 'albumName', 'albumPath', 'albumHierarchy'];
+            const missingFields = requiredFields.filter(field => !imageRecord[field]);
+            
+            if (missingFields.length > 0) {
+              const errorMsg = `Image record for ${imageData.filename} missing required fields: ${missingFields.join(', ')}`;
+              log(errorMsg, 'ERROR');
+              throw new Error(errorMsg);
+            }
+            
+            log(`Saving image record with complete album information for: ${imageData.filename}`, 'DEBUG');
 
             // Save to data storage
             await dataManager.addImage(imageRecord);
@@ -894,6 +968,26 @@ async function handleAPIRoutes(req, res, parsedUrl) {
           image_analysis: async (imageData, job) => {
             log(`Processing image: ${imageData.filename}`);
             
+            // Validate that job has complete album information before processing
+            if (!job.albumKey || !job.albumName || !job.albumPath || !job.albumHierarchy) {
+              const missingFields = [];
+              if (!job.albumKey) missingFields.push('albumKey');
+              if (!job.albumName) missingFields.push('albumName');
+              if (!job.albumPath) missingFields.push('albumPath');
+              if (!job.albumHierarchy) missingFields.push('albumHierarchy');
+              
+              const errorMsg = `Resume job ${job.id} missing required album information: ${missingFields.join(', ')}`;
+              log(errorMsg, 'ERROR');
+              throw new Error(errorMsg);
+            }
+            
+            // Additional validation for albumHierarchy
+            if (!Array.isArray(job.albumHierarchy) || job.albumHierarchy.length === 0) {
+              const errorMsg = `Resume job ${job.id} has invalid album hierarchy: ${JSON.stringify(job.albumHierarchy)}`;
+              log(errorMsg, 'ERROR');
+              throw new Error(errorMsg);
+            }
+            
             const imageResponse = await fetch(imageData.imageUrl);
             if (!imageResponse.ok) {
               throw new Error(`Failed to fetch image: ${imageResponse.status}`);
@@ -928,6 +1022,16 @@ async function handleAPIRoutes(req, res, parsedUrl) {
                 jobId: job.id
               }
             };
+
+            // Final validation before saving
+            const requiredFields = ['albumKey', 'albumName', 'albumPath', 'albumHierarchy'];
+            const missingFields = requiredFields.filter(field => !imageRecord[field]);
+            
+            if (missingFields.length > 0) {
+              const errorMsg = `Resume image record for ${imageData.filename} missing required fields: ${missingFields.join(', ')}`;
+              log(errorMsg, 'ERROR');
+              throw new Error(errorMsg);
+            }
 
             await dataManager.addImage(imageRecord);
             
