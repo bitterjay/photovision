@@ -1,0 +1,14 @@
+{
+  "ignore": [
+    "data/*",
+    "*.log",
+    "*.backup",
+    "test-*.js"
+  ],
+  "ext": "js,json,html,css",
+  "watch": [
+    "server.js",
+    "lib/",
+    "public/"
+  ]
+}
