@@ -129,7 +129,20 @@ Frontend (script.js) → Backend (server.js) → External APIs
 
 ## Recent Significant Changes
 
-### Phase 7 Progress - UI/UX Improvements (Latest)
+### Phase 7 Progress - UI/UX Improvements & Bug Fixes (Latest)
+
+#### Recent Bug Fixes
+- **Album Hierarchy Search Fix**: Fixed search functionality in `searchFunctions.js`
+  - `searchByKeywords` now properly searches through `albumHierarchy`, `albumName`, and `albumPath` fields
+  - Previously these fields were ignored during keyword searches
+  - Users can now search by album names, paths, and hierarchical organization
+
+- **Batch Processing Album Information Preservation**: Fixed data loss in `jobQueue.js`
+  - Batch jobs now preserve album metadata: `albumName`, `albumPath`, and `albumHierarchy`
+  - Previously album information was lost during batch processing operations
+  - Images now retain their album context throughout the analysis pipeline
+
+#### UI/UX Improvements Completed
 - **Masonry Layout Implementation**: Replaced CSS Grid with responsive masonry layout
   - CSS columns approach (`column-count: 3`) for Pinterest-style organic arrangement
   - Cards flow naturally without rigid alignment, creating more visually interesting displays
@@ -146,6 +159,15 @@ Frontend (script.js) → Backend (server.js) → External APIs
   - **Tablet (481-768px)**: 2 columns masonry layout
   - **Mobile (≤480px)**: 1 column masonry layout
   - Updated responsive breakpoints to use `column-count` instead of grid properties
+
+#### Phase 7 Expansion - UI Modernization (In Progress)
+- **Tabbed Interface**: Planning implementation of tabs for Chat/Batch Processing/API Connections
+- **Theme Support**: Adding dark/light theme switching capability
+- **Iconography Updates**: Modern icon system throughout the application
+- **Lightbox Functionality**: Enhanced image viewing with lightbox modal (changing "View" to "Download")
+- **Human-like Chat**: Improving conversational tone and natural language responses
+- **Prompt Manipulation**: Custom AI prompts for batch image analysis
+- **Admin Tools**: Added danger zone for data management and system administration
 
 ### Phase 5 Completion - Batch Processing
 - **JobQueue System Implementation**: Complete job management system for batch processing
