@@ -478,16 +478,30 @@ class PhotoVision {
                                             </span>
                                         </div>
                                     ` : ''}
-                                    ${photo.albumKey ? `
+                                    ${photo.albumPath || photo.albumName || photo.albumKey ? `
                                         <div class="metadata-row">
-                                            <span class="metadata-label">Album:</span>
-                                            <span class="metadata-value">${photo.albumName || photo.albumKey}</span>
+                                            <span class="metadata-label">Album Path:</span>
+                                            <span class="metadata-value" style="font-weight: 500; color: #2c3e50;">
+                                                ${photo.albumPath || photo.albumName || photo.albumKey}
+                                            </span>
+                                        </div>
+                                    ` : ''}
+                                    ${photo.albumName && photo.albumPath && photo.albumName !== photo.albumPath ? `
+                                        <div class="metadata-row">
+                                            <span class="metadata-label">Album Name:</span>
+                                            <span class="metadata-value">${photo.albumName}</span>
                                         </div>
                                     ` : ''}
                                     ${photo.smugmugImageKey ? `
                                         <div class="metadata-row">
                                             <span class="metadata-label">Image Key:</span>
                                             <span class="metadata-value">${photo.smugmugImageKey}</span>
+                                        </div>
+                                    ` : ''}
+                                    ${photo.albumKey ? `
+                                        <div class="metadata-row">
+                                            <span class="metadata-label">Album ID:</span>
+                                            <span class="metadata-value" style="font-family: monospace; font-size: 0.9em; color: #666;">${photo.albumKey}</span>
                                         </div>
                                     ` : ''}
                                 </div>

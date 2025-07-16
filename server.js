@@ -689,6 +689,19 @@ async function handleAPIRoutes(req, res, parsedUrl) {
           return sendError(res, 401, 'SmugMug not connected');
         }
 
+        // Get album details first to include hierarchy information
+        const albumDetailsResult = await smugmugClient.getAlbumDetails(
+          smugmugConfig.accessToken,
+          smugmugConfig.accessTokenSecret,
+          requestData.albumKey
+        );
+
+        if (!albumDetailsResult.success) {
+          return sendError(res, 500, 'Failed to get album details: ' + albumDetailsResult.error);
+        }
+
+        const albumDetails = albumDetailsResult.album;
+
         // Get album images
         const albumUri = `/api/v2/album/${requestData.albumKey}`;
         const imagesResult = await smugmugClient.getAlbumImages(
@@ -705,7 +718,7 @@ async function handleAPIRoutes(req, res, parsedUrl) {
           return sendError(res, 400, 'No images found in album');
         }
 
-        // Create jobs for each image
+        // Create jobs for each image with album information
         const jobs = imagesResult.images
           .filter(img => img.ArchivedUri || (img.Uris && img.Uris.LargestImage))
           .slice(0, requestData.maxImages || 50) // Limit batch size
@@ -720,6 +733,9 @@ async function handleAPIRoutes(req, res, parsedUrl) {
               caption: image.Caption || ''
             },
             albumKey: requestData.albumKey,
+            albumName: albumDetails.Name,
+            albumPath: albumDetails.FullDisplayPath,
+            albumHierarchy: albumDetails.PathHierarchy,
             imageName: image.FileName || `image_${index + 1}`
           }));
 
@@ -766,7 +782,7 @@ async function handleAPIRoutes(req, res, parsedUrl) {
               throw new Error(analysisResult.error);
             }
 
-            // Store the result
+            // Store the result with album information
             const imageRecord = {
               id: generateUniqueId(),
               filename: imageData.filename,
@@ -775,6 +791,9 @@ async function handleAPIRoutes(req, res, parsedUrl) {
               title: imageData.title,
               caption: imageData.caption,
               albumKey: job.albumKey,
+              albumName: job.albumName,
+              albumPath: job.albumPath,
+              albumHierarchy: job.albumHierarchy,
               description: analysisResult.description,
               keywords: analysisResult.keywords || [],
               metadata: {
@@ -897,6 +916,9 @@ async function handleAPIRoutes(req, res, parsedUrl) {
               title: imageData.title,
               caption: imageData.caption,
               albumKey: job.albumKey,
+              albumName: job.albumName,
+              albumPath: job.albumPath,
+              albumHierarchy: job.albumHierarchy,
               description: analysisResult.description,
               keywords: analysisResult.keywords || [],
               metadata: {
