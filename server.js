@@ -530,6 +530,41 @@ async function handleAPIRoutes(req, res, parsedUrl) {
       }
     }
 
+    // SmugMug album processing status endpoint
+    if (pathname.startsWith('/api/smugmug/album/') && pathname.endsWith('/processing-status') && method === 'GET') {
+      const albumKey = pathname.split('/')[4]; // Extract album key from URL
+      log(`SmugMug album processing status request for album: ${albumKey}`);
+      
+      try {
+        const config = await dataManager.getConfig();
+        const smugmugConfig = config.smugmug || {};
+
+        if (!smugmugConfig.connected || !smugmugConfig.accessToken) {
+          return sendError(res, 401, 'SmugMug not connected');
+        }
+
+        // Get album images from SmugMug
+        const albumUri = `/api/v2/album/${albumKey}`;
+        const imagesResult = await smugmugClient.getAlbumImages(
+          smugmugConfig.accessToken,
+          smugmugConfig.accessTokenSecret,
+          albumUri
+        );
+
+        if (!imagesResult.success) {
+          return sendError(res, 500, 'Failed to get album images: ' + imagesResult.error);
+        }
+
+        // Get processed images for this album
+        const albumProcessingStatus = await dataManager.getAlbumProcessingStatus(albumKey, imagesResult.images);
+
+        return sendSuccess(res, albumProcessingStatus, `Retrieved processing status for album ${albumKey}`);
+
+      } catch (error) {
+        return sendError(res, 500, 'Album processing status request failed', error);
+      }
+    }
+
     // Batch processing endpoints
 
     // Start batch processing endpoint

@@ -597,10 +597,11 @@ body {
 }
 
 .album-details {
-  display: flex;
-  gap: 10px;
-  font-size: 0.9em;
-  color: #666;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 8px;
 }
 
 .image-count {
@@ -963,6 +964,73 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* Album Processing Status Styles */
+.album-processing-status {
+    margin-top: 8px;
+    font-size: 13px;
+}
+
+.processing-complete {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #4caf50;
+}
+
+.processing-none {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #ff9800;
+}
+
+.processing-partial {
+    color: #2196f3;
+}
+
+.processing-partial .status-text {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
+.album-processing-status .progress-bar {
+    width: 200px;
+    height: 4px;
+    background-color: #e0e0e0;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.album-processing-status .progress-fill {
+    height: 100%;
+    background-color: #2196f3;
+    transition: width 0.3s ease;
+}
+
+.loading-status {
+    color: #666;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.status-error {
+    color: #f44336;
+    font-style: italic;
+}
+
+.status-empty {
+    color: #999;
+    font-style: italic;
+}
+
+.status-icon {
+    font-size: 14px;
 }
 
 /* Responsive design for batch processing */

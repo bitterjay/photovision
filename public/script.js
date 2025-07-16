@@ -632,6 +632,14 @@ class PhotoVision {
             });
         }
 
+        // Refresh processing status button
+        const refreshProcessingBtn = document.getElementById('refreshProcessingStatus');
+        if (refreshProcessingBtn) {
+            refreshProcessingBtn.addEventListener('click', () => {
+                this.refreshAlbumProcessingStatuses();
+            });
+        }
+
         // Batch control buttons
         const startBatchBtn = document.getElementById('startBatch');
         if (startBatchBtn) {
@@ -702,27 +710,8 @@ class PhotoVision {
                     return;
                 }
 
-                // Render albums list
-                albumsList.innerHTML = albums.map(album => `
-                    <div class="album-item" data-album-key="${album.AlbumKey}">
-                        <div class="album-info">
-                            <div class="album-name">${album.Name || 'Untitled Album'}</div>
-                            <div class="album-details">
-                                <span class="image-count">${album.ImageCount || 0} images</span>
-                                ${album.Description ? `<span class="album-description">${album.Description}</span>` : ''}
-                            </div>
-                        </div>
-                        <button class="select-album-btn" data-album-key="${album.AlbumKey}">Select</button>
-                    </div>
-                `).join('');
-
-                // Add click handlers for album selection
-                albumsList.querySelectorAll('.select-album-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        const albumKey = e.target.dataset.albumKey;
-                        this.selectAlbum(albumKey);
-                    });
-                });
+                // Load processing status for each album
+                await this.loadAlbumsWithProcessingStatus(albums, albumsList);
 
             } else {
                 albumsList.innerHTML = '<div class="error-message">Failed to load albums. Please check your SmugMug connection.</div>';
@@ -733,6 +722,108 @@ class PhotoVision {
             albumsList.innerHTML = '<div class="error-message">Error loading albums. Please try again.</div>';
             albumCount.textContent = 'Error';
         }
+    }
+
+    async loadAlbumsWithProcessingStatus(albums, albumsList) {
+        // Render albums list with placeholder for processing status
+        albumsList.innerHTML = albums.map(album => `
+            <div class="album-item" data-album-key="${album.AlbumKey}">
+                <div class="album-info">
+                    <div class="album-name">${album.Name || 'Untitled Album'}</div>
+                    <div class="album-details">
+                        <span class="image-count">${album.ImageCount || 0} images</span>
+                        ${album.Description ? `<span class="album-description">${album.Description}</span>` : ''}
+                    </div>
+                    <div class="album-processing-status" id="processing-status-${album.AlbumKey}">
+                        <span class="loading-status">Checking processing status...</span>
+                    </div>
+                </div>
+                <button class="select-album-btn" data-album-key="${album.AlbumKey}">Select</button>
+            </div>
+        `).join('');
+
+        // Add click handlers for album selection
+        albumsList.querySelectorAll('.select-album-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const albumKey = e.target.dataset.albumKey;
+                this.selectAlbum(albumKey);
+            });
+        });
+
+        // Load processing status for each album (in batches to avoid overwhelming the server)
+        const batchSize = 3;
+        for (let i = 0; i < albums.length; i += batchSize) {
+            const batch = albums.slice(i, i + batchSize);
+            await Promise.allSettled(
+                batch.map(album => this.loadAlbumProcessingStatus(album.AlbumKey))
+            );
+            // Small delay between batches
+            if (i + batchSize < albums.length) {
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+        }
+    }
+
+    async loadAlbumProcessingStatus(albumKey) {
+        try {
+            const response = await fetch(`/api/smugmug/album/${albumKey}/processing-status`);
+            const data = await response.json();
+
+            const statusElement = document.getElementById(`processing-status-${albumKey}`);
+            if (!statusElement) return;
+
+            if (data.success) {
+                const status = data.data;
+                this.displayAlbumProcessingStatus(statusElement, status);
+            } else {
+                statusElement.innerHTML = '<span class="status-error">Unable to check processing status</span>';
+            }
+        } catch (error) {
+            console.error(`Error loading processing status for album ${albumKey}:`, error);
+            const statusElement = document.getElementById(`processing-status-${albumKey}`);
+            if (statusElement) {
+                statusElement.innerHTML = '<span class="status-error">Error checking status</span>';
+            }
+        }
+    }
+
+    displayAlbumProcessingStatus(statusElement, status) {
+        const { totalImages, processedImages, processingProgress, isCompletelyProcessed } = status;
+
+        if (totalImages === 0) {
+            statusElement.innerHTML = '<span class="status-empty">No images in album</span>';
+            return;
+        }
+
+        let statusHTML = '';
+        
+        if (isCompletelyProcessed) {
+            statusHTML = `
+                <div class="processing-complete">
+                    <span class="status-icon">✅</span>
+                    <span class="status-text">All ${totalImages} images processed</span>
+                </div>
+            `;
+        } else if (processedImages === 0) {
+            statusHTML = `
+                <div class="processing-none">
+                    <span class="status-icon">⏳</span>
+                    <span class="status-text">0 of ${totalImages} images processed</span>
+                </div>
+            `;
+        } else {
+            statusHTML = `
+                <div class="processing-partial">
+                    <span class="status-icon">🔄</span>
+                    <span class="status-text">${processedImages} of ${totalImages} images processed (${processingProgress}%)</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${processingProgress}%"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        statusElement.innerHTML = statusHTML;
     }
 
     selectAlbum(albumKey) {
@@ -966,6 +1057,11 @@ class PhotoVision {
                     this.updateBatchControls('completed');
                     this.showBatchResults(status);
                     this.addMessage(`Batch processing completed! Processed: ${status.processed}, Failed: ${status.failed}`, 'assistant');
+                    
+                    // Refresh album processing status for the processed album
+                    if (this.selectedAlbumKey) {
+                        await this.loadAlbumProcessingStatus(this.selectedAlbumKey);
+                    }
                 } else if (status.isPaused) {
                     this.updateBatchControls('paused');
                 }
@@ -1074,6 +1170,18 @@ class PhotoVision {
         const resultsSection = document.getElementById('batchResults');
         if (resultsSection) {
             resultsSection.style.display = 'none';
+        }
+    }
+
+    async refreshAlbumProcessingStatuses() {
+        // Refresh processing status for all visible albums
+        const albumItems = document.querySelectorAll('.album-item[data-album-key]');
+        
+        for (const albumItem of albumItems) {
+            const albumKey = albumItem.dataset.albumKey;
+            if (albumKey) {
+                await this.loadAlbumProcessingStatus(albumKey);
+            }
         }
     }
 
