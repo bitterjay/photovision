@@ -973,22 +973,51 @@ class PhotoVision {
     }
 
     async loadAlbumsWithProcessingStatus(albums, albumsList) {
-        // Render albums list with placeholder for processing status
-        albumsList.innerHTML = albums.map(album => `
-            <div class="album-item" data-album-key="${album.AlbumKey}">
-                <div class="album-info">
-                    <div class="album-name">${album.Name || 'Untitled Album'}</div>
-                    <div class="album-details">
-                        <span class="image-count">${album.ImageCount || 0} images</span>
-                        ${album.Description ? `<span class="album-description">${album.Description}</span>` : ''}
+        // Render albums list with hierarchy and placeholder for processing status
+        albumsList.innerHTML = albums.map(album => {
+            // Generate hierarchical display elements
+            const indentLevel = album.IndentLevel || 0;
+            const pathTags = album.PathTags || [];
+            const displayPath = album.FullDisplayPath || album.Name || 'Untitled Album';
+            
+            // Create path tags HTML
+            const pathTagsHtml = pathTags.length > 0 ? 
+                pathTags.map(tag => `<span class="path-tag">${this.escapeHtml(tag)}</span>`).join('') : 
+                '<span class="path-tag root-tag">Root</span>';
+
+            // Create indentation indicator
+            const indentIndicator = indentLevel > 0 ? 
+                '├─ '.repeat(Math.min(indentLevel, 3)) : '';
+
+            return `
+                <div class="album-item indent-level-${indentLevel}" data-album-key="${album.AlbumKey}">
+                    <div class="album-info">
+                        <div class="album-header-section">
+                            <div class="album-indent">${indentIndicator}</div>
+                            <div class="album-name">${album.Name || 'Untitled Album'}</div>
+                        </div>
+                        <div class="album-path-info">
+                            <div class="album-full-path">
+                                <span class="path-label">📁</span>
+                                <span class="path-text">${this.escapeHtml(displayPath)}</span>
+                            </div>
+                            <div class="album-path-tags">
+                                <span class="tags-label">🏷️</span>
+                                ${pathTagsHtml}
+                            </div>
+                        </div>
+                        <div class="album-details">
+                            <span class="image-count">${album.ImageCount || 0} images</span>
+                            ${album.Description ? `<span class="album-description">${this.escapeHtml(album.Description)}</span>` : ''}
+                        </div>
+                        <div class="album-processing-status" id="processing-status-${album.AlbumKey}">
+                            <span class="loading-status">Checking processing status...</span>
+                        </div>
                     </div>
-                    <div class="album-processing-status" id="processing-status-${album.AlbumKey}">
-                        <span class="loading-status">Checking processing status...</span>
-                    </div>
+                    <button class="select-album-btn" data-album-key="${album.AlbumKey}">Select</button>
                 </div>
-                <button class="select-album-btn" data-album-key="${album.AlbumKey}">Select</button>
-            </div>
-        `).join('');
+            `;
+        }).join('');
 
         // Add click handlers for album selection
         albumsList.querySelectorAll('.select-album-btn').forEach(btn => {
@@ -1010,6 +1039,13 @@ class PhotoVision {
                 await new Promise(resolve => setTimeout(resolve, 500));
             }
         }
+    }
+
+    // Helper method to escape HTML
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
     }
 
     async loadAlbumProcessingStatus(albumKey) {

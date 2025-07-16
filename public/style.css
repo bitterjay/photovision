@@ -929,11 +929,12 @@ body {
 .album-item {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   padding: 12px;
   border-bottom: 1px solid #e0e0e0;
   background: white;
   transition: all 0.2s ease;
+  position: relative;
 }
 
 .album-item:hover {
@@ -949,14 +950,108 @@ body {
   border-bottom: none;
 }
 
+/* Hierarchical indentation for album items */
+.album-item.indent-level-0 {
+  margin-left: 0;
+}
+
+.album-item.indent-level-1 {
+  margin-left: 1rem;
+  border-left: 2px solid #2196f3;
+  padding-left: 0.5rem;
+}
+
+.album-item.indent-level-2 {
+  margin-left: 2rem;
+  border-left: 2px solid #2196f3;
+  padding-left: 0.5rem;
+}
+
+.album-item.indent-level-3 {
+  margin-left: 3rem;
+  border-left: 2px solid #2196f3;
+  padding-left: 0.5rem;
+}
+
+.album-item.indent-level-4 {
+  margin-left: 4rem;
+  border-left: 2px solid #2196f3;
+  padding-left: 0.5rem;
+}
+
 .album-info {
   flex: 1;
+}
+
+.album-header-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.album-indent {
+  color: #666;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  white-space: pre;
+  margin-right: 0.5rem;
+  opacity: 0.7;
 }
 
 .album-name {
   font-weight: 600;
   color: #333;
-  margin-bottom: 4px;
+}
+
+/* Album path information for batch processing */
+.album-path-info {
+  margin-bottom: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  background: rgba(0,0,0,0.02);
+  border-radius: 3px;
+  border: 1px solid rgba(0,0,0,0.05);
+  font-size: 0.8rem;
+}
+
+.album-full-path {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.album-path-tags {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.path-label, .tags-label {
+  opacity: 0.7;
+  font-size: 0.75rem;
+}
+
+.path-text {
+  color: #666;
+  font-weight: 500;
+  font-size: 0.75rem;
+}
+
+.path-tag {
+  display: inline-block;
+  background: #2196f3;
+  color: white;
+  padding: 0.1rem 0.3rem;
+  border-radius: 8px;
+  font-size: 0.65rem;
+  font-weight: 500;
+  margin-right: 0.15rem;
+}
+
+.path-tag.root-tag {
+  background: #666;
+  opacity: 0.8;
 }
 
 .album-details {
