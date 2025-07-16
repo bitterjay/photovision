@@ -53,9 +53,9 @@
 2. [x] Resize image to under 5mb and 2200px wide (if landscape) or 2200px tall (if portrait)
 3. [x] Enhanced image layout with masonry design and full image display
 4. [ ] Modernize UI interface
-   - [ ] Implement tabbed interface for Chat, Batch Processing, and API Connections
-   - [ ] Add dark/light theme support with theme switcher
-   - [ ] Update iconography throughout the application
+   - [x] Implement tabbed interface for Chat, Batch Processing, and API Connections
+   - [x] Add dark/light theme support with theme switcher
+   - [x] Update iconography throughout the application
    - [ ] Add lightbox functionality for images (change "View" to "Download")
 5. [ ] Improve search algorithms and query understanding
 6. [ ] Enhance conversational responses and context awareness
