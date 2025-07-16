@@ -119,7 +119,7 @@ body {
 /* Header */
 .header {
     background: var(--bg-primary);
-    border-bottom: 1px solid var(--border-color);
+    /* border-bottom: 1px solid var(--border-color); */
     padding: 1.5rem 2rem;
     box-shadow: var(--shadow-sm);
 }
@@ -189,6 +189,7 @@ body {
     overflow-x: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    padding-top:10px;
 }
 
 .tab-navigation::-webkit-scrollbar {
@@ -1207,6 +1208,7 @@ body {
     background: linear-gradient(90deg, var(--warning), var(--error));
 }
 
+
 .admin-badge {
     background: var(--warning);
     color: white;
@@ -1717,4 +1719,11 @@ select:focus {
     .tab-panel {
         display: block !important;
     }
+}
+
+
+/* hidden components */
+
+.upload-section, .duplicate-info, .album-hierarchy {
+    display:none;
 }
