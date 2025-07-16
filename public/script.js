@@ -29,6 +29,8 @@ class PhotoVision {
         this.setupEventListeners();
         this.setupUpload();
         this.initializeStatusDashboard();
+        this.initializeThemeSystem();
+        this.initializeTabSystem();
         console.log('PhotoVision initialized');
     }
 

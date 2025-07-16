@@ -47,9 +47,10 @@
 2. [x] Function calling approach for structured database searches
 3. [x] Conversational responses with photo results and SmugMug links
 4. [x] Test: Natural language search queries work correctly with intelligent results
+
 #### Phase 7: UI Modernization & Enhanced Search
-1. [ ] Duplicate data when batch processing
-2. [ ] Resize image to under 5mb and 2200px wide (if landscape) or 2200px tall (if portrait)
+1. [x] Duplicate data when batch processing
+2. [x] Resize image to under 5mb and 2200px wide (if landscape) or 2200px tall (if portrait)
 3. [x] Enhanced image layout with masonry design and full image display
 4. [ ] Modernize UI interface
    - [ ] Implement tabbed interface for Chat, Batch Processing, and API Connections

@@ -1284,5 +1284,224 @@
       "batchId": "batch_1752687053034_r88dewp22",
       "jobId": "img_NKgD8x_s9LWTkj"
     }
+  },
+  {
+    "id": "md690hb7s0dpysqrptk",
+    "timestamp": "2025-07-16T17:41:56.516Z",
+    "filename": "GCP00124.jpg",
+    "smugmugImageKey": "Bs8WxWs",
+    "smugmugUrl": "https://photos.smugmug.com/2025/Arizona-Cup/Friday-AM-U21U18/i-Bs8WxWs/0/Kf3cpCjTVq8M3bP7RjksnNMQLTrHDnbk9PwRkJ2X9/D/GCP00124-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "NKgD8x",
+    "albumName": "Friday AM - U21/U18",
+    "albumPath": "2025 > Arizona Cup > Friday AM - U21/U18",
+    "albumHierarchy": [
+      "2025",
+      "Arizona Cup",
+      "Friday AM - U21/U18"
+    ],
+    "description": "The image shows a person, presumably a participant in an archery competition or event, drawing back the string of a compound bow. The person is wearing a colorful, patterned jacket and a baseball cap. They are standing in an outdoor setting, with mountains and clouds visible in the background. The scene has a vibrant, active atmosphere, with various archery equipment and targets visible around the area. The lighting suggests it is a bright, sunny day. The composition of the image highlights the focus on the archer and their actions, capturing the moment of tension and anticipation as they prepare to release the arrow.",
+    "keywords": [
+      "archery",
+      "archer",
+      "compound bow",
+      "outdoor",
+      "mountains",
+      "competition",
+      "equipment",
+      "tension",
+      "action",
+      "active",
+      "vibrant",
+      "colorful",
+      "sunny"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-16T17:41:56.515Z",
+      "batchId": "batch_1752687696438_xnd6stf0f",
+      "jobId": "img_NKgD8x_Bs8WxWs"
+    }
+  },
+  {
+    "id": "md6912v4hwannrojw7",
+    "timestamp": "2025-07-16T17:42:24.450Z",
+    "filename": "DSC04832.jpg",
+    "smugmugImageKey": "qf2DCCV",
+    "smugmugUrl": "https://photos.smugmug.com/2025/Arizona-Cup/Friday-AM-U21U18/i-qf2DCCV/0/KRvCfv7s7bWRzGVjqvpgL5trP2hWS25TmfgvBNvhP/D/DSC04832-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "NKgD8x",
+    "albumName": "Friday AM - U21/U18",
+    "albumPath": "2025 > Arizona Cup > Friday AM - U21/U18",
+    "albumHierarchy": [
+      "2025",
+      "Arizona Cup",
+      "Friday AM - U21/U18"
+    ],
+    "description": "The image shows an outdoor setting at a sporting or recreational venue. Several tall flag stands or banners are visible, displaying the logo and branding of 'USA Archery', suggesting this is an archery-related event or facility. The flags are light blue in color with red, white, and blue accents, giving a patriotic and athletic atmosphere. The setting appears to be a flat, paved area surrounded by mountains or hills in the background, indicating an open, scenic location. Tables, chairs, and other equipment can be seen in the foreground, hinting at some kind of organized activity or competition taking place. The overall mood is one of preparation and anticipation, with the venue appearing ready to host a sporting event or exhibition. The lighting and weather conditions seem to be a mix of overcast and partly sunny, creating a somewhat subdued but still vibrant visual environment.",
+    "keywords": [
+      "archery",
+      "USA Archery",
+      "outdoor venue",
+      "sporting event",
+      "competition",
+      "flags",
+      "patriotic",
+      "mountains",
+      "hills",
+      "scenic",
+      "preparation",
+      "anticipation",
+      "equipment",
+      "tables",
+      "chairs"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-16T17:42:24.448Z",
+      "batchId": "batch_1752687740386_msps197t6",
+      "jobId": "img_NKgD8x_qf2DCCV"
+    }
+  },
+  {
+    "id": "md6916glxdcw9ayfro",
+    "timestamp": "2025-07-16T17:42:29.110Z",
+    "filename": "DSC04834.jpg",
+    "smugmugImageKey": "9Lj7q2C",
+    "smugmugUrl": "https://photos.smugmug.com/2025/Arizona-Cup/Friday-AM-U21U18/i-9Lj7q2C/0/MXXK9KvT85NzGWBNKDmVDHZ4WqZSzPWqJWqQvM6j5/D/DSC04834-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "NKgD8x",
+    "albumName": "Friday AM - U21/U18",
+    "albumPath": "2025 > Arizona Cup > Friday AM - U21/U18",
+    "albumHierarchy": [
+      "2025",
+      "Arizona Cup",
+      "Friday AM - U21/U18"
+    ],
+    "description": "The image shows a large black and white flag or banner standing upright in an outdoor setting. The flag has the text 'HOYA' printed on it in a bold font, along with the 'USA' logo. In the background, there is a hilly, mountainous landscape with a cloudy sky. The setting appears to be a sports or athletic event venue, with rows of white bleachers or seating visible in the distance. The overall mood and atmosphere of the image is one of an outdoor sporting or athletic competition, with the prominent display of the HOYA brand and flag creating a sense of sponsorship or event branding. The composition is visually striking, with the large flag dominating the foreground and the scenic landscape providing a scenic backdrop.",
+    "keywords": [
+      "flag",
+      "banner",
+      "HOYA",
+      "USA",
+      "outdoor",
+      "sporting event",
+      "competition",
+      "landscape",
+      "mountains",
+      "clouds",
+      "bleachers",
+      "branding",
+      "sponsorship"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-16T17:42:29.109Z",
+      "batchId": "batch_1752687740386_msps197t6",
+      "jobId": "img_NKgD8x_9Lj7q2C"
+    }
+  },
+  {
+    "id": "md6919odeq87lofbm9b",
+    "timestamp": "2025-07-16T17:42:33.277Z",
+    "filename": "GCP00149.jpg",
+    "smugmugImageKey": "KT9vnzb",
+    "smugmugUrl": "https://photos.smugmug.com/2025/Arizona-Cup/Friday-AM-U21U18/i-KT9vnzb/0/KcpmWSCpPp2fHn7kXGHBdQLFfb66w3wzpgQNFP64N/D/GCP00149-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "NKgD8x",
+    "albumName": "Friday AM - U21/U18",
+    "albumPath": "2025 > Arizona Cup > Friday AM - U21/U18",
+    "albumHierarchy": [
+      "2025",
+      "Arizona Cup",
+      "Friday AM - U21/U18"
+    ],
+    "description": "The image shows several individuals engaged in archery, a recreational outdoor activity. In the foreground, a young person in a black jacket and baseball cap is seen drawing back a bow and arrow, focused intently on their target. Next to them, another young person in colorful clothing appears to be providing guidance or instruction. In the background, additional archers can be seen, all situated in an open, natural setting with trees and a clear sky visible. The overall mood is one of focus and engagement, with the participants fully immersed in the sport. The composition features a balanced arrangement of the archers and their equipment, highlighting the central action taking place. The lighting is bright and natural, creating a sense of warmth and vibrancy. No specific text or signage is visible in the image.",
+    "keywords": [
+      "archery",
+      "outdoor recreation",
+      "sports",
+      "target practice",
+      "instruction",
+      "natural setting",
+      "focus",
+      "concentration",
+      "equipment",
+      "balanced composition",
+      "bright lighting"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-16T17:42:33.277Z",
+      "batchId": "batch_1752687740386_msps197t6",
+      "jobId": "img_NKgD8x_KT9vnzb"
+    }
+  },
+  {
+    "id": "md691d5rz26nrgr8rf",
+    "timestamp": "2025-07-16T17:42:37.792Z",
+    "filename": "GCP00160.jpg",
+    "smugmugImageKey": "pnDWJpQ",
+    "smugmugUrl": "https://photos.smugmug.com/2025/Arizona-Cup/Friday-AM-U21U18/i-pnDWJpQ/0/KkfNcfV8RmFZzLzhCLvsVQgG7LfxWWjbbdwhNTnKg/D/GCP00160-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "NKgD8x",
+    "albumName": "Friday AM - U21/U18",
+    "albumPath": "2025 > Arizona Cup > Friday AM - U21/U18",
+    "albumHierarchy": [
+      "2025",
+      "Arizona Cup",
+      "Friday AM - U21/U18"
+    ],
+    "description": "The image shows a person engaged in archery practice in an outdoor desert setting. The individual is wearing a blue and white patterned hat, a light gray long-sleeved shirt, and dark gray pants. They are holding a bow and drawing back the string, focusing intently on their target. The background features a landscape with mountains and desert vegetation, under a partly cloudy blue sky. The scene has a sense of solitude and focus, with the archer concentrating on their aim amidst the natural surroundings. The lighting is bright and clear, creating a peaceful and serene atmosphere. The overall composition draws the viewer's attention to the archer and their actions, emphasizing the skill and precision required for this sport.",
+    "keywords": [
+      "archery",
+      "archer",
+      "bow and arrow",
+      "outdoor recreation",
+      "desert landscape",
+      "mountains",
+      "nature",
+      "focus",
+      "concentration",
+      "solitude",
+      "peaceful",
+      "serene"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-16T17:42:37.791Z",
+      "batchId": "batch_1752687740386_msps197t6",
+      "jobId": "img_NKgD8x_pnDWJpQ"
+    }
+  },
+  {
+    "id": "md691h3jnn4k1ojbygl",
+    "timestamp": "2025-07-16T17:42:42.897Z",
+    "filename": "GCP00184.jpg",
+    "smugmugImageKey": "RGRXwKn",
+    "smugmugUrl": "https://photos.smugmug.com/2025/Arizona-Cup/Friday-AM-U21U18/i-RGRXwKn/0/LzzF3rBVkzJgfntLD8jtgmGjJ885JfV824c2HNf6b/D/GCP00184-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "NKgD8x",
+    "albumName": "Friday AM - U21/U18",
+    "albumPath": "2025 > Arizona Cup > Friday AM - U21/U18",
+    "albumHierarchy": [
+      "2025",
+      "Arizona Cup",
+      "Friday AM - U21/U18"
+    ],
+    "description": "{\n  \"description\": \"The image depicts an outdoor market or festival setting, with several people gathered under orange-colored tents or umbrellas. In the foreground, a young man in a white cap and sweatshirt is adjusting or examining what appears to be a handheld camera or video device. Next to him, a young woman wearing a navy blue shirt with a USA flag patch is also holding a similar device, suggesting they may be capturing footage or images at the event. \n\nThe background shows a crowd of people milling about, some carrying bags or baskets, indicating this is likely a bustling marketplace or fair. The overall mood is lively and engaged, with the warm lighting and outdoor setting creating a pleasant, festive atmosphere. The composition features a mix of colors, including the orange tents, the blue sky visible above, and the diverse clothing worn by the people present. There are no clear signs or text visible in the image.\n\nBased on the dress and activity, this scene appears to be taking place during a daytime, spring or summer event, possibly in a public square or outdoor plaza setting.\",\n  \"keywords\": [\"outdoor market\", \"festival\", \"camera equipment\", \"videography\", \"photography\", \"crowd\", \"tents\", \"colorful\", \"lively\", \"daytime\", \"spring\", \"summer\"]\n}",
+    "keywords": [],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-16T17:42:42.895Z",
+      "batchId": "batch_1752687740386_msps197t6",
+      "jobId": "img_NKgD8x_RGRXwKn"
+    }
   }
 ]
