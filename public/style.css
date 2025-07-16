@@ -6,6 +6,58 @@
     box-sizing: border-box;
 }
 
+/* Load More Button Styles */
+.load-more-section {
+    padding: 15px;
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+    margin-top: 1rem;
+}
+
+.load-more-btn {
+    background: var(--accent-primary);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.load-more-btn:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.load-more-btn:disabled {
+    background: var(--bg-accent);
+    color: var(--text-muted);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.load-more-btn:disabled:hover {
+    background: var(--bg-accent);
+    transform: none;
+    box-shadow: var(--shadow-sm);
+}
+
+.load-more-btn::before {
+    content: '⬇️';
+    font-size: 0.875rem;
+}
+
+.load-more-btn:disabled::before {
+    content: '⏳';
+}
+
 /* Theme System - CSS Custom Properties */
 :root {
     /* Light theme colors */

@@ -198,6 +198,68 @@ async function handleAPIRoutes(req, res, parsedUrl) {
       return sendSuccess(res, results, `Found ${results.length} images`);
     }
 
+    // Load more results endpoint
+    if (pathname === '/api/chat/load-more' && method === 'POST') {
+      const requestData = await parseJSON(req);
+      log(`Load more request: page ${requestData.page} for query "${requestData.originalQuery}"`);
+      
+      if (!requestData.originalQuery || typeof requestData.originalQuery !== 'string') {
+        return sendError(res, 400, 'Original query is required');
+      }
+
+      try {
+        // Import SearchFunctions
+        const SearchFunctions = require('./lib/searchFunctions');
+        const searchFunctions = new SearchFunctions();
+        
+        // Re-execute the original search to get all results
+        const availableFunctions = searchFunctions.getFunctionDefinitions();
+        const claudeResponse = await claudeClient.processConversationalQuery(requestData.originalQuery, availableFunctions);
+        
+        if (!claudeResponse.success) {
+          throw new Error(claudeResponse.error);
+        }
+        
+        let searchResults = [];
+        const response = claudeResponse.response;
+        
+        // Process function calls to get search results
+        if (response.content) {
+          for (const contentBlock of response.content) {
+            if (contentBlock.type === 'tool_use') {
+              try {
+                const functionResult = await searchFunctions.executeFunction(
+                  contentBlock.name, 
+                  contentBlock.input
+                );
+                
+                if (Array.isArray(functionResult)) {
+                  searchResults = searchResults.concat(functionResult);
+                }
+              } catch (funcError) {
+                console.error(`[Load More] Function ${contentBlock.name} error:`, funcError.message);
+              }
+            }
+          }
+        }
+        
+        // Apply pagination
+        const page = parseInt(requestData.page || '1');
+        const limit = parseInt(requestData.limit || '10');
+        const paginatedData = searchFunctions.paginateResults(searchResults, page, limit);
+        
+        return sendSuccess(res, {
+          results: searchFunctions.formatResults(paginatedData.results),
+          pagination: paginatedData.pagination,
+          resultCount: searchResults.length
+        }, 'More results loaded');
+        
+      } catch (error) {
+        log(`Load more error: ${error.message}`, 'ERROR');
+        return sendError(res, 500, 'Failed to load more results: ' + error.message);
+      }
+    }
+
     // Chat endpoint with conversational search functionality
     if (pathname === '/api/chat' && method === 'POST') {
       const requestData = await parseJSON(req);
@@ -290,10 +352,16 @@ async function handleAPIRoutes(req, res, parsedUrl) {
           }
         }
         
+        // Apply pagination to results (limit to 10 by default)
+        const page = parseInt(requestData.page || '0');
+        const limit = parseInt(requestData.limit || '10');
+        const paginatedData = searchFunctions.paginateResults(searchResults, page, limit);
+        
         // Fallback response if no text was generated
         if (!finalResponse) {
           if (searchResults.length > 0) {
-            finalResponse = `I found ${searchResults.length} photo${searchResults.length === 1 ? '' : 's'} matching your query. Here are the results with their SmugMug links.`;
+            const showing = `Showing ${paginatedData.pagination.startIndex + 1}-${paginatedData.pagination.endIndex} of ${paginatedData.pagination.total}`;
+            finalResponse = `I found ${searchResults.length} photo${searchResults.length === 1 ? '' : 's'} matching your query. ${showing} results with their SmugMug links.`;
           } else {
             finalResponse = "I didn't find any photos matching your query. Try different search terms like 'archery', 'competition', 'celebration', or describe what you're looking for.";
           }
@@ -301,8 +369,10 @@ async function handleAPIRoutes(req, res, parsedUrl) {
         
         return sendSuccess(res, {
           response: finalResponse,
-          results: searchFunctions.formatResults(searchResults),
-          resultCount: searchResults.length
+          results: searchFunctions.formatResults(paginatedData.results),
+          pagination: paginatedData.pagination,
+          resultCount: searchResults.length,
+          originalQuery: requestData.message
         }, 'Chat message processed');
         
       } catch (error) {

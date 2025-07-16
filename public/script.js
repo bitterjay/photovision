@@ -417,10 +417,15 @@ class PhotoVision {
 
         // Add search results if available
         if (data.results && data.results.length > 0) {
+            const pagination = data.pagination || {};
+            const showingText = pagination.total ? 
+                `Showing ${pagination.startIndex + 1}-${pagination.endIndex} of ${pagination.total}` : 
+                `${data.results.length} photos found`;
+            
             messageHTML += `
-                <div class="search-results-section">
+                <div class="search-results-section" data-search-query="${data.originalQuery || ''}" data-current-page="${pagination.page || 0}">
                     <div class="results-header">
-                        <strong>🔍 Search Results (${data.results.length} photos found):</strong>
+                        <strong>🔍 Search Results (${showingText}):</strong>
                     </div>
                     <div class="minimal-results-grid">
             `;
@@ -455,7 +460,7 @@ class PhotoVision {
                                 </a>
                             ` : `
                                 <span class="card-btn" style="background: #e9ecef; color: #6c757d; cursor: not-allowed;">
-                                    � No Link
+                                    No Link
                                 </span>
                             `}
                         </div>
@@ -468,6 +473,20 @@ class PhotoVision {
 
             messageHTML += `
                     </div>
+            `;
+            
+            // Add load more button if there are more results
+            if (pagination.hasMore) {
+                messageHTML += `
+                    <div class="load-more-section" style="text-align: center; padding: 15px;">
+                        <button class="load-more-btn" onclick="window.photoVision.loadMoreResults('${data.originalQuery || ''}', ${(pagination.page || 0) + 1})">
+                            Load More Results (${pagination.total - pagination.endIndex} remaining)
+                        </button>
+                    </div>
+                `;
+            }
+            
+            messageHTML += `
                 </div>
             `;
         } else if (data.results && data.results.length === 0) {
@@ -497,6 +516,141 @@ class PhotoVision {
             this.photoDataStore = new Map();
         }
         this.photoDataStore.set(photoId, photo);
+    }
+
+    async loadMoreResults(query, page) {
+        const loadMoreBtn = document.querySelector('.load-more-btn');
+        if (!loadMoreBtn) return;
+
+        // Disable button and show loading state
+        loadMoreBtn.disabled = true;
+        loadMoreBtn.textContent = 'Loading...';
+
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    message: query,
+                    page: page
+                }),
+            });
+
+            const data = await response.json();
+
+            if (data.success && data.data.results && data.data.results.length > 0) {
+                // Find the search results section that contains this button
+                const searchSection = loadMoreBtn.closest('.search-results-section');
+                if (searchSection) {
+                    this.appendSearchResults(searchSection, data.data);
+                }
+            } else {
+                // No more results or error
+                loadMoreBtn.textContent = 'No more results';
+                setTimeout(() => {
+                    loadMoreBtn.remove();
+                }, 2000);
+            }
+        } catch (error) {
+            console.error('Error loading more results:', error);
+            loadMoreBtn.textContent = 'Error loading more';
+            loadMoreBtn.disabled = false;
+        }
+    }
+
+    appendSearchResults(searchSection, data) {
+        const resultsGrid = searchSection.querySelector('.minimal-results-grid');
+        const loadMoreSection = searchSection.querySelector('.load-more-section');
+        
+        if (!resultsGrid) return;
+
+        // Generate HTML for new results
+        let newResultsHTML = '';
+        data.results.forEach((photo, index) => {
+            const photoId = `photo-${Date.now()}-${index}`;
+            
+            newResultsHTML += `
+                <div class="minimal-result-card">
+                    ${photo.smugmugUrl ? `
+                        <img src="${photo.smugmugUrl}" 
+                             alt="${photo.description || photo.filename || 'Image'}" 
+                             class="card-image"
+                             loading="lazy"
+                             data-photo-id="${photoId}"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div style="display: none; height: 120px; background: #f8f9fa; align-items: center; justify-content: center; color: #666; font-size: 0.9em;">
+                            <span>⚠️ Image unavailable</span>
+                        </div>
+                    ` : `
+                        <div style="height: 120px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; color: #666; font-size: 0.9em;">
+                            <span>📷 No image available</span>
+                        </div>
+                    `}
+                    <div class="card-actions">
+                        <button class="card-btn info-btn" onclick="window.photoVision.showMetadataModal('${photoId}')">
+                            Details
+                        </button>
+                        ${photo.smugmugUrl ? `
+                            <a href="${photo.smugmugUrl}" target="_blank" class="card-btn download-btn" download>
+                                Download
+                            </a>
+                        ` : `
+                            <span class="card-btn" style="background: #e9ecef; color: #6c757d; cursor: not-allowed;">
+                                No Link
+                            </span>
+                        `}
+                    </div>
+                </div>
+            `;
+            
+            // Store photo data for modal and lightbox
+            this.storePhotoData(photoId, photo);
+        });
+
+        // Insert new results before the load more section
+        if (loadMoreSection) {
+            loadMoreSection.insertAdjacentHTML('beforebegin', newResultsHTML);
+        } else {
+            resultsGrid.insertAdjacentHTML('beforeend', newResultsHTML);
+        }
+
+        // Update the lightbox handlers for new images
+        const newImages = resultsGrid.querySelectorAll('.card-image[data-photo-id]');
+        const allResults = [...(this.currentSearchResults || []), ...data.results];
+        this.currentSearchResults = allResults; // Store for lightbox
+        
+        // Add lightbox handlers for new images
+        const newImageElements = Array.from(newImages).slice(-data.results.length);
+        newImageElements.forEach(img => {
+            img.addEventListener('click', (e) => {
+                e.preventDefault();
+                const photoId = img.dataset.photoId;
+                const startIndex = Array.from(newImages).indexOf(img);
+                this.openLightbox(allResults, startIndex);
+            });
+        });
+
+        // Update or remove load more button
+        if (loadMoreSection) {
+            const pagination = data.pagination || {};
+            if (pagination.hasMore) {
+                const remainingCount = pagination.total - pagination.endIndex;
+                loadMoreSection.innerHTML = `
+                    <button class="load-more-btn" onclick="window.photoVision.loadMoreResults('${data.originalQuery || ''}', ${(pagination.page || 0) + 1})">
+                        Load More Results (${remainingCount} remaining)
+                    </button>
+                `;
+            } else {
+                loadMoreSection.remove();
+            }
+        }
+
+        // Update search section attributes
+        if (data.pagination) {
+            searchSection.setAttribute('data-current-page', data.pagination.page || 0);
+        }
     }
 
     showMetadataModal(photoId) {
