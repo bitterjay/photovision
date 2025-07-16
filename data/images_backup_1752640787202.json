@@ -28,14 +28,7 @@
       "timestamp": "2025-07-16T04:27:31.874Z",
       "batchId": "batch_1752640028935_lt3fk0ib8",
       "jobId": "img_NKgD8x_RGqThDP"
-    },
-    "albumName": "Friday AM - U21/U18",
-    "albumPath": "2025 > Arizona Cup > Friday AM - U21/U18",
-    "albumHierarchy": [
-      "2025",
-      "Arizona Cup",
-      "Friday AM - U21/U18"
-    ]
+    }
   },
   {
     "id": "md5gq6czpukx5xunxs",
@@ -53,13 +46,6 @@
       "timestamp": "2025-07-16T04:30:06.515Z",
       "batchId": "batch_1752640201670_uubedkr4w",
       "jobId": "img_BNh6VJ_cfW3mJC"
-    },
-    "albumName": "Saturday AM + Para awards",
-    "albumPath": "2025 > Arizona Cup > Saturday AM + Para awards",
-    "albumHierarchy": [
-      "2025",
-      "Arizona Cup",
-      "Saturday AM + Para awards"
-    ]
+    }
   }
 ]
