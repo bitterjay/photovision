@@ -2183,3 +2183,9 @@ select:focus {
 .duplicate-info, .album-hierarchy {
     display:none;
 }
+
+/* edits */
+
+.metadata-value {
+    color:white !important;
+}
