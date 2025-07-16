@@ -197,19 +197,117 @@ async function handleAPIRoutes(req, res, parsedUrl) {
       return sendSuccess(res, results, `Found ${results.length} images`);
     }
 
-    // Chat endpoint (placeholder for future implementation)
+    // Chat endpoint with conversational search functionality
     if (pathname === '/api/chat' && method === 'POST') {
       const requestData = await parseJSON(req);
       log(`Chat request: ${requestData.message}`);
       
-      // Placeholder response
-      const response = {
-        message: "I'm not fully connected yet, but I received your message: " + requestData.message,
-        timestamp: new Date().toISOString(),
-        type: 'placeholder'
-      };
-      
-      return sendSuccess(res, response, 'Message processed');
+      if (!requestData.message || typeof requestData.message !== 'string') {
+        return sendError(res, 400, 'Message is required');
+      }
+
+      try {
+        // Import SearchFunctions
+        const SearchFunctions = require('./lib/searchFunctions');
+        const searchFunctions = new SearchFunctions();
+        
+        console.log(`[Chat] Processing query: "${requestData.message}"`);
+        
+        // Get available search functions for Claude
+        const availableFunctions = searchFunctions.getFunctionDefinitions();
+        
+        // Process query with Claude
+        const claudeResponse = await claudeClient.processConversationalQuery(requestData.message, availableFunctions);
+        
+        if (!claudeResponse.success) {
+          throw new Error(claudeResponse.error);
+        }
+        
+        // Handle Claude's response and function calls
+        let finalResponse = '';
+        let searchResults = [];
+        
+        const response = claudeResponse.response;
+        
+        // Process any function calls Claude made
+        if (response.content) {
+          for (const contentBlock of response.content) {
+            if (contentBlock.type === 'tool_use') {
+              console.log(`[Chat] Executing function: ${contentBlock.name} with params:`, contentBlock.input);
+              
+              try {
+                const functionResult = await searchFunctions.executeFunction(
+                  contentBlock.name, 
+                  contentBlock.input
+                );
+                
+                // Store results for final response
+                if (Array.isArray(functionResult)) {
+                  searchResults = searchResults.concat(functionResult);
+                }
+                
+                console.log(`[Chat] Function ${contentBlock.name} returned ${Array.isArray(functionResult) ? functionResult.length : 'non-array'} results`);
+                
+              } catch (funcError) {
+                console.error(`[Chat] Function ${contentBlock.name} error:`, funcError.message);
+              }
+            } else if (contentBlock.type === 'text') {
+              finalResponse += contentBlock.text;
+            }
+          }
+        }
+        
+        // If Claude made function calls but we need the final response, make another request
+        if (response.content.some(block => block.type === 'tool_use') && !finalResponse) {
+          console.log('[Chat] Getting final response from Claude with search results');
+          
+          // Create a follow-up request with the search results
+          const followUpBody = {
+            model: "claude-3-5-sonnet-20241022",
+            max_tokens: 1000,
+            system: `You are PhotoVision, an intelligent image discovery assistant. Format the search results into a helpful conversational response.`,
+            messages: [
+              {
+                role: "user",
+                content: requestData.message
+              },
+              {
+                role: "assistant",
+                content: response.content
+              },
+              {
+                role: "user",
+                content: `Here are the search results: ${JSON.stringify(searchFunctions.formatResults(searchResults), null, 2)}. Please provide a conversational response about these results.`
+              }
+            ]
+          };
+          
+          const followUpResponse = await claudeClient.makeRequest('/v1/messages', 'POST', followUpBody);
+          
+          if (followUpResponse.content && followUpResponse.content[0]) {
+            finalResponse = followUpResponse.content[0].text || 'I found some results but had trouble formatting the response.';
+          }
+        }
+        
+        // Fallback response if no text was generated
+        if (!finalResponse) {
+          if (searchResults.length > 0) {
+            finalResponse = `I found ${searchResults.length} photo${searchResults.length === 1 ? '' : 's'} matching your query. Here are the results with their SmugMug links.`;
+          } else {
+            finalResponse = "I didn't find any photos matching your query. Try different search terms like 'archery', 'competition', 'celebration', or describe what you're looking for.";
+          }
+        }
+        
+        return sendSuccess(res, {
+          response: finalResponse,
+          results: searchFunctions.formatResults(searchResults),
+          resultCount: searchResults.length
+        }, 'Chat message processed');
+        
+      } catch (error) {
+        log(`Chat processing error: ${error.message}`, 'ERROR');
+        return sendError(res, 500, 'Failed to process chat message: ' + error.message);
+      }
     }
 
     // Images endpoint

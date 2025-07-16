@@ -43,10 +43,10 @@
 4. [x] Test: Process multiple images, handle failures gracefully
 
 #### Phase 6: Conversational LLM Bridge
-1. [ ] Claude interprets natural language queries (e.g., "find 10 photos of girls ages 5-8 smiling")
-2. [ ] Function calling approach for structured database searches
-3. [ ] Conversational responses with photo results and SmugMug links
-4. [ ] Test: Natural language search queries work correctly with intelligent results
+1. [x] Claude interprets natural language queries (e.g., \"find 10 photos of girls ages 5-8 smiling\")
+2. [x] Function calling approach for structured database searches
+3. [x] Conversational responses with photo results and SmugMug links
+4. [x] Test: Natural language search queries work correctly with intelligent results
 
 #### Phase 7: Enhanced Search & Polish
 1. [ ] Improved search algorithms and query understanding
