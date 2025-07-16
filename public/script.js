@@ -197,7 +197,13 @@ class PhotoVision {
             this.hideTypingIndicator();
             
             if (data.success) {
-                this.addMessage(data.data.message, 'assistant');
+                // Check if this is a conversational search response with results
+                if (data.data.response && data.data.results !== undefined) {
+                    this.addConversationalSearchMessage(data.data);
+                } else {
+                    // Fallback to simple message
+                    this.addMessage(data.data.message || data.data.response, 'assistant');
+                }
             } else {
                 this.addMessage('Sorry, I encountered an error processing your request.', 'assistant');
             }

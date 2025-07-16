@@ -480,10 +480,10 @@ body {
 /* Loading animation */
 .loading {
     display: inline-block;
-    width: 20px;
-    height: 20px;
+    width: 12px;
+    height: 12px;
     border: 2px solid #f3f3f3;
-    border-top: 2px solid #3498db;
+    border-top: 2px solid #333;
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
@@ -491,6 +491,130 @@ body {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+/* Conversational Search Results Styles */
+.conversational-response {
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.search-results-section {
+    margin-top: 15px;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 15px;
+}
+
+.results-header {
+    margin-bottom: 12px;
+    color: #333;
+}
+
+.results-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.result-item {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px;
+    background-color: #f9f9f9;
+    transition: background-color 0.2s ease;
+}
+
+.result-item:hover {
+    background-color: #f0f0f0;
+}
+
+.result-info {
+    margin-bottom: 8px;
+}
+
+.result-filename {
+    margin-bottom: 6px;
+    color: #2c5282;
+}
+
+.result-description {
+    color: #666;
+    font-size: 0.9em;
+    line-height: 1.4;
+    margin-bottom: 8px;
+}
+
+.result-keywords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.keyword-tag {
+    background-color: #e3f2fd;
+    color: #1565c0;
+    padding: 2px 6px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    border: 1px solid #bbdefb;
+}
+
+.result-actions {
+    text-align: right;
+}
+
+.smugmug-link {
+    display: inline-block;
+    background-color: #2c5282;
+    color: white;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease;
+}
+
+.smugmug-link:hover {
+    background-color: #2a4d7a;
+    text-decoration: none;
+    color: white;
+}
+
+.no-link {
+    color: #999;
+    font-size: 0.9em;
+    font-style: italic;
+}
+
+.no-results-section {
+    margin-top: 15px;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 15px;
+    text-align: center;
+}
+
+.no-results-message {
+    color: #666;
+    font-style: italic;
+}
+
+/* Responsive design for search results */
+@media (min-width: 768px) {
+    .results-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 15px;
+    }
+    
+    .result-item {
+        padding: 15px;
+    }
+}
+
+/* Enhanced chat messages for conversational search */
+.message.assistant .message-content {
+    max-width: none; /* Allow full width for search results */
 }
 
 /* Batch Processing Styles */
