@@ -300,6 +300,242 @@ class PhotoVision {
         this.scrollToBottom();
     }
 
+    addConversationalSearchMessage(data) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message assistant';
+        
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'message-content';
+        
+        // Start with the conversational response
+        let messageHTML = `
+            <div class="conversational-response" style="padding: 8px; background-color: #f0f8ff; border-radius: 6px; border-left: 4px solid #2196f3;">
+                ${data.response}
+            </div>
+        `;
+
+        // Add search results if available
+        if (data.results && data.results.length > 0) {
+            messageHTML += `
+                <div class="search-results-section">
+                    <div class="results-header">
+                        <strong>🔍 Search Results (${data.results.length} photos found):</strong>
+                    </div>
+                    <div class="minimal-results-grid">
+            `;
+
+            data.results.forEach((photo, index) => {
+                const photoId = `photo-${Date.now()}-${index}`;
+                
+                messageHTML += `
+                    <div class="minimal-result-card">
+                        ${photo.smugmugUrl ? `
+                            <img src="${photo.smugmugUrl}" 
+                                 alt="${photo.description || photo.filename || 'Image'}" 
+                                 class="card-image"
+                                 loading="lazy"
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div style="display: none; height: 120px; background: #f8f9fa; align-items: center; justify-content: center; color: #666; font-size: 0.9em;">
+                                <span>⚠️ Image unavailable</span>
+                            </div>
+                        ` : `
+                            <div style="height: 120px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; color: #666; font-size: 0.9em;">
+                                <span>📷 No image available</span>
+                            </div>
+                        `}
+                        <div class="card-actions">
+                            <button class="card-btn info-btn" onclick="window.photoVision.showMetadataModal('${photoId}')">
+                                ℹ️ Details
+                            </button>
+                            ${photo.smugmugUrl ? `
+                                <a href="${photo.smugmugUrl}" target="_blank" class="card-btn smugmug-btn">
+                                    📸 View
+                                </a>
+                            ` : `
+                                <span class="card-btn" style="background: #e9ecef; color: #6c757d; cursor: not-allowed;">
+                                    📸 No Link
+                                </span>
+                            `}
+                        </div>
+                    </div>
+                `;
+                
+                // Store photo data for modal
+                this.storePhotoData(photoId, photo);
+            });
+
+            messageHTML += `
+                    </div>
+                </div>
+            `;
+        } else if (data.results && data.results.length === 0) {
+            messageHTML += `
+                <div class="no-results-section">
+                    <div class="no-results-message">
+                        <strong>🔍 No photos found</strong> matching your search criteria.
+                    </div>
+                </div>
+            `;
+        }
+
+        contentDiv.innerHTML = messageHTML;
+        
+        messageDiv.appendChild(contentDiv);
+        this.messagesContainer.appendChild(messageDiv);
+        
+        // Scroll to bottom
+        this.scrollToBottom();
+    }
+
+    storePhotoData(photoId, photo) {
+        if (!this.photoDataStore) {
+            this.photoDataStore = new Map();
+        }
+        this.photoDataStore.set(photoId, photo);
+    }
+
+    showMetadataModal(photoId) {
+        const photo = this.photoDataStore?.get(photoId);
+        if (!photo) {
+            console.error('Photo data not found for ID:', photoId);
+            return;
+        }
+
+        // Create modal HTML
+        const modalHTML = `
+            <div class="metadata-modal" onclick="this.remove()">
+                <div class="modal-content" onclick="event.stopPropagation()">
+                    <div class="modal-header">
+                        <h3 class="modal-title">${photo.filename || 'Image Details'}</h3>
+                        <button class="modal-close" onclick="this.closest('.metadata-modal').remove()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="metadata-section">
+                            <h4>📄 File Information</h4>
+                            <div class="metadata-content">
+                                <div class="metadata-row">
+                                    <span class="metadata-label">Filename:</span>
+                                    <span class="metadata-value">${photo.filename || 'Unknown'}</span>
+                                </div>
+                                ${photo.size ? `
+                                    <div class="metadata-row">
+                                        <span class="metadata-label">File Size:</span>
+                                        <span class="metadata-value">${this.formatFileSize(photo.size)}</span>
+                                    </div>
+                                ` : ''}
+                                ${photo.mimeType ? `
+                                    <div class="metadata-row">
+                                        <span class="metadata-label">Type:</span>
+                                        <span class="metadata-value">${photo.mimeType}</span>
+                                    </div>
+                                ` : ''}
+                                ${photo.uploadedAt || photo.timestamp ? `
+                                    <div class="metadata-row">
+                                        <span class="metadata-label">Date:</span>
+                                        <span class="metadata-value">${new Date(photo.uploadedAt || photo.timestamp).toLocaleString()}</span>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+
+                        ${photo.description ? `
+                            <div class="metadata-section">
+                                <h4>🤖 AI Analysis</h4>
+                                <div class="metadata-content">
+                                    <div class="description-text">${photo.description}</div>
+                                    ${photo.metadata?.model || photo.analysis?.model ? `
+                                        <div class="metadata-row" style="margin-top: 8px;">
+                                            <span class="metadata-label">Model:</span>
+                                            <span class="metadata-value">${photo.metadata?.model || photo.analysis?.model}</span>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        ` : ''}
+
+                        ${photo.keywords && photo.keywords.length > 0 ? `
+                            <div class="metadata-section">
+                                <h4>🏷️ Keywords</h4>
+                                <div class="metadata-content">
+                                    <div class="keywords-list">
+                                        ${photo.keywords.map(keyword => `<span class="keyword-tag">${keyword}</span>`).join('')}
+                                    </div>
+                                </div>
+                            </div>
+                        ` : ''}
+
+                        ${photo.smugmugUrl || photo.albumKey ? `
+                            <div class="metadata-section">
+                                <h4>🔗 SmugMug Information</h4>
+                                <div class="metadata-content">
+                                    ${photo.smugmugUrl ? `
+                                        <div class="metadata-row">
+                                            <span class="metadata-label">Image URL:</span>
+                                            <span class="metadata-value">
+                                                <a href="${photo.smugmugUrl}" target="_blank" style="color: #007bff; text-decoration: none;">
+                                                    View Full Image →
+                                                </a>
+                                            </span>
+                                        </div>
+                                    ` : ''}
+                                    ${photo.albumKey ? `
+                                        <div class="metadata-row">
+                                            <span class="metadata-label">Album:</span>
+                                            <span class="metadata-value">${photo.albumName || photo.albumKey}</span>
+                                        </div>
+                                    ` : ''}
+                                    ${photo.smugmugImageKey ? `
+                                        <div class="metadata-row">
+                                            <span class="metadata-label">Image Key:</span>
+                                            <span class="metadata-value">${photo.smugmugImageKey}</span>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        ` : ''}
+
+                        ${photo.metadata || photo.analysis ? `
+                            <div class="metadata-section">
+                                <h4>📊 Technical Details</h4>
+                                <div class="metadata-content">
+                                    ${photo.metadata?.timestamp ? `
+                                        <div class="metadata-row">
+                                            <span class="metadata-label">Analyzed:</span>
+                                            <span class="metadata-value">${new Date(photo.metadata.timestamp).toLocaleString()}</span>
+                                        </div>
+                                    ` : ''}
+                                    ${photo.metadata?.batchId ? `
+                                        <div class="metadata-row">
+                                            <span class="metadata-label">Batch ID:</span>
+                                            <span class="metadata-value">${photo.metadata.batchId}</span>
+                                        </div>
+                                    ` : ''}
+                                    ${photo.id ? `
+                                        <div class="metadata-row">
+                                            <span class="metadata-label">Record ID:</span>
+                                            <span class="metadata-value">${photo.id}</span>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Add modal to page
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
+    formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
     showTypingIndicator() {
         const typingDiv = document.createElement('div');
         typingDiv.className = 'message assistant typing-indicator';
@@ -445,12 +681,18 @@ class PhotoVision {
             
             if (data.success) {
                 this.updateServiceStatus('claude', 'connected', 'Connected');
+                // Enable chat interface when Claude AI is connected
+                this.enableChat();
             } else {
                 this.updateServiceStatus('claude', 'disconnected', 'Connection failed');
+                // Disable chat interface when Claude AI is not connected
+                this.disableChat();
             }
         } catch (error) {
             console.error('Claude status check error:', error);
             this.updateServiceStatus('claude', 'disconnected', 'Connection error');
+            // Disable chat interface on connection error
+            this.disableChat();
         }
     }
 
