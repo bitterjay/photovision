@@ -54,6 +54,18 @@ From projectRoadmap.md - Phase 3:
 7. [x] **UI Integration Fixes**: Resolved frontend-backend data structure mismatches and infinite polling issues
 8. [x] **Status Transformation**: Added proper data mapping between JobQueue and frontend expectations
 
+### Latest Enhancement: Image Dimension Resizing (Just Completed)
+- **✅ Problem Solved**: API Error 400 when SmugMug images exceed 8000 pixels
+- **✅ Solution**: Enhanced `lib/claudeClient.js` with intelligent dimension-based resizing
+  - Landscape images: Resize to 2200px wide, auto height
+  - Portrait images: Resize to 2200px tall, auto width  
+  - Square images: Resize to 2200px × 2200px
+  - Maintains aspect ratio using Sharp library for high-quality resizing
+  - Dual optimization: Handles both dimension limits (2200px) and file size limits (5MB)
+  - Comprehensive logging and error handling with graceful fallback
+- **✅ Testing**: Verified with landscape, portrait, and normal-sized test images - all passed
+- **✅ Status**: COMPLETE - Ready for production use
+
 ### Previous Phase 4 Achievements
 1. [x] **SmugMug OAuth 1.0a Implementation**: Complete OAuth flow with proper signature generation
 2. [x] **SmugMug Client Features**: User authentication, album management, connection testing

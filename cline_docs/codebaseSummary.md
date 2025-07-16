@@ -39,8 +39,12 @@
   - Anthropic Claude API communication
   - Image analysis with vision capabilities
   - JSON response parsing for descriptions and keywords
-  - Automatic image resizing for API limits
-  - Error handling and connection testing
+  - **Automatic image resizing for API limits**:
+    - **Dimension-based resizing**: 2200px wide (landscape) or 2200px tall (portrait)
+    - **File size optimization**: Progressive quality reduction for 5MB limit
+    - **Aspect ratio preservation**: Maintains original proportions
+    - **Error handling**: Graceful fallback if resizing fails
+  - Connection testing and comprehensive logging
 
 - **lib/smugmugClient.js**: SmugMug API integration
   - OAuth 1.0a authentication flow implementation
@@ -156,6 +160,19 @@ Frontend (script.js) → Backend (server.js) → External APIs
 ## Recent Significant Changes
 
 ### Phase 7 Progress - UI/UX Improvements & Bug Fixes (Latest)
+
+#### Latest Enhancement - Image Dimension Resizing (Just Completed)
+- **Problem Solved**: API Error 400 when SmugMug images exceed 8000 pixels
+- **Solution**: Enhanced `lib/claudeClient.js` with intelligent dimension-based resizing
+  - **Landscape images**: Resize to 2200px wide, auto height
+  - **Portrait images**: Resize to 2200px tall, auto width  
+  - **Square images**: Resize to 2200px × 2200px
+  - **Maintains aspect ratio**: Uses Sharp library for high-quality resizing
+  - **Dual optimization**: Handles both dimension limits (2200px) and file size limits (5MB)
+  - **Comprehensive logging**: Detailed console output for debugging
+  - **Error handling**: Graceful fallback to original image if resizing fails
+- **Testing**: Verified with landscape, portrait, and normal-sized test images
+- **Status**: ✅ **COMPLETE** - Ready for production use
 
 #### Recent Bug Fixes
 - **Album Hierarchy Search Fix**: Fixed search functionality in `searchFunctions.js`
