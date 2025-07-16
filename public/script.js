@@ -1088,56 +1088,58 @@ class PhotoVision {
     }
 
     async loadAlbumsWithProcessingStatus(albums, albumsList) {
-        // Render albums list with hierarchy and placeholder for processing status
+        // Render albums list with card-style layout
         albumsList.innerHTML = albums.map(album => {
             // Generate hierarchical display elements
             const indentLevel = album.IndentLevel || 0;
             const pathTags = album.PathTags || [];
             const displayPath = album.FullDisplayPath || album.Name || 'Untitled Album';
             
-            // Create path tags HTML
-            const pathTagsHtml = pathTags.length > 0 ? 
-                pathTags.map(tag => `<span class="path-tag">${this.escapeHtml(tag)}</span>`).join('') : 
-                '<span class="path-tag root-tag">Root</span>';
-
-            // Create indentation indicator
-            const indentIndicator = indentLevel > 0 ? 
-                '├─ '.repeat(Math.min(indentLevel, 3)) : '';
+            // Create hierarchy indicator
+            const hierarchyIndicator = indentLevel > 0 ? 
+                `${'📁'.repeat(Math.min(indentLevel, 3))} ` : '📁 ';
 
             return `
-                <div class="album-item indent-level-${indentLevel}" data-album-key="${album.AlbumKey}">
-                    <div class="album-info">
-                        <div class="album-header-section">
-                            <div class="album-indent">${indentIndicator}</div>
-                            <div class="album-name">${album.Name || 'Untitled Album'}</div>
+                <div class="album-item" data-album-key="${album.AlbumKey}">
+                    <div class="album-card-header">
+                        <div class="album-hierarchy">
+                            <span class="album-hierarchy-icon">${hierarchyIndicator}</span>
+                            <span class="hierarchy-level">Level ${indentLevel}</span>
                         </div>
-                        <div class="album-path-info">
-                            <div class="album-full-path">
-                                <span class="path-label">📁</span>
-                                <span class="path-text">${this.escapeHtml(displayPath)}</span>
-                            </div>
-                            <div class="album-path-tags">
-                                <span class="tags-label">🏷️</span>
-                                ${pathTagsHtml}
-                            </div>
+                        <h4 class="album-name">${album.Name || 'Untitled Album'}</h4>
+                    </div>
+                    
+                    <div class="album-card-path">
+                        <svg class="album-card-path-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"></path>
+                        </svg>
+                        <span class="path-text">${this.escapeHtml(displayPath)}</span>
+                    </div>
+                    
+                    <div class="album-card-details">
+                        <div class="album-image-count">
+                            <svg class="album-image-count-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21,15 16,10 5,21"></polyline>
+                            </svg>
+                            <span>${album.ImageCount || 0} images</span>
                         </div>
-                        <div class="album-details">
-                            <span class="image-count">${album.ImageCount || 0} images</span>
-                            ${album.Description ? `<span class="album-description">${this.escapeHtml(album.Description)}</span>` : ''}
-                        </div>
+                        
+                        ${album.Description ? `<div class="album-description">${this.escapeHtml(album.Description)}</div>` : ''}
+                        
                         <div class="album-processing-status" id="processing-status-${album.AlbumKey}">
                             <span class="loading-status">Checking processing status...</span>
                         </div>
                     </div>
-                    <button class="select-album-btn" data-album-key="${album.AlbumKey}">Select</button>
                 </div>
             `;
         }).join('');
 
-        // Add click handlers for album selection
-        albumsList.querySelectorAll('.select-album-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const albumKey = e.target.dataset.albumKey;
+        // Add click handlers for album selection (entire card is clickable)
+        albumsList.querySelectorAll('.album-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                const albumKey = e.currentTarget.dataset.albumKey;
                 this.selectAlbum(albumKey);
             });
         });
