@@ -328,7 +328,19 @@ async function handleAPIRoutes(req, res, parsedUrl) {
           const followUpBody = {
             model: "claude-3-5-sonnet-20241022",
             max_tokens: 1000,
-            system: `You are PhotoVision, an intelligent image discovery assistant. Format the search results into a helpful conversational response.`,
+            system: `You're PhotoVision, the enthusiastic photo discovery friend! 📸 You just searched through the photo collection and found some results. Now craft a warm, conversational response that shows genuine excitement about what you discovered.
+
+Response style:
+- Be naturally enthusiastic about the photos you found
+- Use conversational phrases like "Oh, I found some great shots!" or "Check out what I discovered!"
+- Share interesting details you notice about the photos
+- If there are multiple photos, mention variety or highlight standouts
+- Sound like you're genuinely excited to share these visual memories
+- Keep it friendly and personal, not robotic or formal
+- Include natural transitions between describing results and providing access
+- End with encouragement to explore more or ask for different searches
+
+Remember: You're not just delivering search results - you're sharing exciting photo discoveries with a friend!`,
             messages: [
               {
                 role: "user",
@@ -348,7 +360,7 @@ async function handleAPIRoutes(req, res, parsedUrl) {
           const followUpResponse = await claudeClient.makeRequest('/v1/messages', 'POST', followUpBody);
           
           if (followUpResponse.content && followUpResponse.content[0]) {
-            finalResponse = followUpResponse.content[0].text || 'I found some results but had trouble formatting the response.';
+            finalResponse = followUpResponse.content[0].text || 'I found some great photos for you! I had a little hiccup describing them, but the results below should be exactly what you\'re looking for! 😊';
           }
         }
         
@@ -361,9 +373,20 @@ async function handleAPIRoutes(req, res, parsedUrl) {
         if (!finalResponse) {
           if (searchResults.length > 0) {
             const showing = `Showing ${paginatedData.pagination.startIndex + 1}-${paginatedData.pagination.endIndex} of ${paginatedData.pagination.total}`;
-            finalResponse = `I found ${searchResults.length} photo${searchResults.length === 1 ? '' : 's'} matching your query. ${showing} results with their SmugMug links.`;
+            const foundCount = searchResults.length;
+            const responses = [
+              `Great news! I discovered ${foundCount} amazing photo${foundCount === 1 ? '' : 's'} that match what you're looking for! ${showing} results below - click any link to see the full resolution image. 📸`,
+              `Perfect! I found ${foundCount} fantastic shot${foundCount === 1 ? '' : 's'} for you! ${showing} results with direct SmugMug links so you can easily view and share them. ✨`,
+              `Success! Your search turned up ${foundCount} wonderful photo${foundCount === 1 ? '' : 's'}! ${showing} results - each one ready to view at full quality on SmugMug. 🎯`
+            ];
+            finalResponse = responses[Math.floor(Math.random() * responses.length)];
           } else {
-            finalResponse = "I didn't find any photos matching your query. Try different search terms like 'archery', 'competition', 'celebration', or describe what you're looking for.";
+            const noResultsResponses = [
+              "Hmm, I couldn't find any photos matching that search, but don't worry! 🤔 Try describing what you're looking for differently - maybe 'happy athletes', 'competition winners', 'outdoor archery', or 'award ceremonies'. I'm great at understanding natural language!",
+              "No matches this time, but I'd love to help you find what you're looking for! 💭 Try being more specific or using different words - like 'celebrating kids', 'focused competitors', 'victory moments', or even just 'smiling faces'. What kind of moment are you hoping to relive?",
+              "I didn't spot any photos with those terms, but let's try a different approach! 🎯 Describe the scene you remember - was it outdoors? Were people celebrating? Was it during a competition? I can understand natural descriptions really well!"
+            ];
+            finalResponse = noResultsResponses[Math.floor(Math.random() * noResultsResponses.length)];
           }
         }
         
@@ -1687,7 +1710,9 @@ const server = http.createServer(async (req, res) => {
 
 // Start server
 server.listen(PORT, () => {
-  log(`PhotoVision server running on http://localhost:${PORT}`);
+  log(`🚀 PhotoVision is ready to help you discover amazing photos!`);
+  log(`💻 Server running on http://localhost:${PORT}`);
+  log(`📸 AI-powered photo search is online and ready for natural conversations!`);
   log('Available API endpoints:');
   log('  GET  /api/status    - Get application status');
   log('  GET  /api/search?q= - Search images');
