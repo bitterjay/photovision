@@ -271,9 +271,9 @@
   },
   "imageAnalysisConfig": {
     "enabled": false,
-    "preContext": "",
-    "template": "default",
+    "preContext": "You are analyzing photos from a sports competition. Focus on athletic performance, technique, equipment, and competitive atmosphere. Emphasize participant achievements, skill demonstration, and event organization. Pay attention to sports-specific terminology and competitive elements.",
+    "template": "sports-photography",
     "modifiedBy": "admin",
-    "lastModified": "2025-07-17T17:46:14.691Z"
+    "lastModified": "2025-07-17T18:32:39.037Z"
   }
 }

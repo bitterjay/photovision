@@ -1401,29 +1401,42 @@ class PhotoVision {
         const testBtn = document.getElementById('testSmugmug');
         const disconnectBtn = document.getElementById('disconnectSmugmug');
         
-        if (connectBtn) connectBtn.disabled = connected;
-        if (testBtn) testBtn.disabled = !connected;
-        if (disconnectBtn) disconnectBtn.disabled = !connected;
+        if (connectBtn) {
+            connectBtn.style.display = connected ? 'none' : 'inline-flex';
+            connectBtn.disabled = connected;
+        }
+        if (testBtn) {
+            testBtn.style.display = connected ? 'none' : 'inline-flex';
+            testBtn.disabled = !connected;
+        }
+        if (disconnectBtn) {
+            disconnectBtn.style.display = connected ? 'inline-flex' : 'none';
+            disconnectBtn.disabled = !connected;
+        }
     }
 
     showSmugMugAccountInfo(user) {
-        const accountInfo = document.getElementById('smugmugAccountInfo');
         const accountDetails = document.getElementById('accountDetails');
         
-        if (accountInfo && accountDetails && user) {
+        if (accountDetails && user) {
             accountDetails.innerHTML = `
-                <strong>User:</strong> ${user.NickName || user.Name || 'Unknown'}<br>
-                <strong>Account:</strong> ${user.AccountStatus || 'Active'}
+                <div class="account-user-info">
+                    <svg class="user-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>${user.NickName || user.Name || 'Unknown'}</span>
+                </div>
             `;
             
-            accountInfo.style.display = 'block';
+            accountDetails.style.display = 'block';
         }
     }
 
     hideSmugMugAccountInfo() {
-        const accountInfo = document.getElementById('smugmugAccountInfo');
-        if (accountInfo) {
-            accountInfo.style.display = 'none';
+        const accountDetails = document.getElementById('accountDetails');
+        if (accountDetails) {
+            accountDetails.style.display = 'none';
         }
     }
 
@@ -3339,6 +3352,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize duplicate detection on page load
     refreshBackups();
+    
+    // Help block functionality
+    const analysisHelpIcon = document.getElementById('analysisHelpIcon');
+    const analysisHelpBlock = document.getElementById('analysisHelpBlock');
+    
+    if (analysisHelpIcon && analysisHelpBlock) {
+        analysisHelpIcon.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const isVisible = analysisHelpBlock.style.display === 'block';
+            analysisHelpBlock.style.display = isVisible ? 'none' : 'block';
+        });
+    }
     
     // Image Analysis Configuration functionality
     const enableCustomAnalysis = document.getElementById('enableCustomAnalysis');
