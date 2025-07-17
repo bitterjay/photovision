@@ -3448,12 +3448,22 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateImageAnalysisToggle() {
         const enableCustomAnalysis = document.getElementById('enableCustomAnalysis');
         const imageAnalysisToggle = document.querySelector('[data-toggle="image-analysis"]');
+        const analysisStatus = document.getElementById('analysisStatus');
         
         if (imageAnalysisToggle && enableCustomAnalysis) {
             if (enableCustomAnalysis.checked) {
                 imageAnalysisToggle.classList.add('active');
             } else {
                 imageAnalysisToggle.classList.remove('active');
+            }
+        }
+        
+        // Update header analysis status indicator
+        if (analysisStatus && enableCustomAnalysis) {
+            if (enableCustomAnalysis.checked) {
+                analysisStatus.classList.add('status-success');
+            } else {
+                analysisStatus.classList.remove('status-success');
             }
         }
     }

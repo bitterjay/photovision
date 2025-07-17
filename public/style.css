@@ -454,6 +454,40 @@ body {
     animation: pulse 2s infinite;
 }
 
+/* Analysis Status Bar */
+.analysis-status-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-right: 1rem;
+    transition: all var(--transition-fast);
+}
+
+.analysis-status-bar:hover {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border-color: var(--accent-primary);
+}
+
+.analysis-status-bar .status-indicator-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    transition: background var(--transition-fast);
+}
+
+.analysis-status-bar.status-success .status-indicator-dot {
+    background: var(--success);
+}
+
 /* Tab Panels */
 .tab-panel {
     display: none;
@@ -2922,7 +2956,8 @@ body {
         width: 100%;
     }
     
-    .status-bar {
+    .status-bar,
+    .analysis-status-bar {
         margin-right: 0;
         font-size: 0.75rem;
         padding: 0.25rem 0.5rem;
@@ -3011,6 +3046,10 @@ body {
     
     .status-bar {
         order: -1; /* Show status bar above theme toggle on very small screens */
+    }
+    
+    .analysis-status-bar {
+        order: -1; /* Show analysis status bar above theme toggle on very small screens */
     }
     
     .theme-toggle {

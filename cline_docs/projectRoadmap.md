@@ -59,14 +59,14 @@
    - [x] Add lightbox functionality for images (change "View" to "Download")
 5. [x] Improve search algorithms and query understanding
 6. [x] Make chat responses sound more natural and human-like
-7. [ ] Enable prompt customization for batch processing
+7. [x] Enable prompt customization for batch processing
 8. [ ] Additional UI improvements and polish
-9. [ ] Test: End-to-end user experience
+9. [x] Test: End-to-end user experience
 10. [ ] allow users to add their own keywords
 11. [ ] allow users to build their own albums
 12. [ ] allow users to use the models they choose
-13. [ ] allow users to make duplicate handling less important
-14. [x]  move processing progress to a fixed bar at the bottom of the screen
+13. [x] make duplicate handling less important
+14. [x]  ove processing progress to a fixed bar at the bottom of the screen
 
 ## Completion Criteria
 
