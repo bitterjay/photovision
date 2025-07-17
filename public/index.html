@@ -16,6 +16,10 @@
                     <p>Search your SmugMug photos with natural language</p>
                 </div>
                 <div class="header-controls">
+                    <div class="status-bar" id="status">
+                        <span class="status-indicator-dot"></span>
+                        <span class="status-text">Initializing...</span>
+                    </div>
                     <div class="theme-toggle" id="themeToggle">
                         <button class="theme-btn" data-theme="light" title="Light Mode">
                             <svg class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -66,10 +70,6 @@
         </nav>
 
         <main class="main">
-            <div class="status-bar" id="status">
-                <span class="status-text">Initializing...</span>
-            </div>
-
             <!-- Chat Tab -->
             <div class="tab-panel active" id="chatTab">
                 <div class="chat-container">

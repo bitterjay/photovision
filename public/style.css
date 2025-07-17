@@ -194,6 +194,13 @@ body {
     color: var(--text-muted);
 }
 
+/* Header Controls */
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
 /* Theme Toggle */
 .theme-toggle {
     display: flex;
@@ -325,55 +332,59 @@ body {
     background: var(--bg-secondary);
 }
 
-/* Status Bar */
+/* Status Bar - Minimal Top-Right Design */
 .status-bar {
-    background: linear-gradient(135deg, var(--bg-primary), var(--bg-tertiary));
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    padding: 1rem 1.5rem;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--shadow-md);
-    position: relative;
-    overflow: hidden;
-}
-
-.status-bar::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary), var(--success));
-}
-
-.status-text {
-    font-size: 0.875rem;
-    color: var(--text-primary);
-    font-weight: 500;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-right: 1rem;
+    transition: all var(--transition-fast);
 }
 
-/* .status-text::before {
-    content: '⚡';
-    font-size: 1rem;
-} */
-
-.status-bar.status-success .status-text::before {
-    content: '✅';
+.status-bar:hover {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border-color: var(--accent-primary);
 }
 
-.status-bar.status-error .status-text::before {
-    content: '❌';
+.status-indicator-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    transition: background-color var(--transition-fast);
 }
 
-.status-bar.status-warning .status-text::before {
-    content: '⚠️';
+.status-text {
+    font-size: inherit;
+    font-weight: inherit;
+    color: inherit;
+    line-height: 1;
+}
+
+/* Status States */
+.status-bar.status-success .status-indicator-dot {
+    background: var(--success);
+}
+
+.status-bar.status-error .status-indicator-dot {
+    background: var(--error);
+}
+
+.status-bar.status-warning .status-indicator-dot {
+    background: var(--warning);
+}
+
+.status-bar.status-loading .status-indicator-dot {
+    background: var(--accent-primary);
+    animation: pulse 2s infinite;
 }
 
 /* Tab Panels */
@@ -1854,6 +1865,17 @@ body {
         gap: 1rem;
     }
     
+    .header-controls {
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .status-bar {
+        margin-right: 0;
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+    }
+    
     .main {
         padding: 1rem;
     }
@@ -1916,6 +1938,15 @@ body {
 @media (max-width: 480px) {
     .header-title h1 {
         font-size: 1.5rem;
+    }
+    
+    .header-controls {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .status-bar {
+        order: -1; /* Show status bar above theme toggle on very small screens */
     }
     
     .theme-toggle {

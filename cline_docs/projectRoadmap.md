@@ -58,7 +58,7 @@
    - [x] Update iconography throughout the application
    - [x] Add lightbox functionality for images (change "View" to "Download")
 5. [x] Improve search algorithms and query understanding
-6. [ ] Make chat responses sound more natural and human-like
+6. [x] Make chat responses sound more natural and human-like
 7. [ ] Enable prompt customization for batch processing
 8. [ ] Additional UI improvements and polish
 9. [ ] Test: End-to-end user experience
