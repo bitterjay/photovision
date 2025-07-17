@@ -175,6 +175,34 @@ class PhotoVision {
         this.messageInput.addEventListener('input', () => {
             this.updateSendButtonState();
         });
+        
+        // Event delegation for load more buttons
+        this.messagesContainer.addEventListener('click', (e) => {
+            if (e.target.matches('.load-more-btn') || e.target.closest('.load-more-btn')) {
+                const button = e.target.matches('.load-more-btn') ? e.target : e.target.closest('.load-more-btn');
+                const query = button.dataset.query;
+                const page = parseInt(button.dataset.page);
+                
+                if (query !== undefined && page) {
+                    this.handleLoadMoreClick(button, query, page);
+                }
+            }
+        });
+        
+        // Keyboard support for load more buttons
+        this.messagesContainer.addEventListener('keydown', (e) => {
+            if ((e.key === 'Enter' || e.key === ' ') && 
+                (e.target.matches('.load-more-btn') || e.target.closest('.load-more-btn'))) {
+                e.preventDefault();
+                const button = e.target.matches('.load-more-btn') ? e.target : e.target.closest('.load-more-btn');
+                const query = button.dataset.query;
+                const page = parseInt(button.dataset.page);
+                
+                if (query !== undefined && page) {
+                    this.handleLoadMoreClick(button, query, page);
+                }
+            }
+        });
     }
 
     setupUpload() {
@@ -343,37 +371,28 @@ class PhotoVision {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${type}`;
         
-        // Create avatar
-        const avatarDiv = document.createElement('div');
-        avatarDiv.className = 'message-avatar';
-        
-        const avatarSvg = document.createElement('svg');
-        avatarSvg.setAttribute('viewBox', '0 0 24 24');
-        avatarSvg.setAttribute('fill', 'none');
-        avatarSvg.setAttribute('stroke', 'currentColor');
-        avatarSvg.setAttribute('stroke-width', '2');
-        
-        if (type === 'user') {
-            avatarSvg.innerHTML = '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle>';
-        } else if (type === 'assistant') {
-            avatarSvg.innerHTML = '<path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path>';
-        } else {
-            avatarSvg.innerHTML = '<path d="M12 2L2 7v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7l-10-5z"></path><polyline points="2,7 12,13 22,7"></polyline>';
-        }
-        
-        avatarDiv.appendChild(avatarSvg);
-        
         // Create content
         const contentDiv = document.createElement('div');
         contentDiv.className = 'message-content';
         contentDiv.textContent = content;
         
-        messageDiv.appendChild(avatarDiv);
         messageDiv.appendChild(contentDiv);
         this.messagesContainer.appendChild(messageDiv);
         
+        // Remove welcome message on first user message
+        if (type === 'user') {
+            this.removeWelcomeMessage();
+        }
+        
         // Scroll to bottom
         this.scrollToBottom();
+    }
+
+    removeWelcomeMessage() {
+        const welcomeMessage = document.querySelector('.message.system');
+        if (welcomeMessage) {
+            welcomeMessage.remove();
+        }
     }
 
     addComprehensiveAnalysisMessage(data) {
@@ -456,7 +475,7 @@ class PhotoVision {
         
         // Start with the conversational response
         let messageHTML = `
-            <div class="conversational-response" style="padding: 8px; background-color: #f0f8ff; border-radius: 6px; border-left: 4px solid #2196f3;">
+            <div class="conversational-response" style="padding: 8px;">
                 ${data.response}
             </div>
         `;
@@ -525,7 +544,12 @@ class PhotoVision {
             if (pagination.hasMore) {
                 messageHTML += `
                     <div class="load-more-section" style="text-align: center; padding: 15px;">
-                        <button class="load-more-btn" onclick="window.photoVision.loadMoreResults('${data.originalQuery || ''}', ${(pagination.page || 0) + 1})">
+                        <button class="load-more-btn" data-query="${data.originalQuery || ''}" data-page="${(pagination.page || 0) + 1}" aria-label="Load more results" tabindex="0">
+                            <svg class="load-more-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M7 13l3 3 7-7"></path>
+                                <path d="M12 3v12"></path>
+                                <path d="M8 21h8"></path>
+                            </svg>
                             Load More Results (${pagination.total - pagination.endIndex} remaining)
                         </button>
                     </div>
@@ -564,14 +588,56 @@ class PhotoVision {
         this.photoDataStore.set(photoId, photo);
     }
 
+    handleLoadMoreClick(button, query, page) {
+        // Set loading state
+        this.setLoadMoreLoadingState(button, true);
+        
+        // Remove the button since we're creating a new chat window
+        button.remove();
+        
+        // Show typing indicator
+        this.showTypingIndicator();
+        
+        // Call the actual load more function
+        this.loadMoreResults(query, page);
+    }
+    
+    setLoadMoreLoadingState(button, isLoading) {
+        if (isLoading) {
+            button.disabled = true;
+            button.classList.add('loading');
+            
+            // Replace icon with spinner
+            const icon = button.querySelector('.load-more-btn-icon');
+            if (icon) {
+                icon.innerHTML = '<div class="load-more-spinner"></div>';
+            }
+            
+            // Update text
+            const textContent = button.childNodes;
+            for (let node of textContent) {
+                if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
+                    node.textContent = 'Loading...';
+                    break;
+                }
+            }
+        } else {
+            button.disabled = false;
+            button.classList.remove('loading');
+            
+            // Restore icon
+            const icon = button.querySelector('.load-more-btn-icon');
+            if (icon) {
+                icon.innerHTML = `
+                    <path d="M7 13l3 3 7-7"></path>
+                    <path d="M12 3v12"></path>
+                    <path d="M8 21h8"></path>
+                `;
+            }
+        }
+    }
+
     async loadMoreResults(query, page) {
-        const loadMoreBtn = document.querySelector('.load-more-btn');
-        if (!loadMoreBtn) return;
-
-        // Disable button and show loading state
-        loadMoreBtn.disabled = true;
-        loadMoreBtn.textContent = 'Loading...';
-
         try {
             const response = await fetch('/api/chat', {
                 method: 'POST',
@@ -587,25 +653,36 @@ class PhotoVision {
             const data = await response.json();
 
             if (data.success && data.data.results && data.data.results.length > 0) {
-                // Find the search results section that contains this button
-                const searchSection = loadMoreBtn.closest('.search-results-section');
-                if (searchSection) {
-                    this.appendSearchResults(searchSection, data.data);
-                }
+                // Hide typing indicator
+                this.hideTypingIndicator();
+                
+                // Create a new chat message with the additional results
+                const moreResultsData = {
+                    response: `Here are more results for "${query}":`,
+                    results: data.data.results,
+                    pagination: data.data.pagination,
+                    originalQuery: query
+                };
+                
+                this.addConversationalSearchMessage(moreResultsData);
             } else {
-                // No more results or error
-                loadMoreBtn.textContent = 'No more results';
-                setTimeout(() => {
-                    loadMoreBtn.remove();
-                }, 2000);
+                // Hide typing indicator
+                this.hideTypingIndicator();
+                
+                // No more results - add a simple message
+                this.addMessage('No more results found.', 'assistant');
             }
         } catch (error) {
             console.error('Error loading more results:', error);
-            loadMoreBtn.textContent = 'Error loading more';
-            loadMoreBtn.disabled = false;
+            
+            // Hide typing indicator
+            this.hideTypingIndicator();
+            
+            this.addMessage('Error loading more results. Please try again.', 'assistant');
         }
     }
 
+    /*
     appendSearchResults(searchSection, data) {
         const resultsGrid = searchSection.querySelector('.minimal-results-grid');
         const loadMoreSection = searchSection.querySelector('.load-more-section');
@@ -684,7 +761,12 @@ class PhotoVision {
             if (pagination.hasMore) {
                 const remainingCount = pagination.total - pagination.endIndex;
                 loadMoreSection.innerHTML = `
-                    <button class="load-more-btn" onclick="window.photoVision.loadMoreResults('${data.originalQuery || ''}', ${(pagination.page || 0) + 1})">
+                    <button class="load-more-btn" data-query="${data.originalQuery || ''}" data-page="${(pagination.page || 0) + 1}" aria-label="Load more results" tabindex="0">
+                        <svg class="load-more-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M7 13l3 3 7-7"></path>
+                            <path d="M12 3v12"></path>
+                            <path d="M8 21h8"></path>
+                        </svg>
                         Load More Results (${remainingCount} remaining)
                     </button>
                 `;
@@ -698,6 +780,7 @@ class PhotoVision {
             searchSection.setAttribute('data-current-page', data.pagination.page || 0);
         }
     }
+    */
 
     showMetadataModal(photoId) {
         const photo = this.photoDataStore?.get(photoId);
