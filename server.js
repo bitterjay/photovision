@@ -5,6 +5,7 @@ const path = require('path');
 const url = require('url');
 const DataManager = require('./lib/dataManager');
 const ClaudeClient = require('./lib/claudeClient');
+const OpenAIClient = require('./lib/openaiClient');
 const SmugMugClient = require('./lib/smugmugClient');
 const JobQueue = require('./lib/jobQueue');
 
@@ -212,16 +213,41 @@ async function handleAPIRoutes(req, res, parsedUrl) {
         const SearchFunctions = require('./lib/searchFunctions');
         const searchFunctions = new SearchFunctions();
         
+        // Get AI configuration and determine which provider to use
+        const config = await dataManager.getConfig();
+        const aiConfig = config.ai || { provider: 'claude' };
+        const provider = aiConfig.provider || 'claude';
+        
+        log(`Processing load more with AI provider: ${provider}`, 'DEBUG');
+        
         // Re-execute the original search to get all results
         const availableFunctions = searchFunctions.getFunctionDefinitions();
-        const claudeResponse = await claudeClient.processConversationalQuery(requestData.originalQuery, availableFunctions);
         
-        if (!claudeResponse.success) {
-          throw new Error(claudeResponse.error);
+        let aiResponse;
+        if (provider === 'openai') {
+          const apiKey = aiConfig.apiKeys?.openai || process.env.OPENAI_API_KEY;
+          if (!apiKey) {
+            throw new Error('OpenAI API key not configured');
+          }
+          const openaiAnalyzer = new OpenAIClient(apiKey);
+          const model = aiConfig.models?.openai || 'gpt-4-turbo-preview';
+          aiResponse = await openaiAnalyzer.processConversationalQuery(requestData.originalQuery, availableFunctions, model);
+        } else {
+          // Default to Claude
+          const apiKey = aiConfig.apiKeys?.claude || process.env.ANTHROPIC_API_KEY;
+          if (!apiKey) {
+            throw new Error('Claude API key not configured');
+          }
+          const claudeAnalyzer = new ClaudeClient(apiKey);
+          aiResponse = await claudeAnalyzer.processConversationalQuery(requestData.originalQuery, availableFunctions);
+        }
+        
+        if (!aiResponse.success) {
+          throw new Error(aiResponse.error);
         }
         
         let searchResults = [];
-        const response = claudeResponse.response;
+        const response = aiResponse.response;
         
         // Process function calls to get search results
         if (response.content) {
@@ -276,21 +302,45 @@ async function handleAPIRoutes(req, res, parsedUrl) {
         
         console.log(`[Chat] Processing query: "${requestData.message}"`);
         
-        // Get available search functions for Claude
+        // Get AI configuration and determine which provider to use
+        const config = await dataManager.getConfig();
+        const aiConfig = config.ai || { provider: 'claude' };
+        const provider = aiConfig.provider || 'claude';
+        
+        log(`Processing chat with AI provider: ${provider}`, 'DEBUG');
+        
+        // Get available search functions
         const availableFunctions = searchFunctions.getFunctionDefinitions();
         
-        // Process query with Claude
-        const claudeResponse = await claudeClient.processConversationalQuery(requestData.message, availableFunctions);
-        
-        if (!claudeResponse.success) {
-          throw new Error(claudeResponse.error);
+        // Process query with specified AI provider
+        let aiResponse;
+        if (provider === 'openai') {
+          const apiKey = aiConfig.apiKeys?.openai || process.env.OPENAI_API_KEY;
+          if (!apiKey) {
+            throw new Error('OpenAI API key not configured');
+          }
+          const openaiAnalyzer = new OpenAIClient(apiKey);
+          const model = aiConfig.models?.openai || 'gpt-4-turbo-preview';
+          aiResponse = await openaiAnalyzer.processConversationalQuery(requestData.message, availableFunctions, model);
+        } else {
+          // Default to Claude
+          const apiKey = aiConfig.apiKeys?.claude || process.env.ANTHROPIC_API_KEY;
+          if (!apiKey) {
+            throw new Error('Claude API key not configured');
+          }
+          const claudeAnalyzer = new ClaudeClient(apiKey);
+          aiResponse = await claudeAnalyzer.processConversationalQuery(requestData.message, availableFunctions);
         }
         
-        // Handle Claude's response and function calls
+        if (!aiResponse.success) {
+          throw new Error(aiResponse.error);
+        }
+        
+        // Handle AI response and function calls
         let finalResponse = '';
         let searchResults = [];
         
-        const response = claudeResponse.response;
+        const response = aiResponse.response;
         
         // Process any function calls Claude made
         if (response.content) {
@@ -320,35 +370,74 @@ async function handleAPIRoutes(req, res, parsedUrl) {
           }
         }
         
-        // If Claude made function calls but we need the final response, make another request
+        // If AI made function calls but we need the final response, make another request
         if (response.content.some(block => block.type === 'tool_use') && !finalResponse) {
-          console.log('[Chat] Getting final response from Claude with search results');
+          console.log(`[Chat] Getting final response from ${provider} with search results`);
           
           // Create a follow-up request with the search results
-          const followUpBody = {
-            model: "claude-3-5-sonnet-20241022",
-            max_tokens: 1000,
-            system: `You are PhotoVision, an intelligent image discovery assistant. Format the search results into a helpful conversational response.`,
-            messages: [
-              {
-                role: "user",
-                content: requestData.message
-              },
-              {
-                role: "assistant",
-                content: response.content
-              },
-              {
-                role: "user",
-                content: `Here are the search results: ${JSON.stringify(searchFunctions.formatResults(searchResults), null, 2)}. Please provide a conversational response about these results.`
-              }
-            ]
-          };
-          
-          const followUpResponse = await claudeClient.makeRequest('/v1/messages', 'POST', followUpBody);
-          
-          if (followUpResponse.content && followUpResponse.content[0]) {
-            finalResponse = followUpResponse.content[0].text || 'I found some results but had trouble formatting the response.';
+          if (provider === 'openai') {
+            const apiKey = aiConfig.apiKeys?.openai || process.env.OPENAI_API_KEY;
+            const openaiAnalyzer = new OpenAIClient(apiKey);
+            const model = aiConfig.models?.openai || 'gpt-4-turbo-preview';
+            
+            const followUpBody = {
+              model: model,
+              max_tokens: 1000,
+              messages: [
+                {
+                  role: "system",
+                  content: `You are PhotoVision, an intelligent image discovery assistant. Format the search results into a helpful conversational response.`
+                },
+                {
+                  role: "user",
+                  content: requestData.message
+                },
+                {
+                  role: "assistant",
+                  content: JSON.stringify(response.content)
+                },
+                {
+                  role: "user",
+                  content: `Here are the search results: ${JSON.stringify(searchFunctions.formatResults(searchResults), null, 2)}. Please provide a conversational response about these results.`
+                }
+              ]
+            };
+            
+            const followUpResponse = await openaiAnalyzer.makeRequest('/v1/chat/completions', 'POST', followUpBody);
+            
+            if (followUpResponse.choices && followUpResponse.choices[0] && followUpResponse.choices[0].message) {
+              finalResponse = followUpResponse.choices[0].message.content || 'I found some results but had trouble formatting the response.';
+            }
+          } else {
+            // Claude
+            const apiKey = aiConfig.apiKeys?.claude || process.env.ANTHROPIC_API_KEY;
+            const claudeAnalyzer = new ClaudeClient(apiKey);
+            
+            const followUpBody = {
+              model: "claude-3-5-sonnet-20241022",
+              max_tokens: 1000,
+              system: `You are PhotoVision, an intelligent image discovery assistant. Format the search results into a helpful conversational response.`,
+              messages: [
+                {
+                  role: "user",
+                  content: requestData.message
+                },
+                {
+                  role: "assistant",
+                  content: response.content
+                },
+                {
+                  role: "user",
+                  content: `Here are the search results: ${JSON.stringify(searchFunctions.formatResults(searchResults), null, 2)}. Please provide a conversational response about these results.`
+                }
+              ]
+            };
+            
+            const followUpResponse = await claudeAnalyzer.makeRequest('/v1/messages', 'POST', followUpBody);
+            
+            if (followUpResponse.content && followUpResponse.content[0]) {
+              finalResponse = followUpResponse.content[0].text || 'I found some results but had trouble formatting the response.';
+            }
           }
         }
         
@@ -437,12 +526,41 @@ async function handleAPIRoutes(req, res, parsedUrl) {
 
         log('Starting image analysis...');
 
-        // Analyze image with Claude
-        const analysisResult = await claudeClient.analyzeImage(
-          formData.image.data,
-          formData.image.type,
-          formData.prompt || null
-        );
+        // Get AI configuration and determine which provider to use
+        const config = await dataManager.getConfig();
+        const aiConfig = config.ai || { provider: 'claude' };
+        const provider = aiConfig.provider || 'claude';
+        
+        log(`Starting image analysis with provider: ${provider}...`);
+
+        // Analyze image with specified AI provider
+        let analysisResult;
+        if (provider === 'openai') {
+          const apiKey = aiConfig.apiKeys?.openai || process.env.OPENAI_API_KEY;
+          if (!apiKey) {
+            return sendError(res, 500, 'OpenAI API key not configured');
+          }
+          const openaiAnalyzer = new OpenAIClient(apiKey);
+          const model = aiConfig.models?.openai || 'gpt-4-vision-preview';
+          analysisResult = await openaiAnalyzer.analyzeImage(
+            formData.image.data,
+            formData.image.type,
+            formData.prompt || null,
+            model
+          );
+        } else {
+          // Default to Claude
+          const apiKey = aiConfig.apiKeys?.claude || process.env.ANTHROPIC_API_KEY;
+          if (!apiKey) {
+            return sendError(res, 500, 'Claude API key not configured');
+          }
+          const claudeAnalyzer = new ClaudeClient(apiKey);
+          analysisResult = await claudeAnalyzer.analyzeImage(
+            formData.image.data,
+            formData.image.type,
+            formData.prompt || null
+          );
+        }
 
         if (!analysisResult.success) {
           log(`Image analysis failed: ${analysisResult.error}`, 'ERROR');
@@ -468,6 +586,194 @@ async function handleAPIRoutes(req, res, parsedUrl) {
 
       } catch (error) {
         return sendError(res, 500, 'Failed to process image', error);
+      }
+    }
+
+    // AI provider test endpoint
+    if (pathname === '/api/ai/test' && method === 'POST') {
+      log('AI provider test request');
+      
+      try {
+        const requestData = await parseJSON(req);
+        const { provider, apiKey } = requestData;
+        
+        if (!provider || !apiKey) {
+          return sendError(res, 400, 'Provider and API key are required');
+        }
+        
+        let testResult;
+        
+        if (provider === 'claude') {
+          const testClient = new ClaudeClient(apiKey);
+          testResult = await testClient.testConnection();
+          testResult.provider = 'claude';
+        } else if (provider === 'openai') {
+          const testClient = new OpenAIClient(apiKey);
+          testResult = await testClient.testConnection();
+          testResult.provider = 'openai';
+        } else {
+          return sendError(res, 400, `Unsupported provider: ${provider}`);
+        }
+        
+        return sendSuccess(res, testResult, `${provider} API connection test completed`);
+        
+      } catch (error) {
+        return sendError(res, 500, `API test failed: ${error.message}`);
+      }
+    }
+
+    // AI provider configuration endpoint
+    if (pathname === '/api/ai/config' && method === 'GET') {
+      log('AI config request');
+      
+      try {const config = await dataManager.getConfig();
+        const aiConfig = config.ai || {
+          provider: 'claude',
+          apiKeys: {},
+          models: {
+            claude: 'claude-3-5-sonnet-20241022',
+            openai: 'gpt-4-vision-preview'
+          }
+        };
+        
+        // Return configuration with hasApiKey flags for security
+        const safeConfig = {
+          ...aiConfig,
+          hasApiKey: !!(aiConfig.apiKeys && (aiConfig.apiKeys.claude || aiConfig.apiKeys.openai))
+        };
+        
+        // Don't return actual API keys
+        delete safeConfig.apiKeys;
+        
+        return sendSuccess(res, safeConfig, 'AI configuration retrieved');
+        
+      } catch (error) {
+        return sendError(res, 500, 'Failed to get AI configuration', error);
+      }
+    }
+
+    if (pathname === '/api/ai/config' && method === 'POST') {
+      log('AI config update request');
+      
+      try {
+        const requestData = await parseJSON(req);
+        const { provider, apiKey, model } = requestData;
+        
+        if (!provider) {
+          return sendError(res, 400, 'Provider is required');
+        }
+        
+        // Get current config
+        const config = await dataManager.getConfig();
+        const aiConfig = config.ai || {
+          provider: 'claude',
+          apiKeys: {},
+          models: {
+            claude: 'claude-3-5-sonnet-20241022',
+            openai: 'gpt-4-vision-preview'
+          }
+        };
+        
+        // Update provider
+        aiConfig.provider = provider;
+        
+        // Update API key if provided
+        if (apiKey) {
+          aiConfig.apiKeys = aiConfig.apiKeys || {};
+          aiConfig.apiKeys[provider] = apiKey;
+        }
+        
+        // Update model if provided
+        if (model) {
+          aiConfig.models = aiConfig.models || {};
+          aiConfig.models[provider] = model;
+        }
+        
+        // Save updated config
+        await dataManager.updateConfig('ai', aiConfig);
+        
+        return sendSuccess(res, aiConfig, 'AI configuration updated');
+        
+      } catch (error) {
+        return sendError(res, 500, 'Failed to update AI configuration', error);
+      }
+    }
+
+    if (pathname === '/api/ai/config' && method === 'DELETE') {
+      log('AI config clear request');
+      
+      try {
+        // Clear all AI configuration
+        await dataManager.updateConfig('ai', {
+          provider: 'claude',
+          apiKeys: {},
+          models: {
+            claude: 'claude-3-5-sonnet-20241022',
+            openai: 'gpt-4-vision-preview'
+          }
+        });
+        
+        return sendSuccess(res, {}, 'AI configuration cleared');
+        
+      } catch (error) {
+        return sendError(res, 500, 'Failed to clear AI configuration', error);
+      }
+    }
+
+    // AI provider models endpoint
+    if (pathname === '/api/ai/models' && method === 'GET') {
+      log('AI models request');
+      
+      try {
+        const provider = query.provider;
+        
+        if (!provider) {
+          return sendError(res, 400, 'Provider query parameter is required');
+        }
+        
+        let models = [];
+        
+        if (provider === 'claude') {
+          // Claude models are fixed - we define them here
+          models = [
+            { id: 'claude-3-5-sonnet-20241022', name: 'Claude 3.5 Sonnet', capabilities: ['vision', 'chat', 'functions'] },
+            { id: 'claude-3-5-haiku-20241022', name: 'Claude 3.5 Haiku', capabilities: ['vision', 'chat', 'functions'] },
+            { id: 'claude-3-opus-20240229', name: 'Claude 3 Opus', capabilities: ['vision', 'chat', 'functions'] }
+          ];
+        } else if (provider === 'openai') {
+          // For OpenAI, we can try to fetch models dynamically if API key is available
+          const config = await dataManager.getConfig();
+          const apiKey = config.ai?.apiKeys?.openai || process.env.OPENAI_API_KEY;
+          
+          if (apiKey) {
+            try {
+              const testClient = new OpenAIClient(apiKey);
+              models = await testClient.getAvailableModels();
+            } catch (error) {
+              log(`Failed to fetch OpenAI models: ${error.message}`, 'WARN');
+              // Fallback to default models
+              models = [
+                { id: 'gpt-4-vision-preview', name: 'GPT-4 Vision Preview', capabilities: ['vision', 'chat'] },
+                { id: 'gpt-4-turbo-preview', name: 'GPT-4 Turbo Preview', capabilities: ['chat', 'functions'] },
+                { id: 'gpt-4o', name: 'GPT-4o', capabilities: ['vision', 'chat', 'functions'] }
+              ];
+            }
+          } else {
+            // Default models when no API key
+            models = [
+              { id: 'gpt-4-vision-preview', name: 'GPT-4 Vision Preview', capabilities: ['vision', 'chat'] },
+              { id: 'gpt-4-turbo-preview', name: 'GPT-4 Turbo Preview', capabilities: ['chat', 'functions'] },
+              { id: 'gpt-4o', name: 'GPT-4o', capabilities: ['vision', 'chat', 'functions'] }
+            ];
+          }
+        } else {
+          return sendError(res, 400, `Unsupported provider: ${provider}`);
+        }
+        
+        return sendSuccess(res, { models }, `Retrieved ${models.length} models for ${provider}`);
+        
+      } catch (error) {
+        return sendError(res, 500, 'Failed to get models', error);
       }
     }
 
@@ -1048,8 +1354,32 @@ async function handleAPIRoutes(req, res, parsedUrl) {
             const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
             const contentType = imageResponse.headers.get('content-type') || 'image/jpeg';
             
-            // Analyze with Claude
-            const analysisResult = await claudeClient.analyzeImage(imageBuffer, contentType, null);
+            // Get AI configuration and determine which provider to use
+            const config = await dataManager.getConfig();
+            const aiConfig = config.ai || { provider: 'claude' };
+            const provider = aiConfig.provider || 'claude';
+            
+            log(`Using AI provider: ${provider}`, 'DEBUG');
+            
+            // Analyze with specified AI provider
+            let analysisResult;
+            if (provider === 'openai') {
+              const apiKey = aiConfig.apiKeys?.openai || process.env.OPENAI_API_KEY;
+              if (!apiKey) {
+                throw new Error('OpenAI API key not configured');
+              }
+              const openaiAnalyzer = new OpenAIClient(apiKey);
+              const model = aiConfig.models?.openai || 'gpt-4-vision-preview';
+              analysisResult = await openaiAnalyzer.analyzeImage(imageBuffer, contentType, null, model);
+            } else {
+              // Default to Claude
+              const apiKey = aiConfig.apiKeys?.claude || process.env.ANTHROPIC_API_KEY;
+              if (!apiKey) {
+                throw new Error('Claude API key not configured');
+              }
+              const claudeAnalyzer = new ClaudeClient(apiKey);
+              analysisResult = await claudeAnalyzer.analyzeImage(imageBuffer, contentType, null);
+            }
             
             if (!analysisResult.success) {
               throw new Error(analysisResult.error);
@@ -1216,7 +1546,32 @@ async function handleAPIRoutes(req, res, parsedUrl) {
             const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
             const contentType = imageResponse.headers.get('content-type') || 'image/jpeg';
             
-            const analysisResult = await claudeClient.analyzeImage(imageBuffer, contentType, null);
+            // Get AI configuration and determine which provider to use
+            const config = await dataManager.getConfig();
+            const aiConfig = config.ai || { provider: 'claude' };
+            const provider = aiConfig.provider || 'claude';
+            
+            log(`Resuming with AI provider: ${provider}`, 'DEBUG');
+            
+            // Analyze with specified AI provider
+            let analysisResult;
+            if (provider === 'openai') {
+              const apiKey = aiConfig.apiKeys?.openai || process.env.OPENAI_API_KEY;
+              if (!apiKey) {
+                throw new Error('OpenAI API key not configured');
+              }
+              const openaiAnalyzer = new OpenAIClient(apiKey);
+              const model = aiConfig.models?.openai || 'gpt-4-vision-preview';
+              analysisResult = await openaiAnalyzer.analyzeImage(imageBuffer, contentType, null, model);
+            } else {
+              // Default to Claude
+              const apiKey = aiConfig.apiKeys?.claude || process.env.ANTHROPIC_API_KEY;
+              if (!apiKey) {
+                throw new Error('Claude API key not configured');
+              }
+              const claudeAnalyzer = new ClaudeClient(apiKey);
+              analysisResult = await claudeAnalyzer.analyzeImage(imageBuffer, contentType, null);
+            }
             
             if (!analysisResult.success) {
               throw new Error(analysisResult.error);
@@ -1695,7 +2050,11 @@ server.listen(PORT, () => {
   log('  GET  /api/images    - Get all images');
   log('  GET  /api/config    - Get configuration');
   log('  POST /api/config    - Update configuration');
-  log('  POST /api/analyze   - Analyze image with Claude');
+  log('  POST /api/analyze   - Analyze image with AI provider');
+  log('  POST /api/ai/test   - Test AI provider connection');
+  log('  GET  /api/ai/config - Get AI configuration');
+  log('  POST /api/ai/config - Update AI configuration');
+  log('  GET  /api/ai/models - Get available models for provider');
   log('  POST /api/smugmug/auth-start     - Start SmugMug OAuth');
   log('  GET  /api/smugmug/callback       - OAuth callback');
   log('  POST /api/smugmug/disconnect     - Disconnect SmugMug');

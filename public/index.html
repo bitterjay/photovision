@@ -156,26 +156,7 @@
                                 <label for="batchName">Batch Name:</label>
                                 <input type="text" id="batchName" placeholder="Optional batch name">
                             </div>
-                            
-                            <div class="duplicate-settings">
-                                <div class="setting-group">
-                                    <label for="duplicateHandling">Duplicate Handling:</label>
-                                    <select id="duplicateHandling">
-                                        <option value="skip">Skip duplicates (recommended)</option>
-                                        <option value="update">Update existing records</option>
-                                        <option value="replace">Replace existing records</option>
-                                    </select>
-                                </div>
-                                
-                                <label class="checkbox-label">
-                                    <input type="checkbox" id="forceReprocessing">
-                                    <span class="checkmark"></span>
-                                    Force reprocess all images
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <div class="control-buttons">
+                            <div class="control-buttons">
                             <button id="startBatch" class="btn btn-primary" disabled>
                                 <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <polygon points="5,3 19,12 5,21"></polygon>
@@ -203,6 +184,26 @@
                                 Cancel
                             </button>
                         </div>
+                            
+                            <div class="duplicate-settings">
+                                <div class="setting-group">
+                                    <label for="duplicateHandling">Duplicate Handling:</label>
+                                    <select id="duplicateHandling">
+                                        <option value="skip">Skip duplicates (recommended)</option>
+                                        <option value="update">Update existing records</option>
+                                        <option value="replace">Replace existing records</option>
+                                    </select>
+                                </div>
+                                
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="forceReprocessing">
+                                    <span class="checkmark"></span>
+                                    Force reprocess all images
+                                </label>
+                            </div>
+                        </div>
+                        
+                        
                     </div>
                     
                     <div class="batch-progress" id="batchProgress" style="display: none;">
@@ -352,18 +353,52 @@
                     </div>
                     
                     <div class="services-grid">
-                        <div class="service-card" id="claudeStatusCard">
-                            <div class="service-icon">
-                                <img src="img/claude-icon.svg" alt="Claude AI" class="service-icon-img">
+                        <div class="service-card ai-provider-card" id="aiProviderCard">
+                            <div class="service-icon" id="aiProviderIcon">
+                                <img src="img/claude-icon.svg" alt="AI Provider" class="service-icon-img">
                             </div>
                             <div class="service-info">
-                                <div class="service-name">Claude AI</div>
-                                <div class="service-status" id="claudeStatus">
-                                    <span class="status-indicator checking"></span>
-                                    <span class="status-text">Checking...</span>
+                                <div class="service-name">AI Provider</div>
+                                <div class="service-status" id="aiProviderStatus">
+                                    <span class="status-indicator disconnected"></span>
+                                    <span class="status-text">No API Key</span>
                                 </div>
                             </div>
-                            <button id="testClaude" class="btn btn-secondary">Test</button>
+                            <div class="ai-provider-config">
+                                <div class="provider-selection">
+                                    <label for="aiProvider">Provider:</label>
+                                    <select id="aiProvider" class="provider-select">
+                                        <option value="claude">Claude (Anthropic)</option>
+                                        <option value="openai">OpenAI</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="api-key-input">
+                                    <label for="apiKey">API Key:</label>
+                                    <div class="input-group">
+                                        <input type="password" id="apiKey" class="api-key-field" placeholder="Enter your API key">
+                                        <button id="toggleApiKey" class="btn btn-icon" type="button">
+                                            <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                                <circle cx="12" cy="12" r="3"></circle>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="model-selection">
+                                    <label for="aiModel">Model:</label>
+                                    <select id="aiModel" class="model-select">
+                                        <!-- Options will be populated dynamically -->
+                                    </select>
+                                </div>
+                                
+                                <div class="provider-actions">
+                                    <button id="saveApiConfig" class="btn btn-primary">Save Configuration</button>
+                                    <button id="testApiConnection" class="btn btn-secondary" disabled>Test Connection</button>
+                                    <button id="clearApiSettings" class="btn btn-danger">Clear Settings</button>
+                                </div>
+                            </div>
                         </div>
                         
                         <div class="service-card" id="smugmugStatusCard">

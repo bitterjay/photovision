@@ -52,19 +52,19 @@
 1. [x] Duplicate data when batch processing
 2. [x] Resize image to under 5mb and 2200px wide (if landscape) or 2200px tall (if portrait)
 3. [x] Enhanced image layout with masonry design and full image display
-4. [ ] Modernize UI interface
+4. [x] Modernize UI interface
    - [x] Implement tabbed interface for Chat, Batch Processing, and API Connections
    - [x] Add dark/light theme support with theme switcher
    - [x] Update iconography throughout the application
-   - [ ] Add lightbox functionality for images (change "View" to "Download")
+   - [x] Add lightbox functionality for images (change "View" to "Download")
 5. [ ] Improve search algorithms and query understanding
-6. [ ] Enhance conversational responses and context awareness
-   - [ ] Make chat responses sound more natural and human-like
-   - [ ] Improve conversation flow and context retention
+6. [ ]Make chat responses sound more natural and human-like
 7. [ ] Enable prompt customization for batch processing
-   - [ ] Allow users to define specific analysis criteria for batch image analysis
 8. [ ] Additional UI improvements and polish
 9. [ ] Test: End-to-end user experience
+10. allow users to add their own keywords
+11. allow users to build their own albums
+12. allow users to choose their own LLM to use
 
 ## Completion Criteria
 
