@@ -3347,7 +3347,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const contextCharCount = document.getElementById('contextCharCount');
     const previewAccordionBtn = document.getElementById('previewAccordionBtn');
     const previewAccordionContent = document.getElementById('previewAccordionContent');
-    const previewContent = document.getElementById('previewContent');
+    const previewContent = document.getElementById('previewAccordionContent');
     const generatePreviewBtn = document.getElementById('generatePreview');
     const saveAnalysisConfigBtn = document.getElementById('saveAnalysisConfig');
     const resetAnalysisConfigBtn = document.getElementById('resetAnalysisConfig');

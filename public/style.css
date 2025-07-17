@@ -2570,20 +2570,6 @@ body {
     padding: 1.5rem;
 }
 
-.accordion-section {
-    margin-bottom: 1.5rem;
-}
-
-.accordion-section:last-child {
-    margin-bottom: 0;
-}
-
-.accordion-section h5 {
-    margin: 0 0 0.75rem 0;
-    color: var(--text-primary);
-    font-size: 1rem;
-    font-weight: 600;
-}
 
 .accordion-actions {
     display: flex;
