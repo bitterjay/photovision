@@ -1419,6 +1419,7 @@ body {
     padding: 0.5rem;
     border-radius: var(--radius-sm);
     background-opacity: 0.1;
+    transition: all 0.3s ease;
 }
 
 .processing-none {
@@ -1441,6 +1442,9 @@ body {
     padding: 0.5rem;
     border-radius: var(--radius-sm);
     background-opacity: 0.1;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
 }
 
 .processing-partial .status-count {
@@ -1483,6 +1487,51 @@ body {
     color: var(--text-muted);
     font-size: 0.875rem;
     font-style: italic;
+}
+
+/* Enhanced progress bar animations */
+.processing-partial.processing-active {
+    background-image: linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.1) 75%, transparent 75%, transparent);
+    background-size: 20px 20px;
+    animation: progress-stripe 1s linear infinite;
+}
+
+@keyframes progress-stripe {
+    0% { background-position: 0 0; }
+    100% { background-position: 20px 0; }
+}
+
+.processing-partial.processing-active::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    animation: progress-shimmer 2s ease-in-out infinite;
+}
+
+@keyframes progress-shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Smooth transitions for progress updates */
+.album-processing-status {
+    transition: all 0.3s ease;
+}
+
+.album-processing-status .processing-complete,
+.album-processing-status .processing-partial {
+    transition: background 0.5s ease;
+}
+
+.processing-status-text {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-style: italic;
+    margin-left: 0.5rem;
 }
 
 .status-error {

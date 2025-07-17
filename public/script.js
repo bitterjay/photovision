@@ -1786,6 +1786,13 @@ class PhotoVision {
 
         // Find the parent album card to add/remove the completely-processed class
         const albumCard = statusElement.closest('.album-item');
+        const albumKey = albumCard ? albumCard.dataset.albumKey : null;
+        
+        // Check if batch processing is currently active
+        const isBatchProcessingActive = this.batchProgressInterval !== null;
+        
+        // Only show active processing animation for the currently selected album during batch processing
+        const isActivelyProcessing = isBatchProcessingActive && albumKey === this.selectedAlbumKey && !isCompletelyProcessed;
         
         if (totalImages === 0) {
             statusElement.innerHTML = '<span class="status-empty">No images in album</span>';
@@ -1815,10 +1822,18 @@ class PhotoVision {
         } else if (processedImages === 0) {
             // Remove completely-processed class for unprocessed albums
             if (albumCard) albumCard.classList.remove('completely-processed');
+            
+            // Show different status for the selected album if batch processing is active
+            const isSelectedAlbum = albumKey === this.selectedAlbumKey;
+            const showWaitingStatus = isBatchProcessingActive && isSelectedAlbum;
+            const statusIcon = '⏳';
+            const statusText = 'Waiting for processing...';
+            
             statusHTML = `
                 <div class="processing-none" style="background: linear-gradient(90deg, var(--warning) 0%, var(--bg-secondary) 0%)">
-                    <span class="status-icon">⏳</span>
+                    <span class="status-icon">${statusIcon}</span>
                     <span class="status-count">0/${totalImages}</span>
+                    ${showWaitingStatus ? `<small class="processing-status-text">${statusText}</small>` : ''}
                     ${duplicateDetectionEnabled ? `
                         <div class="duplicate-info">
                             <small>Ready for duplicate-aware processing</small>
@@ -1829,9 +1844,13 @@ class PhotoVision {
         } else {
             // Remove completely-processed class for partially processed albums
             if (albumCard) albumCard.classList.remove('completely-processed');
+            
+            // Add processing-active class only if this is the actively processing album
+            const activeClass = isActivelyProcessing ? ' processing-active' : '';
+            
             statusHTML = `
-                <div class="processing-partial" style="background: linear-gradient(90deg, var(--accent-primary) ${processingProgress}%, var(--bg-secondary) ${processingProgress}%)">
-                    <span class="status-icon">🔄</span>
+                <div class="processing-partial${activeClass}" style="background: linear-gradient(90deg, var(--accent-primary) ${processingProgress}%, var(--bg-secondary) ${processingProgress}%)">
+                    <span class="status-icon">${isActivelyProcessing ? '⚡' : '🔄'}</span>
                     <span class="status-count">${processedImages}/${totalImages}</span>
                     <span class="status-percentage">${processingProgress}%</span>
                     ${duplicateDetectionEnabled ? `
@@ -2243,8 +2262,14 @@ class PhotoVision {
                     if (this.selectedAlbumKey) {
                         await this.loadAlbumProcessingStatus(this.selectedAlbumKey);
                     }
+                    
+                    // Refresh all visible album statuses after completion
+                    await this.refreshVisibleAlbumStatuses();
                 } else if (status.isPaused) {
                     this.updateBatchControls('paused');
+                } else {
+                    // During active processing, refresh album statuses periodically
+                    await this.refreshActiveProcessingAlbumStatuses();
                 }
             }
         } catch (error) {
@@ -2419,6 +2444,62 @@ class PhotoVision {
             if (albumKey) {
                 await this.loadAlbumProcessingStatus(albumKey);
             }
+        }
+    }
+
+    async refreshVisibleAlbumStatuses() {
+        // Refresh all visible album statuses (used after batch completion)
+        const albumItems = document.querySelectorAll('.album-item[data-album-key]');
+        
+        // Process in batches to avoid overwhelming the server
+        const batchSize = 5;
+        for (let i = 0; i < albumItems.length; i += batchSize) {
+            const batch = Array.from(albumItems).slice(i, i + batchSize);
+            await Promise.allSettled(
+                batch.map(albumItem => {
+                    const albumKey = albumItem.dataset.albumKey;
+                    return albumKey ? this.loadAlbumProcessingStatus(albumKey) : Promise.resolve();
+                })
+            );
+            
+            // Small delay between batches
+            if (i + batchSize < albumItems.length) {
+                await new Promise(resolve => setTimeout(resolve, 200));
+            }
+        }
+    }
+
+    async refreshActiveProcessingAlbumStatuses() {
+        // Refresh album statuses during active processing (more conservative)
+        // Only refresh selected album and a few visible albums to avoid server overload
+        
+        // Always refresh the selected album
+        if (this.selectedAlbumKey) {
+            await this.loadAlbumProcessingStatus(this.selectedAlbumKey);
+        }
+        
+        // Refresh a limited number of visible albums on a rotating basis
+        const albumItems = document.querySelectorAll('.album-item[data-album-key]');
+        if (albumItems.length > 0) {
+            // Initialize refresh counter if not exists
+            if (!this.albumRefreshCounter) {
+                this.albumRefreshCounter = 0;
+            }
+            
+            // Refresh 2-3 albums per update cycle in rotation
+            const refreshCount = Math.min(3, albumItems.length);
+            for (let i = 0; i < refreshCount; i++) {
+                const albumIndex = (this.albumRefreshCounter + i) % albumItems.length;
+                const albumItem = albumItems[albumIndex];
+                const albumKey = albumItem.dataset.albumKey;
+                
+                if (albumKey && albumKey !== this.selectedAlbumKey) {
+                    await this.loadAlbumProcessingStatus(albumKey);
+                }
+            }
+            
+            // Update counter for next cycle
+            this.albumRefreshCounter = (this.albumRefreshCounter + refreshCount) % albumItems.length;
         }
     }
 
