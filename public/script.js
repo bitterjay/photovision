@@ -159,6 +159,9 @@ class PhotoVision {
         this.sendButton.addEventListener('click', () => {
             this.handleSendMessage();
         });
+        
+        // Setup infinite scroll for albums
+        this.setupInfiniteScroll();
 
         // Enter key in input
         this.messageInput.addEventListener('keypress', (e) => {
@@ -340,10 +343,32 @@ class PhotoVision {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${type}`;
         
+        // Create avatar
+        const avatarDiv = document.createElement('div');
+        avatarDiv.className = 'message-avatar';
+        
+        const avatarSvg = document.createElement('svg');
+        avatarSvg.setAttribute('viewBox', '0 0 24 24');
+        avatarSvg.setAttribute('fill', 'none');
+        avatarSvg.setAttribute('stroke', 'currentColor');
+        avatarSvg.setAttribute('stroke-width', '2');
+        
+        if (type === 'user') {
+            avatarSvg.innerHTML = '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle>';
+        } else if (type === 'assistant') {
+            avatarSvg.innerHTML = '<path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path>';
+        } else {
+            avatarSvg.innerHTML = '<path d="M12 2L2 7v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7l-10-5z"></path><polyline points="2,7 12,13 22,7"></polyline>';
+        }
+        
+        avatarDiv.appendChild(avatarSvg);
+        
+        // Create content
         const contentDiv = document.createElement('div');
         contentDiv.className = 'message-content';
         contentDiv.textContent = content;
         
+        messageDiv.appendChild(avatarDiv);
         messageDiv.appendChild(contentDiv);
         this.messagesContainer.appendChild(messageDiv);
         
@@ -1026,7 +1051,13 @@ class PhotoVision {
     }
 
     scrollToBottom() {
-        this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
+        if (this.messagesContainer) {
+            // Use smooth scrolling if supported
+            this.messagesContainer.scrollTo({
+                top: this.messagesContainer.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
     }
 
     // Future method for API communication
@@ -1411,12 +1442,8 @@ class PhotoVision {
         if (!append) {
             albumsList.innerHTML = '<div class="loading-albums"><div class="loading-spinner"></div> <span id="loadingText">Loading albums...</span></div>';
         } else {
-            // Add loading indicator for additional pages
-            const loadMoreBtn = document.getElementById('loadMoreAlbums');
-            if (loadMoreBtn) {
-                loadMoreBtn.innerHTML = '<div class="loading-spinner"></div> Loading...';
-                loadMoreBtn.disabled = true;
-            }
+            // Show infinite scroll loader when loading more
+            this.showInfiniteScrollLoader();
         }
 
         try {
@@ -1452,8 +1479,11 @@ class PhotoVision {
                 // Load processing status for albums
                 await this.loadAlbumsWithProcessingStatus(this.albumsData, albumsList);
                 
-                // Add load more button if there are more pages
-                this.addLoadMoreButton(albumsList);
+                // Add infinite scroll loader if there are more pages
+                this.addInfiniteScrollLoader(albumsList);
+                
+                // Hide loader if it was showing
+                this.hideInfiniteScrollLoader();
 
             } else {
                 if (!append) {
@@ -1470,27 +1500,76 @@ class PhotoVision {
         }
     }
 
-    addLoadMoreButton(albumsList) {
-        // Remove existing load more button
-        const existingBtn = document.getElementById('loadMoreAlbums');
-        if (existingBtn) {
-            existingBtn.remove();
-        }
+    setupInfiniteScroll() {
+        const albumsList = document.getElementById('albumsList');
+        if (!albumsList) return;
 
-        // Add new load more button if there are more pages
-        if (this.paginationState.hasNextPage) {
-            const loadMoreBtn = document.createElement('button');
-            loadMoreBtn.id = 'loadMoreAlbums';
-            loadMoreBtn.className = 'load-more-btn';
-            loadMoreBtn.innerHTML = `Load More Albums (${this.albumsData.length} of ${this.paginationState.totalAlbums})`;
-            loadMoreBtn.onclick = () => this.loadMoreAlbums();
-            albumsList.appendChild(loadMoreBtn);
+        // Add scroll event listener for infinite scroll
+        albumsList.addEventListener('scroll', this.handleScroll.bind(this));
+    }
+
+    handleScroll(event) {
+        const albumsList = event.target;
+        
+        // Check if we're near the bottom (within 100px)
+        const scrollThreshold = 100;
+        const isNearBottom = albumsList.scrollTop + albumsList.clientHeight >= albumsList.scrollHeight - scrollThreshold;
+        
+        // Debug logging
+        console.log('Scroll event:', {
+            scrollTop: albumsList.scrollTop,
+            clientHeight: albumsList.clientHeight,
+            scrollHeight: albumsList.scrollHeight,
+            isNearBottom: isNearBottom,
+            hasNextPage: this.paginationState.hasNextPage,
+            isLoading: this.paginationState.isLoading
+        });
+        
+        // Load more if we're near bottom, have more pages, and not currently loading
+        if (isNearBottom && this.paginationState.hasNextPage && !this.paginationState.isLoading) {
+            console.log('Loading more albums...');
+            this.loadMoreAlbums();
         }
     }
 
     async loadMoreAlbums() {
         if (this.paginationState.hasNextPage && !this.paginationState.isLoading) {
             await this.loadAlbums(this.paginationState.currentPage + 1, true);
+        }
+    }
+
+    addInfiniteScrollLoader(albumsList) {
+        // Remove existing loader
+        const existingLoader = document.getElementById('infiniteScrollLoader');
+        if (existingLoader) {
+            existingLoader.remove();
+        }
+
+        // Add loading indicator at bottom if there are more pages
+        if (this.paginationState.hasNextPage) {
+            const loaderDiv = document.createElement('div');
+            loaderDiv.id = 'infiniteScrollLoader';
+            loaderDiv.className = 'infinite-scroll-loader';
+            loaderDiv.innerHTML = `
+                <div class="loading-spinner"></div>
+                <span>Loading more albums...</span>
+            `;
+            loaderDiv.style.display = 'none'; // Initially hidden
+            albumsList.appendChild(loaderDiv);
+        }
+    }
+
+    showInfiniteScrollLoader() {
+        const loader = document.getElementById('infiniteScrollLoader');
+        if (loader) {
+            loader.style.display = 'flex';
+        }
+    }
+
+    hideInfiniteScrollLoader() {
+        const loader = document.getElementById('infiniteScrollLoader');
+        if (loader) {
+            loader.style.display = 'none';
         }
     }
 
@@ -1609,8 +1688,12 @@ class PhotoVision {
     displayAlbumProcessingStatus(statusElement, status) {
         const { totalImages, processedImages, processingProgress, isCompletelyProcessed } = status;
 
+        // Find the parent album card to add/remove the completely-processed class
+        const albumCard = statusElement.closest('.album-item');
+        
         if (totalImages === 0) {
             statusElement.innerHTML = '<span class="status-empty">No images in album</span>';
+            if (albumCard) albumCard.classList.remove('completely-processed');
             return;
         }
 
@@ -1620,6 +1703,8 @@ class PhotoVision {
         let statusHTML = '';
         
         if (isCompletelyProcessed) {
+            // Add completely-processed class to the album card
+            if (albumCard) albumCard.classList.add('completely-processed');
             statusHTML = `
                 <div class="processing-complete" style="background: linear-gradient(90deg, var(--success) 100%, var(--bg-secondary) 100%)">
                     <span class="status-icon">✅</span>
@@ -1632,6 +1717,8 @@ class PhotoVision {
                 </div>
             `;
         } else if (processedImages === 0) {
+            // Remove completely-processed class for unprocessed albums
+            if (albumCard) albumCard.classList.remove('completely-processed');
             statusHTML = `
                 <div class="processing-none" style="background: linear-gradient(90deg, var(--warning) 0%, var(--bg-secondary) 0%)">
                     <span class="status-icon">⏳</span>
@@ -1644,6 +1731,8 @@ class PhotoVision {
                 </div>
             `;
         } else {
+            // Remove completely-processed class for partially processed albums
+            if (albumCard) albumCard.classList.remove('completely-processed');
             statusHTML = `
                 <div class="processing-partial" style="background: linear-gradient(90deg, var(--accent-primary) ${processingProgress}%, var(--bg-secondary) ${processingProgress}%)">
                     <span class="status-icon">🔄</span>
@@ -2102,6 +2191,16 @@ class PhotoVision {
         if (bottomProcessedCount) bottomProcessedCount.textContent = status.processed || 0;
         if (bottomTotalCount) bottomTotalCount.textContent = status.total || 0;
 
+        // Update bottom progress stats
+        const bottomProcessedCountStat = document.getElementById('bottomProcessedCountStat');
+        const bottomTotalCountStat = document.getElementById('bottomTotalCountStat');
+        const bottomFailedCountStat = document.getElementById('bottomFailedCountStat');
+        const bottomRemainingCountStat = document.getElementById('bottomRemainingCountStat');
+        if (bottomProcessedCountStat) bottomProcessedCountStat.textContent = status.processed || 0;
+        if (bottomTotalCountStat) bottomTotalCountStat.textContent = status.total || 0;
+        if (bottomFailedCountStat) bottomFailedCountStat.textContent = status.failed || 0;
+        if (bottomRemainingCountStat) bottomRemainingCountStat.textContent = (status.total - status.processed) || 0;
+
         // Update status (main progress)
         const batchStatus = document.getElementById('batchStatus');
         if (batchStatus) {
@@ -2322,7 +2421,7 @@ class PhotoVision {
         
         this.filteredAlbums = filtered;
     this.renderFilteredAlbums();
-    this.addLoadMoreButton(albumsList);
+    this.addInfiniteScrollLoader(albumsList);
     this.updateActiveFilters();
         this.updateAlbumCount();
     }
