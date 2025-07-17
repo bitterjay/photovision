@@ -431,6 +431,108 @@ Remember: You're not just delivering search results - you're sharing exciting ph
       return sendSuccess(res, config, 'Configuration updated');
     }
 
+    // Image analysis configuration endpoints
+    if (pathname === '/api/admin/image-analysis-config' && method === 'GET') {
+      log('Get image analysis config request');
+      try {
+        const config = await dataManager.getImageAnalysisConfig();
+        return sendSuccess(res, config, 'Image analysis configuration retrieved');
+      } catch (error) {
+        return sendError(res, 500, 'Failed to retrieve image analysis configuration', error);
+      }
+    }
+
+    if (pathname === '/api/admin/image-analysis-config' && method === 'POST') {
+      log('Save image analysis config request');
+      try {
+        const requestData = await parseJSON(req);
+        const config = await dataManager.saveImageAnalysisConfig(requestData);
+        return sendSuccess(res, config, 'Image analysis configuration saved');
+      } catch (error) {
+        return sendError(res, 500, 'Failed to save image analysis configuration', error);
+      }
+    }
+
+    if (pathname === '/api/admin/image-analysis-config/reset' && method === 'POST') {
+      log('Reset image analysis config request');
+      try {
+        const defaultConfig = {
+          enabled: false,
+          preContext: '',
+          template: 'default',
+          modifiedBy: 'admin'
+        };
+        const config = await dataManager.saveImageAnalysisConfig(defaultConfig);
+        return sendSuccess(res, config, 'Image analysis configuration reset to default');
+      } catch (error) {
+        return sendError(res, 500, 'Failed to reset image analysis configuration', error);
+      }
+    }
+
+    if (pathname === '/api/admin/image-analysis-config/preview' && method === 'POST') {
+      log('Preview image analysis config request');
+      try {
+        const requestData = await parseJSON(req);
+        const { preContext } = requestData;
+        
+        const defaultPrompt = `Please analyze this image in detail. Provide a comprehensive description and generate relevant keywords for indexing. Return your response as a JSON object with the following structure:
+
+{
+  "description": "A detailed description of the image...",
+  "keywords": ["keyword1", "keyword2", "keyword3", ...]
+}
+
+For the description, include:
+1. Main subjects (people, objects, animals)
+2. Setting and location type
+3. Activities or actions taking place
+4. Mood, lighting, and atmosphere
+5. Colors, composition, and visual elements
+6. Any text or signs visible
+7. Time of day or season if apparent
+
+For keywords, provide 5-10 relevant terms that would help with searching and indexing, such as:
+- Main subjects (person, animal, object types)
+- Activities (running, eating, playing)
+- Settings (outdoor, indoor, beach, forest)
+- Emotions/moods (happy, serious, peaceful)
+- Visual elements (colorful, black and white, sunset)
+- Equipment or objects visible
+
+Be specific and descriptive to enable natural language searches like "photos of people laughing outdoors" or "sunset landscapes with mountains".`;
+
+        const completePrompt = claudeClient.buildCompletePrompt(preContext, defaultPrompt);
+        
+        return sendSuccess(res, { 
+          preContext: preContext || '',
+          completePrompt: completePrompt 
+        }, 'Preview generated');
+      } catch (error) {
+        return sendError(res, 500, 'Failed to generate preview', error);
+      }
+    }
+
+    if (pathname === '/api/admin/image-analysis-templates' && method === 'GET') {
+      log('Get image analysis templates request');
+      try {
+        const templates = dataManager.getImageAnalysisTemplates();
+        return sendSuccess(res, templates, 'Image analysis templates retrieved');
+      } catch (error) {
+        return sendError(res, 500, 'Failed to retrieve image analysis templates', error);
+      }
+    }
+
+    if (pathname.startsWith('/api/admin/image-analysis-templates/') && method === 'GET') {
+      log('Get specific image analysis template request');
+      try {
+        const templateId = pathname.split('/').pop();
+        const template = dataManager.getImageAnalysisTemplate(templateId);
+        return sendSuccess(res, template, 'Image analysis template retrieved');
+      } catch (error) {
+        return sendError(res, 500, 'Failed to retrieve image analysis template', error);
+      }
+    }
+
     // Image analysis endpoint
     if (pathname === '/api/analyze' && method === 'POST') {
       log('Image analysis request received');
@@ -460,11 +562,16 @@ Remember: You're not just delivering search results - you're sharing exciting ph
 
         log('Starting image analysis...');
 
+        // Get current image analysis configuration
+        const analysisConfig = await dataManager.getImageAnalysisConfig();
+        const preContext = analysisConfig.enabled ? analysisConfig.preContext : null;
+
         // Analyze image with Claude
         const analysisResult = await claudeClient.analyzeImage(
           formData.image.data,
           formData.image.type,
-          formData.prompt || null
+          formData.prompt || null,
+          preContext
         );
 
         if (!analysisResult.success) {
@@ -1088,8 +1195,12 @@ Remember: You're not just delivering search results - you're sharing exciting ph
             const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
             const contentType = imageResponse.headers.get('content-type') || 'image/jpeg';
             
+            // Get current image analysis configuration
+            const analysisConfig = await dataManager.getImageAnalysisConfig();
+            const preContext = analysisConfig.enabled ? analysisConfig.preContext : null;
+            
             // Analyze with Claude
-            const analysisResult = await claudeClient.analyzeImage(imageBuffer, contentType, null);
+            const analysisResult = await claudeClient.analyzeImage(imageBuffer, contentType, null, preContext);
             
             if (!analysisResult.success) {
               throw new Error(analysisResult.error);
@@ -1256,7 +1367,11 @@ Remember: You're not just delivering search results - you're sharing exciting ph
             const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
             const contentType = imageResponse.headers.get('content-type') || 'image/jpeg';
             
-            const analysisResult = await claudeClient.analyzeImage(imageBuffer, contentType, null);
+            // Get current image analysis configuration
+            const analysisConfig = await dataManager.getImageAnalysisConfig();
+            const preContext = analysisConfig.enabled ? analysisConfig.preContext : null;
+            
+            const analysisResult = await claudeClient.analyzeImage(imageBuffer, contentType, null, preContext);
             
             if (!analysisResult.success) {
               throw new Error(analysisResult.error);

@@ -3338,4 +3338,221 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize duplicate detection on page load
     refreshBackups();
+    
+    // Image Analysis Configuration functionality
+    const enableCustomAnalysis = document.getElementById('enableCustomAnalysis');
+    const analysisTemplate = document.getElementById('analysisTemplate');
+    const applyTemplateBtn = document.getElementById('applyTemplate');
+    const preContextInput = document.getElementById('preContextInput');
+    const contextCharCount = document.getElementById('contextCharCount');
+    const previewPromptBtn = document.getElementById('previewPrompt');
+    const previewSection = document.getElementById('previewSection');
+    const previewContent = document.getElementById('previewContent');
+    const hidePreviewBtn = document.getElementById('hidePreview');
+    const saveAnalysisConfigBtn = document.getElementById('saveAnalysisConfig');
+    const resetAnalysisConfigBtn = document.getElementById('resetAnalysisConfig');
+    const configStatusDot = document.getElementById('configStatusDot');
+    const configStatusText = document.getElementById('configStatusText');
+    const configLastModified = document.getElementById('configLastModified');
+    
+    // Load current configuration
+    async function loadAnalysisConfig() {
+        try {
+            const response = await fetch('/api/admin/image-analysis-config');
+            const data = await response.json();
+            
+            if (data.success) {
+                const config = data.data;
+                
+                // Update UI with current config
+                enableCustomAnalysis.checked = config.enabled;
+                preContextInput.value = config.preContext || '';
+                updateCharCount();
+                updateStatusDisplay(config);
+                
+                // Update template selection
+                if (config.template) {
+                    analysisTemplate.value = config.template;
+                }
+            }
+        } catch (error) {
+            console.error('Error loading analysis config:', error);
+            configStatusText.textContent = 'Error loading configuration';
+        }
+    }
+    
+    // Load available templates
+    async function loadTemplates() {
+        try {
+            const response = await fetch('/api/admin/image-analysis-templates');
+            const data = await response.json();
+            
+            if (data.success) {
+                const templates = data.data;
+                analysisTemplate.innerHTML = '<option value="">Select a template...</option>';
+                
+                Object.values(templates).forEach(template => {
+                    const option = document.createElement('option');
+                    option.value = template.id;
+                    option.textContent = `${template.name} - ${template.description}`;
+                    analysisTemplate.appendChild(option);
+                });
+            }
+        } catch (error) {
+            console.error('Error loading templates:', error);
+        }
+    }
+    
+    // Update character count
+    function updateCharCount() {
+        const count = preContextInput.value.length;
+        contextCharCount.textContent = count;
+        
+        const charCountElement = contextCharCount.parentElement;
+        charCountElement.classList.remove('warning', 'error');
+        
+        if (count > 1800) {
+            charCountElement.classList.add('error');
+        } else if (count > 1500) {
+            charCountElement.classList.add('warning');
+        }
+    }
+    
+    // Update status display
+    function updateStatusDisplay(config) {
+        const enabled = config.enabled;
+        
+        configStatusDot.classList.remove('enabled', 'disabled');
+        configStatusDot.classList.add(enabled ? 'enabled' : 'disabled');
+        configStatusText.textContent = enabled ? 'Custom Analysis Enabled' : 'Default Analysis';
+        
+        if (config.lastModified) {
+            const date = new Date(config.lastModified);
+            configLastModified.textContent = `Last modified: ${date.toLocaleString()}`;
+        } else {
+            configLastModified.textContent = '';
+        }
+    }
+    
+    // Event listeners
+    if (enableCustomAnalysis) {
+        enableCustomAnalysis.addEventListener('change', updateCharCount);
+    }
+    
+    if (preContextInput) {
+        preContextInput.addEventListener('input', updateCharCount);
+    }
+    
+    if (applyTemplateBtn) {
+        applyTemplateBtn.addEventListener('click', async () => {
+            const templateId = analysisTemplate.value;
+            if (!templateId) return;
+            
+            try {
+                const response = await fetch(`/api/admin/image-analysis-templates/${templateId}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    preContextInput.value = data.data.preContext || '';
+                    updateCharCount();
+                }
+            } catch (error) {
+                console.error('Error applying template:', error);
+            }
+        });
+    }
+    
+    if (previewPromptBtn) {
+        previewPromptBtn.addEventListener('click', async () => {
+            const preContext = preContextInput.value;
+            
+            try {
+                const response = await fetch('/api/admin/image-analysis-config/preview', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ preContext })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    previewContent.textContent = data.data.completePrompt;
+                    previewSection.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error generating preview:', error);
+            }
+        });
+    }
+    
+    if (hidePreviewBtn) {
+        hidePreviewBtn.addEventListener('click', () => {
+            previewSection.style.display = 'none';
+        });
+    }
+    
+    if (saveAnalysisConfigBtn) {
+        saveAnalysisConfigBtn.addEventListener('click', async () => {
+            const config = {
+                enabled: enableCustomAnalysis.checked,
+                preContext: preContextInput.value,
+                template: analysisTemplate.value,
+                modifiedBy: 'admin'
+            };
+            
+            try {
+                const response = await fetch('/api/admin/image-analysis-config', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(config)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    updateStatusDisplay(data.data);
+                    alert('Configuration saved successfully!');
+                } else {
+                    alert('Error saving configuration: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error saving config:', error);
+                alert('Error saving configuration. Please try again.');
+            }
+        });
+    }
+    
+    if (resetAnalysisConfigBtn) {
+        resetAnalysisConfigBtn.addEventListener('click', async () => {
+            if (!confirm('Are you sure you want to reset to default configuration? This will remove all custom settings.')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/admin/image-analysis-config/reset', {
+                    method: 'POST'
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    enableCustomAnalysis.checked = false;
+                    preContextInput.value = '';
+                    analysisTemplate.value = '';
+                    updateCharCount();
+                    updateStatusDisplay(data.data);
+                    alert('Configuration reset to default!');
+                } else {
+                    alert('Error resetting configuration: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error resetting config:', error);
+                alert('Error resetting configuration. Please try again.');
+            }
+        });
+    }
+    
+    // Initialize analysis configuration
+    loadAnalysisConfig();
+    loadTemplates();
 });

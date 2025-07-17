@@ -268,5 +268,12 @@
     "inProgress": false,
     "completed": 0,
     "failed": 0
+  },
+  "imageAnalysisConfig": {
+    "enabled": false,
+    "preContext": "",
+    "template": "default",
+    "lastModified": "2025-07-17T15:11:02.262Z",
+    "modifiedBy": null
   }
 }
