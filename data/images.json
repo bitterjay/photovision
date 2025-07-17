@@ -10088,5 +10088,729 @@
       "batchId": "batch_1752718831763_j8n1i5vur",
       "jobId": "img_3PCPNB_ZDZ5KzH"
     }
+  },
+  {
+    "id": "md6sazlw7lkj11vknrl",
+    "timestamp": "2025-07-17T02:41:59.495Z",
+    "filename": "GCP03559.jpg",
+    "smugmugImageKey": "BcTmD73",
+    "smugmugUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Official-Practice-Wednesday-AM/i-BcTmD73/0/MBdt88tcDfdfBLz7Xscnk66Q4PFsp6x4zzGt79n7Q/D/GCP03559-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "59qb9g",
+    "albumName": "Official Practice - Wednesday AM",
+    "albumPath": "2025 > JOAD Target Nationals JOAD US Open > Official Practice - Wednesday AM",
+    "albumHierarchy": [
+      "2025",
+      "JOAD Target Nationals JOAD US Open",
+      "Official Practice - Wednesday AM"
+    ],
+    "description": "{\n  \"description\": \"The image shows two young women standing together in an outdoor setting. They appear to be engaged in some kind of recreational or sporting activity, based on their attire and the presence of archery targets in the background. \n\nThe setting is a grassy field or park, with trees visible in the background. The lighting is bright and natural, suggesting a daytime or early evening scene. The two women are standing close together, with one woman facing the other and appearing to be speaking or interacting with her. \n\nBoth women are wearing casual, athletic-style clothing. One woman has on a purple and green patterned top and black shorts, while the other is wearing a navy blue shirt with the letters \"NYPD\" printed on it and dark pants. They both have their hair pulled back and are wearing baseball caps.\n\nThe overall mood of the image is relaxed and casual, with a sense of camaraderie or shared activity between the two women. The visual composition is balanced, with the two figures positioned centrally in the frame and the archery targets providing a visual anchor in the background.\",\n  \"keywords\": [\"outdoor recreation\", \"archery\", \"athletic activity\", \"casual attire\", \"female friends\", \"public park\", \"bright daylight\", \"casual interaction\", \"relaxed mood\"]\n}",
+    "keywords": [],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T02:41:59.492Z",
+      "batchId": "batch_1752720114483_zzle1gody",
+      "jobId": "img_59qb9g_BcTmD73"
+    }
+  },
+  {
+    "id": "md6sb3i8e4khi15f61",
+    "timestamp": "2025-07-17T02:42:04.545Z",
+    "filename": "GCP03560.jpg",
+    "smugmugImageKey": "QwhM79K",
+    "smugmugUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Official-Practice-Wednesday-AM/i-QwhM79K/0/Lr4NSzGbG5SZQtz7vGhxDGCKsP6QZqfvwWqJjPQ3s/D/GCP03560-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "59qb9g",
+    "albumName": "Official Practice - Wednesday AM",
+    "albumPath": "2025 > JOAD Target Nationals JOAD US Open > Official Practice - Wednesday AM",
+    "albumHierarchy": [
+      "2025",
+      "JOAD Target Nationals JOAD US Open",
+      "Official Practice - Wednesday AM"
+    ],
+    "description": "The image shows a young man wearing a blue t-shirt, sunglasses, and a baseball cap, holding a quiver of arrows and a bow. He appears to be standing in an outdoor setting, with a grassy field and colorful archery targets visible in the background. The man has a serious expression on his face as he prepares to take a shot with his bow. The scene has a vibrant, energetic atmosphere, with the bright green grass and clear blue sky adding to the overall mood. The composition of the image draws the viewer's attention to the archer and his equipment, highlighting the focus and concentration required for this sport. The visible text on the archer's shirt indicates this is likely an outdoor archery event or competition.",
+    "keywords": [
+      "archery",
+      "archer",
+      "bow and arrow",
+      "outdoor sport",
+      "competition",
+      "athletic",
+      "concentration",
+      "focus",
+      "vibrant",
+      "energetic",
+      "green grass",
+      "blue sky",
+      "targets",
+      "equipment",
+      "quiver",
+      "sportsman"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T02:42:04.544Z",
+      "batchId": "batch_1752720114483_zzle1gody",
+      "jobId": "img_59qb9g_QwhM79K"
+    }
+  },
+  {
+    "id": "md6sb7ags9che69mezf",
+    "timestamp": "2025-07-17T02:42:09.450Z",
+    "filename": "GCP03562.jpg",
+    "smugmugImageKey": "rXF9hb9",
+    "smugmugUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Official-Practice-Wednesday-AM/i-rXF9hb9/0/KcLW9xRkCs3H2dvhdN8tBpvw8cz5fTr9kdvC2WpTB/D/GCP03562-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "59qb9g",
+    "albumName": "Official Practice - Wednesday AM",
+    "albumPath": "2025 > JOAD Target Nationals JOAD US Open > Official Practice - Wednesday AM",
+    "albumHierarchy": [
+      "2025",
+      "JOAD Target Nationals JOAD US Open",
+      "Official Practice - Wednesday AM"
+    ],
+    "description": "The image shows an older man wearing a red cap and shirt, holding binoculars and intently looking through them. He appears to be standing outdoors, possibly at an event or sporting venue based on the blurred background which suggests a crowd or spectators. The man's expression is focused and engaged, suggesting he is observing or watching something in the distance. The lighting is bright and the overall mood is one of concentration and attention. The composition places the man's hands and binoculars as the central focal point, drawing the viewer's eye to his actions. There are no visible text or signs in the image.",
+    "keywords": [
+      "man",
+      "binoculars",
+      "outdoor",
+      "observation",
+      "focus",
+      "attention",
+      "spectator",
+      "event",
+      "sporting",
+      "concentration",
+      "red",
+      "cap",
+      "shirt"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T02:42:09.448Z",
+      "batchId": "batch_1752720114483_zzle1gody",
+      "jobId": "img_59qb9g_rXF9hb9"
+    }
+  },
+  {
+    "id": "md6sbididkh85qe0ach",
+    "timestamp": "2025-07-17T02:42:23.815Z",
+    "filename": "GCP03563.jpg",
+    "smugmugImageKey": "mb5cJ45",
+    "smugmugUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Official-Practice-Wednesday-AM/i-mb5cJ45/0/KKKj4cp3tWRmBrwcTzSDktDtSSsNCVHV4njJ27T2k/D/GCP03563-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "59qb9g",
+    "albumName": "Official Practice - Wednesday AM",
+    "albumPath": "2025 > JOAD Target Nationals JOAD US Open > Official Practice - Wednesday AM",
+    "albumHierarchy": [
+      "2025",
+      "JOAD Target Nationals JOAD US Open",
+      "Official Practice - Wednesday AM"
+    ],
+    "description": "The image shows a young man wearing a black and gray trucker hat with the text 'ABB America's Best Powerstations' on it. He has shoulder-length curly dark hair and a neatly trimmed beard. The man is wearing sunglasses with purple-tinted lenses that reflect the surroundings. He is smiling and appears to be outdoors in a natural setting, with a blurred green background suggesting a park or field. The overall mood is casual and relaxed, with the warm, bright lighting creating a pleasant, sunny atmosphere. The composition places the man's face and upper body prominently in the frame, with the hat and sunglasses drawing the viewer's attention to his facial features.",
+    "keywords": [
+      "man",
+      "portrait",
+      "hat",
+      "sunglasses",
+      "curly hair",
+      "beard",
+      "outdoor",
+      "natural setting",
+      "sunny",
+      "casual",
+      "relaxed"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T02:42:23.814Z",
+      "batchId": "batch_1752720114483_zzle1gody",
+      "jobId": "img_59qb9g_mb5cJ45"
+    }
+  },
+  {
+    "id": "md6sbm9yz2ellug1rkr",
+    "timestamp": "2025-07-17T02:42:28.873Z",
+    "filename": "GCP03564.jpg",
+    "smugmugImageKey": "sW47zKm",
+    "smugmugUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Official-Practice-Wednesday-AM/i-sW47zKm/0/MRkSVJqksBDQ8tWxCnqvHKCn4fGbS2hC34RPn767F/D/GCP03564-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "59qb9g",
+    "albumName": "Official Practice - Wednesday AM",
+    "albumPath": "2025 > JOAD Target Nationals JOAD US Open > Official Practice - Wednesday AM",
+    "albumHierarchy": [
+      "2025",
+      "JOAD Target Nationals JOAD US Open",
+      "Official Practice - Wednesday AM"
+    ],
+    "description": "The image shows a young man with long hair and a beard, wearing a red t-shirt and a black baseball cap with the logo 'ABB' on it. He is standing outdoors in a grassy area, with colorful tents and umbrellas visible in the background, suggesting an outdoor event or festival setting. The man is smiling and giving a thumbs up gesture, conveying a positive and upbeat mood. The lighting is bright and natural, creating a cheerful and vibrant atmosphere. The composition of the image is centered on the man, with the background providing a colorful and lively context. Overall, the image depicts a casual, relaxed, and celebratory scene.",
+    "keywords": [
+      "man",
+      "person",
+      "outdoor",
+      "festival",
+      "event",
+      "tents",
+      "umbrellas",
+      "smile",
+      "thumbs up",
+      "happy",
+      "casual",
+      "vibrant",
+      "colorful",
+      "natural lighting"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T02:42:28.870Z",
+      "batchId": "batch_1752720114483_zzle1gody",
+      "jobId": "img_59qb9g_sW47zKm"
+    }
+  },
+  {
+    "id": "md6sbqhh3waxpohv651",
+    "timestamp": "2025-07-17T02:42:34.326Z",
+    "filename": "GCP03565.jpg",
+    "smugmugImageKey": "62PRFXH",
+    "smugmugUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Official-Practice-Wednesday-AM/i-62PRFXH/0/McZqPxqBVcL9HSm7LX8CqWKtT8skSK7stSRC5k8CP/D/GCP03565-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "59qb9g",
+    "albumName": "Official Practice - Wednesday AM",
+    "albumPath": "2025 > JOAD Target Nationals JOAD US Open > Official Practice - Wednesday AM",
+    "albumHierarchy": [
+      "2025",
+      "JOAD Target Nationals JOAD US Open",
+      "Official Practice - Wednesday AM"
+    ],
+    "description": "{\n  \"description\": \"The image shows two people, a man and a woman, standing in a grassy outdoor setting surrounded by archery targets. The targets have colorful circular patterns on them, indicating this is likely an archery range or practice area. The people are wearing casual, sporty clothing and holding archery equipment, suggesting they are engaged in archery activities. \n\nThe scene has a bright, sunny atmosphere with a clear blue sky in the background. The grass is lush and green, creating a pleasant, natural setting. The overall mood is one of leisure and recreation, with the vibrant colors and casual postures of the individuals contributing to a relaxed, enjoyable atmosphere.\n\nThere are several numbered markers placed in the grass, likely used to indicate shooting distances or positions. The presence of these markers, along with the archery targets, makes it clear this is a dedicated archery venue or facility of some kind.\",\n  \"keywords\": [\"archery\", \"outdoor recreation\", \"leisure activity\", \"sports equipment\", \"colorful targets\", \"grassy field\", \"sunny day\", \"casual clothing\", \"numbered markers\"]\n}",
+    "keywords": [],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T02:42:34.325Z",
+      "batchId": "batch_1752720114483_zzle1gody",
+      "jobId": "img_59qb9g_62PRFXH"
+    }
+  },
+  {
+    "id": "md6sbunjovtkd5x29a",
+    "timestamp": "2025-07-17T02:42:39.730Z",
+    "filename": "GCP03566.jpg",
+    "smugmugImageKey": "79xS7vg",
+    "smugmugUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Official-Practice-Wednesday-AM/i-79xS7vg/0/KM7FQQfNFv4x2kL9rRWRgVbBjzFtG2t5RjzdqPgHd/D/GCP03566-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "59qb9g",
+    "albumName": "Official Practice - Wednesday AM",
+    "albumPath": "2025 > JOAD Target Nationals JOAD US Open > Official Practice - Wednesday AM",
+    "albumHierarchy": [
+      "2025",
+      "JOAD Target Nationals JOAD US Open",
+      "Official Practice - Wednesday AM"
+    ],
+    "description": "The image depicts an outdoor event or festival taking place in a mountainous, snowy setting. In the foreground, a person in a blue shirt is kneeling and using a camera on a tripod, seemingly photographing or recording the scene. Other people can be seen in the background, some carrying skis or snowboards, suggesting a winter sports or recreation event. The scene is set against a backdrop of white, snow-covered mountains and a tent-covered area, likely a vendor or concession area. The overall mood is active and lively, with a sense of energy and outdoor recreation. The lighting is bright and natural, with a crisp, cool atmosphere typical of a winter setting. The composition features a balance of the central camera-wielding figure and the broader festival scene in the background, creating a sense of engagement and context.",
+    "keywords": [
+      "outdoor event",
+      "winter sports",
+      "photography",
+      "mountain",
+      "snow",
+      "festival",
+      "recreation",
+      "activity",
+      "skiing",
+      "snowboarding",
+      "tent",
+      "concession",
+      "landscape",
+      "natural light",
+      "cool atmosphere"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T02:42:39.727Z",
+      "batchId": "batch_1752720114483_zzle1gody",
+      "jobId": "img_59qb9g_79xS7vg"
+    }
+  },
+  {
+    "id": "md6sby4x5f9q4l6qre",
+    "timestamp": "2025-07-17T02:42:44.245Z",
+    "filename": "GCP03568.jpg",
+    "smugmugImageKey": "cDMJK4N",
+    "smugmugUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Official-Practice-Wednesday-AM/i-cDMJK4N/0/Ln3trfw2DqJTsVwDKGjS277mJkBXvQQF56HbXFNdV/D/GCP03568-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "59qb9g",
+    "albumName": "Official Practice - Wednesday AM",
+    "albumPath": "2025 > JOAD Target Nationals JOAD US Open > Official Practice - Wednesday AM",
+    "albumHierarchy": [
+      "2025",
+      "JOAD Target Nationals JOAD US Open",
+      "Official Practice - Wednesday AM"
+    ],
+    "description": "The image shows a person, likely a female archer, preparing to shoot an arrow from a compound bow. She is wearing a blue knit cap and a black jacket with 'FERGUS' printed on the back. The archer appears to be in an outdoor setting, with a mountainous landscape visible in the background. The composition of the image focuses on the archer's hands and the bow, highlighting the technical aspects of archery. The overall mood of the image is focused and determined, with the archer's expression suggesting concentration. The colors in the image are predominantly blue, black, and gray, creating a cool and slightly muted tone. The lighting appears to be natural, with the scene illuminated by daylight.",
+    "keywords": [
+      "archery",
+      "compound bow",
+      "archer",
+      "outdoor",
+      "mountains",
+      "focus",
+      "determination",
+      "blue",
+      "black",
+      "gray",
+      "natural light"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T02:42:44.241Z",
+      "batchId": "batch_1752720114483_zzle1gody",
+      "jobId": "img_59qb9g_cDMJK4N"
+    }
+  },
+  {
+    "id": "md6sc1mopo6wwv0zfxa",
+    "timestamp": "2025-07-17T02:42:48.770Z",
+    "filename": "GCP03569.jpg",
+    "smugmugImageKey": "mgJpkmV",
+    "smugmugUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Official-Practice-Wednesday-AM/i-mgJpkmV/0/MzbnKf38mrSbcw2N6rCRjjcHQV5tTkBqKhRtZwF9x/D/GCP03569-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "59qb9g",
+    "albumName": "Official Practice - Wednesday AM",
+    "albumPath": "2025 > JOAD Target Nationals JOAD US Open > Official Practice - Wednesday AM",
+    "albumHierarchy": [
+      "2025",
+      "JOAD Target Nationals JOAD US Open",
+      "Official Practice - Wednesday AM"
+    ],
+    "description": "The image shows a person in a blue and white archery uniform holding a compound bow and aiming at a target in an outdoor setting. The person has their back to the camera and is wearing a baseball cap. In the background, there is a grassy field with some targets set up, indicating this is likely an archery range or practice area. The lighting is bright and the sky is clear, suggesting this is taking place on a sunny day. The composition of the image focuses on the archer and their equipment, with the target in the distance providing context. The overall mood is one of focused concentration and engagement in the sport of archery.",
+    "keywords": [
+      "archery",
+      "archer",
+      "compound bow",
+      "target",
+      "outdoor",
+      "practice range",
+      "sporting equipment",
+      "athletic",
+      "focus",
+      "concentration",
+      "sunny",
+      "bright",
+      "grassy field"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T02:42:48.768Z",
+      "batchId": "batch_1752720114483_zzle1gody",
+      "jobId": "img_59qb9g_mgJpkmV"
+    }
+  },
+  {
+    "id": "md6se2gzjfoiy6kcyff",
+    "timestamp": "2025-07-17T02:44:23.175Z",
+    "filename": "GCP03570.jpg",
+    "smugmugImageKey": "2rFk845",
+    "smugmugUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Official-Practice-Wednesday-AM/i-2rFk845/0/LMK6LtVTZvTx6fKgG8tvSp4G5fNWpnssnrPbg7n7G/D/GCP03570-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "59qb9g",
+    "albumName": "Official Practice - Wednesday AM",
+    "albumPath": "2025 > JOAD Target Nationals JOAD US Open > Official Practice - Wednesday AM",
+    "albumHierarchy": [
+      "2025",
+      "JOAD Target Nationals JOAD US Open",
+      "Official Practice - Wednesday AM"
+    ],
+    "description": "The image depicts two people engaged in archery, a competitive sport involving the use of bows and arrows. The main subjects are a woman wearing a red shirt who is drawing back the string of a compound bow, and a man in a yellow shirt and baseball cap standing nearby. They appear to be at an outdoor archery range or practice area, surrounded by various archery equipment and targets in the background. The setting has a grassy, open field with some trees or foliage in the distance, suggesting a rural or natural environment. The lighting is bright and the atmosphere seems relaxed and focused, with the subjects appearing intent on their archery practice. The overall composition is dynamic, capturing the action and movement of the archery activity. The visual elements include the various archery equipment, the colors of the clothing and gear, and the contrast between the human subjects and the natural outdoor setting.",
+    "keywords": [
+      "archery",
+      "outdoor",
+      "sport",
+      "bow",
+      "arrow",
+      "practice",
+      "competition",
+      "equipment",
+      "target",
+      "nature",
+      "field",
+      "focus",
+      "activity",
+      "movement",
+      "dynamic"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T02:44:23.171Z",
+      "batchId": "batch_1752720258179_hr6cc3e76",
+      "jobId": "img_59qb9g_2rFk845"
+    }
+  },
+  {
+    "id": "md6se5z58erwtlq35le",
+    "timestamp": "2025-07-17T02:44:27.714Z",
+    "filename": "GCP03571.jpg",
+    "smugmugImageKey": "9RjxFcL",
+    "smugmugUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Official-Practice-Wednesday-AM/i-9RjxFcL/0/MWLTz6M5mRST6ksjz7gSxgJQXNMfJJh3b9t5ZpXM7/D/GCP03571-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "59qb9g",
+    "albumName": "Official Practice - Wednesday AM",
+    "albumPath": "2025 > JOAD Target Nationals JOAD US Open > Official Practice - Wednesday AM",
+    "albumHierarchy": [
+      "2025",
+      "JOAD Target Nationals JOAD US Open",
+      "Official Practice - Wednesday AM"
+    ],
+    "description": "The image shows two individuals, possibly park or security personnel, standing in a grassy outdoor setting. One person is wearing a black cap and navy blue uniform with a patch that says 'Alexsco 1992', while the other is wearing a green hat. They appear to be examining or discussing something on a large, vertical, flat object in front of them, possibly a signboard or map. The setting has a calm, peaceful atmosphere with a clear sky in the background. The composition and lighting create a somewhat hazy, subdued tone. There are no other people or prominent objects visible in the frame.",
+    "keywords": [
+      "outdoor",
+      "park",
+      "security",
+      "uniform",
+      "cap",
+      "hat",
+      "signboard",
+      "map",
+      "grassy",
+      "calm",
+      "peaceful",
+      "hazy",
+      "subdued"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T02:44:27.713Z",
+      "batchId": "batch_1752720258179_hr6cc3e76",
+      "jobId": "img_59qb9g_9RjxFcL"
+    }
+  },
+  {
+    "id": "md6se9n9pl59zic55t",
+    "timestamp": "2025-07-17T02:44:32.471Z",
+    "filename": "GCP03572.jpg",
+    "smugmugImageKey": "czmVKZv",
+    "smugmugUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Official-Practice-Wednesday-AM/i-czmVKZv/0/Nf96L942xnhWd6QDKpjrkBMTBq2fnDNNfN9G2BmsD/D/GCP03572-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "59qb9g",
+    "albumName": "Official Practice - Wednesday AM",
+    "albumPath": "2025 > JOAD Target Nationals JOAD US Open > Official Practice - Wednesday AM",
+    "albumHierarchy": [
+      "2025",
+      "JOAD Target Nationals JOAD US Open",
+      "Official Practice - Wednesday AM"
+    ],
+    "description": "{\n  \"description\": \"The image depicts a group of young people, presumably children, participating in an outdoor activity or event. The setting appears to be a grassy field or park, with rows of colorful tents or canopies in the background, suggesting a campsite or festival-like atmosphere. \n\nThe main subjects are three children, two boys and one girl, who are standing and holding what appear to be archery equipment, such as bows and arrows. They are wearing casual, sporty clothing and hats, indicating they are engaged in some form of recreational or athletic activity.\n\nThe overall mood of the scene is lively and energetic, with a sense of excitement and camaraderie among the participants. The lighting is bright and natural, likely during the daytime, creating a warm and vibrant atmosphere. The composition of the image is balanced, with the tents and trees in the background providing a sense of depth and context.\n\nWhile the image does not contain any visible text or signage, the setting and the equipment suggest this is likely an archery or outdoor sports event or camp, where children are learning and practicing these skills in a fun and engaging environment.\",\n  \"keywords\": [\"children\", \"archery\", \"outdoor activity\", \"campsite\", \"festival\", \"recreation\", \"sports\", \"tents\", \"grass\", \"trees\", \"colorful\", \"energetic\", \"lively\"]\n}",
+    "keywords": [],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T02:44:32.469Z",
+      "batchId": "batch_1752720258179_hr6cc3e76",
+      "jobId": "img_59qb9g_czmVKZv"
+    }
+  },
+  {
+    "id": "md6sednmf07nlcp4xuq",
+    "timestamp": "2025-07-17T02:44:37.667Z",
+    "filename": "GCP03573.jpg",
+    "smugmugImageKey": "Js5jv7V",
+    "smugmugUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Official-Practice-Wednesday-AM/i-Js5jv7V/0/L8Ssd6DK8pdRjC9B7bD9GSNw8JkZj3mnGnWrWmcZM/D/GCP03573-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "59qb9g",
+    "albumName": "Official Practice - Wednesday AM",
+    "albumPath": "2025 > JOAD Target Nationals JOAD US Open > Official Practice - Wednesday AM",
+    "albumHierarchy": [
+      "2025",
+      "JOAD Target Nationals JOAD US Open",
+      "Official Practice - Wednesday AM"
+    ],
+    "description": "The image depicts two young women standing on a grassy field in an outdoor setting. The woman on the left is wearing a bright red hat and appears to be interacting with the woman on the right, who is wearing a vibrant, patterned top. Both women have a relaxed, casual posture, suggesting they are engaging in some kind of recreational or social activity. In the background, there are other people visible, though they are blurred and not the main focus of the image. The overall atmosphere is colorful, lively, and suggests a festive or celebratory event taking place. The lighting is bright and natural, with a clear, blue sky overhead. The composition of the image draws the viewer's attention to the two central figures and their interaction, with the green grass and blurred background providing a pleasing visual context.",
+    "keywords": [
+      "outdoor",
+      "field",
+      "people",
+      "women",
+      "interaction",
+      "casual",
+      "colorful",
+      "vibrant",
+      "festival",
+      "celebration",
+      "social",
+      "recreational",
+      "lighting",
+      "natural",
+      "composition"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T02:44:37.666Z",
+      "batchId": "batch_1752720258179_hr6cc3e76",
+      "jobId": "img_59qb9g_Js5jv7V"
+    }
+  },
+  {
+    "id": "md6sehhwx6zya6xujoe",
+    "timestamp": "2025-07-17T02:44:42.645Z",
+    "filename": "GCP03574.jpg",
+    "smugmugImageKey": "CPbzzZP",
+    "smugmugUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Official-Practice-Wednesday-AM/i-CPbzzZP/0/LvXBHC5W3m2mCS6Nm9xBF4WXZJSndBwRN2qdpCh9S/D/GCP03574-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "59qb9g",
+    "albumName": "Official Practice - Wednesday AM",
+    "albumPath": "2025 > JOAD Target Nationals JOAD US Open > Official Practice - Wednesday AM",
+    "albumHierarchy": [
+      "2025",
+      "JOAD Target Nationals JOAD US Open",
+      "Official Practice - Wednesday AM"
+    ],
+    "description": "The image shows a young person standing in a grassy field, holding a colorful striped umbrella. They are wearing a black t-shirt with the 'Nike Moving Co.' logo, black shorts, and sneakers. In the background, other people can be seen in the distance, also holding umbrellas. The setting appears to be an outdoor event or festival, with a clear blue sky and lush green grass underfoot. The overall mood is one of a pleasant, relaxed day with a touch of whimsy from the vibrant umbrellas. The composition draws the eye to the central figure, who is standing calmly amidst the activity around them.",
+    "keywords": [
+      "person",
+      "umbrella",
+      "outdoor",
+      "field",
+      "festival",
+      "t-shirt",
+      "nike",
+      "shorts",
+      "sneakers",
+      "relaxed",
+      "colorful"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T02:44:42.644Z",
+      "batchId": "batch_1752720258179_hr6cc3e76",
+      "jobId": "img_59qb9g_CPbzzZP"
+    }
+  },
+  {
+    "id": "md6sekxehw5evuab66u",
+    "timestamp": "2025-07-17T02:44:47.091Z",
+    "filename": "GCP03575.jpg",
+    "smugmugImageKey": "RdVxpcH",
+    "smugmugUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Official-Practice-Wednesday-AM/i-RdVxpcH/0/NKz4xt56DdppqxFV8khFFwW2wZch8KvnQDzGw5Mhz/D/GCP03575-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "59qb9g",
+    "albumName": "Official Practice - Wednesday AM",
+    "albumPath": "2025 > JOAD Target Nationals JOAD US Open > Official Practice - Wednesday AM",
+    "albumHierarchy": [
+      "2025",
+      "JOAD Target Nationals JOAD US Open",
+      "Official Practice - Wednesday AM"
+    ],
+    "description": "The image shows a young boy wearing sunglasses and a navy blue t-shirt with the text 'Since 1908' on it. He is holding a red and white archery target and a quiver of arrows, indicating he is participating in an archery activity. The boy is standing on a grassy field with several colorful archery targets visible in the background, suggesting an outdoor archery range or range. The setting appears to be a sunny, pleasant day with a clear sky. The image has a vibrant, energetic atmosphere, capturing the boy's focus and engagement in the archery activity.",
+    "keywords": [
+      "archery",
+      "boy",
+      "outdoor",
+      "target",
+      "quiver",
+      "arrows",
+      "sports",
+      "t-shirt",
+      "sunglasses",
+      "field",
+      "sunny",
+      "activity",
+      "competition",
+      "equipment"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T02:44:47.090Z",
+      "batchId": "batch_1752720258179_hr6cc3e76",
+      "jobId": "img_59qb9g_RdVxpcH"
+    }
+  },
+  {
+    "id": "md6sfjk9koprmusjfk",
+    "timestamp": "2025-07-17T02:45:31.981Z",
+    "filename": "GCP03425.jpg",
+    "smugmugImageKey": "q5GVQnC",
+    "smugmugUrl": "https://photos.smugmug.com/2025/Gator-Cup/Saturday-AM-Para-awards/i-q5GVQnC/0/MsDZZrw66fSCjfCPNmw6nVBWxqCFvkGnQvdPdT4jc/D/GCP03425-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "zkn3CW",
+    "albumName": "Saturday AM + Para awards",
+    "albumPath": "2025 > Gator Cup > Saturday AM + Para awards",
+    "albumHierarchy": [
+      "2025",
+      "Gator Cup",
+      "Saturday AM + Para awards"
+    ],
+    "description": "The image depicts two archers, dressed in athletic gear, practicing archery on an outdoor field. One archer is in a red and white jersey, while the other is wearing a blue and gray jersey. They are both using compound bows and are aiming at targets set up in the distance. The setting appears to be a practice or competition venue, with a grassy field and a few buildings visible in the background. The scene has a focused and competitive atmosphere, with the archers intently concentrating on their shots. The lighting is bright and clear, indicating a daytime, possibly afternoon setting. The overall composition is well-balanced, with the archers positioned prominently in the frame and the targets providing a clear focal point. The image captures the skill and dedication of these archery enthusiasts as they hone their craft.",
+    "keywords": [
+      "archery",
+      "archery practice",
+      "compound bow",
+      "outdoor field",
+      "athletic gear",
+      "competition",
+      "target practice",
+      "sports",
+      "outdoor recreation",
+      "skill",
+      "dedication",
+      "focus",
+      "competitive atmosphere"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T02:45:31.977Z",
+      "batchId": "batch_1752720327521_xaftakzkr",
+      "jobId": "img_zkn3CW_q5GVQnC"
+    }
+  },
+  {
+    "id": "md6sfnc4g2nq6zsehob",
+    "timestamp": "2025-07-17T02:45:36.872Z",
+    "filename": "GCP03426.jpg",
+    "smugmugImageKey": "ndn6DDv",
+    "smugmugUrl": "https://photos.smugmug.com/2025/Gator-Cup/Saturday-AM-Para-awards/i-ndn6DDv/0/KcQ6cHbbVVcmznPxRZt8rSZXKnBhNKx7htm4gB9mt/D/GCP03426-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "zkn3CW",
+    "albumName": "Saturday AM + Para awards",
+    "albumPath": "2025 > Gator Cup > Saturday AM + Para awards",
+    "albumHierarchy": [
+      "2025",
+      "Gator Cup",
+      "Saturday AM + Para awards"
+    ],
+    "description": "The image shows a man engaged in archery practice outdoors. He is wearing a black and yellow archery jersey and a baseball cap, and is holding a yellow compound bow and pulling back the bowstring. The man has a tattoo on his arm and appears to be focused and intent on his shot. In the background, there is a residential building with a gray roof, surrounded by trees and greenery, indicating an outdoor recreational or practice setting. The lighting is bright and the atmosphere seems calm and sunny, creating an overall relaxed and focused mood for the archery activity. The composition of the image draws the viewer's attention to the archer's form and the act of drawing the bow.",
+    "keywords": [
+      "archery",
+      "archer",
+      "compound bow",
+      "outdoor recreation",
+      "athletic practice",
+      "residential area",
+      "trees",
+      "green foliage",
+      "sunny day",
+      "focused expression",
+      "tattoo",
+      "sportswear",
+      "black and yellow"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T02:45:36.868Z",
+      "batchId": "batch_1752720327521_xaftakzkr",
+      "jobId": "img_zkn3CW_ndn6DDv"
+    }
+  },
+  {
+    "id": "md6sfrhnvcjzu9j6lbr",
+    "timestamp": "2025-07-17T02:45:42.252Z",
+    "filename": "GCP03427.jpg",
+    "smugmugImageKey": "sQgDbBR",
+    "smugmugUrl": "https://photos.smugmug.com/2025/Gator-Cup/Saturday-AM-Para-awards/i-sQgDbBR/0/MGCsHX5bCqHqfgjH7XBJ8kfcv3qPvGhPSSSsF7jcG/D/GCP03427-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "zkn3CW",
+    "albumName": "Saturday AM + Para awards",
+    "albumPath": "2025 > Gator Cup > Saturday AM + Para awards",
+    "albumHierarchy": [
+      "2025",
+      "Gator Cup",
+      "Saturday AM + Para awards"
+    ],
+    "description": "{\n  \"description\": \"The image shows a man in a white hard hat and safety gear using a bow and arrow to shoot at a target. He appears to be an archer or archer competitor, based on the specialized equipment and archery setup visible in the scene. The man has a beard and is concentrating intently on his shot, with a serious expression on his face. \n\nThe setting is an outdoor area, likely a sports or competition venue, with buildings and a grassy field visible in the background. The lighting is bright and natural, indicating it is likely daytime. The overall mood is focused and intense, with the archer's intense concentration and the specialized archery equipment creating a sense of precision and skill.\n\nThe visual elements include the red and black archery equipment, the man's blue and black athletic clothing, and the grassy outdoor environment. There are no visible signs or text in the image.\"\n\n  \"keywords\": [\n    \"archer\",\n    \"archery\",\n    \"outdoor\",\n    \"competition\",\n    \"target\",\n    \"bow and arrow\",\n    \"sports\",\n    \"equipment\",\n    \"concentration\",\n    \"focus\"\n  ]\n}",
+    "keywords": [],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T02:45:42.250Z",
+      "batchId": "batch_1752720327521_xaftakzkr",
+      "jobId": "img_zkn3CW_sQgDbBR"
+    }
+  },
+  {
+    "id": "md6sfv2smpxej11u9v",
+    "timestamp": "2025-07-17T02:45:46.902Z",
+    "filename": "GCP03428.jpg",
+    "smugmugImageKey": "gXXJSV3",
+    "smugmugUrl": "https://photos.smugmug.com/2025/Gator-Cup/Saturday-AM-Para-awards/i-gXXJSV3/0/KHBGNxWHWvKGTKP8R8J7JNC7mhsbvSFcS7cDcXpRn/D/GCP03428-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "zkn3CW",
+    "albumName": "Saturday AM + Para awards",
+    "albumPath": "2025 > Gator Cup > Saturday AM + Para awards",
+    "albumHierarchy": [
+      "2025",
+      "Gator Cup",
+      "Saturday AM + Para awards"
+    ],
+    "description": "The image shows a person aiming a compound bow while standing on a grassy field. The bow is a bright green color and appears to be a modern, high-tech design. The person is wearing a khaki-colored jacket and cap, suggesting they are engaged in an outdoor recreational or sporting activity. In the background, there are several buildings, indicating this is likely taking place in a suburban or residential area. The sky is clear and blue, and the overall scene has a peaceful, relaxed atmosphere. The composition of the image draws the viewer's attention to the person and their archery equipment, with the buildings in the background providing context for the setting. No specific text or signage is visible in the image.",
+    "keywords": [
+      "archery",
+      "compound bow",
+      "outdoor recreation",
+      "suburban setting",
+      "sporting equipment",
+      "green bow",
+      "khaki clothing",
+      "blue sky",
+      "peaceful scene",
+      "visual focus"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T02:45:46.900Z",
+      "batchId": "batch_1752720327521_xaftakzkr",
+      "jobId": "img_zkn3CW_gXXJSV3"
+    }
+  },
+  {
+    "id": "md6sfykohqi2t4bag46",
+    "timestamp": "2025-07-17T02:45:51.433Z",
+    "filename": "GCP03430.jpg",
+    "smugmugImageKey": "nFfZXns",
+    "smugmugUrl": "https://photos.smugmug.com/2025/Gator-Cup/Saturday-AM-Para-awards/i-nFfZXns/0/Lsjn5rnRLC3XGSfGWqGKh7tqfkXV2WsK9frFfhKNr/D/GCP03430-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "zkn3CW",
+    "albumName": "Saturday AM + Para awards",
+    "albumPath": "2025 > Gator Cup > Saturday AM + Para awards",
+    "albumHierarchy": [
+      "2025",
+      "Gator Cup",
+      "Saturday AM + Para awards"
+    ],
+    "description": "The image shows a person in archery gear, holding a bow and drawing back the string, preparing to release an arrow. The person is wearing a trucker-style hat, a shirt with an American flag design, and is standing in an outdoor setting, likely an archery range or competition venue. The background includes a grassy field, some buildings or structures, and a clear, blue sky. The overall mood is focused and determined, with the archer concentrating on their shot. The composition emphasizes the archer's form and the bow, creating a dynamic and visually compelling image.",
+    "keywords": [
+      "archery",
+      "archer",
+      "bow and arrow",
+      "outdoor sport",
+      "American flag",
+      "competition",
+      "target shooting",
+      "focus",
+      "determination",
+      "outdoor equipment",
+      "athletic performance"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T02:45:51.432Z",
+      "batchId": "batch_1752720327521_xaftakzkr",
+      "jobId": "img_zkn3CW_nFfZXns"
+    }
   }
 ]

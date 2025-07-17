@@ -1761,6 +1761,7 @@ class PhotoVision {
             if (data.success) {
                 this.addMessage(`Batch processing started! Processing ${data.data.jobCount} images.`, 'assistant');
                 this.showBatchProgress();
+                this.showBottomProgressBar();
                 this.updateBatchControls('processing');
                 this.startProgressMonitoring();
             } else {
@@ -1817,6 +1818,7 @@ class PhotoVision {
                 this.updateBatchControls('idle');
                 this.stopProgressMonitoring();
                 this.hideBatchProgress();
+                this.hideBottomProgressBar();
             } else {
                 this.addMessage('Error cancelling batch processing.', 'assistant');
             }
@@ -1856,6 +1858,27 @@ class PhotoVision {
         const progressSection = document.getElementById('batchProgress');
         if (progressSection) {
             progressSection.style.display = 'none';
+        }
+    }
+
+    showBottomProgressBar() {
+        const bottomProgressBar = document.getElementById('bottomProgressBar');
+        if (bottomProgressBar) {
+            bottomProgressBar.style.display = 'block';
+            // Trigger reflow to ensure display change is applied
+            bottomProgressBar.offsetHeight;
+            bottomProgressBar.classList.add('show');
+        }
+    }
+
+    hideBottomProgressBar() {
+        const bottomProgressBar = document.getElementById('bottomProgressBar');
+        if (bottomProgressBar) {
+            bottomProgressBar.classList.remove('show');
+            // Wait for animation to complete before hiding
+            setTimeout(() => {
+                bottomProgressBar.style.display = 'none';
+            }, 300);
         }
     }
 
@@ -1923,6 +1946,11 @@ class PhotoVision {
                     this.showBatchResults(status);
                     this.addMessage(`Batch processing completed! Processed: ${status.processed}, Failed: ${status.failed}`, 'assistant');
                     
+                    // Hide bottom progress bar after a brief delay to show completion
+                    setTimeout(() => {
+                        this.hideBottomProgressBar();
+                    }, 3000);
+                    
                     // Refresh album processing status for the processed album
                     if (this.selectedAlbumKey) {
                         await this.loadAlbumProcessingStatus(this.selectedAlbumKey);
@@ -1937,16 +1965,25 @@ class PhotoVision {
     }
 
     displayBatchStatus(status) {
-        // Update progress bar
+        const percentage = status.total > 0 ? Math.round((status.processed / status.total) * 100) : 0;
+        
+        // Update main progress bar (existing functionality)
         const progressFill = document.getElementById('batchProgressFill');
         const progressPercentage = document.getElementById('progressPercentage');
         if (progressFill && progressPercentage) {
-            const percentage = status.total > 0 ? Math.round((status.processed / status.total) * 100) : 0;
             progressFill.style.width = `${percentage}%`;
             progressPercentage.textContent = `${percentage}%`;
         }
 
-        // Update counters
+        // Update bottom progress bar
+        const bottomProgressFill = document.getElementById('bottomProgressFill');
+        const bottomProgressPercentage = document.getElementById('bottomProgressPercentage');
+        if (bottomProgressFill && bottomProgressPercentage) {
+            bottomProgressFill.style.width = `${percentage}%`;
+            bottomProgressPercentage.textContent = `${percentage}%`;
+        }
+
+        // Update counters (main progress)
         const processedCount = document.getElementById('processedCount');
         const totalCount = document.getElementById('totalCount');
         const failedCount = document.getElementById('failedCount');
@@ -1957,7 +1994,13 @@ class PhotoVision {
         if (failedCount) failedCount.textContent = status.failed || 0;
         if (remainingCount) remainingCount.textContent = (status.total - status.processed) || 0;
 
-        // Update status
+        // Update bottom progress counters
+        const bottomProcessedCount = document.getElementById('bottomProcessedCount');
+        const bottomTotalCount = document.getElementById('bottomTotalCount');
+        if (bottomProcessedCount) bottomProcessedCount.textContent = status.processed || 0;
+        if (bottomTotalCount) bottomTotalCount.textContent = status.total || 0;
+
+        // Update status (main progress)
         const batchStatus = document.getElementById('batchStatus');
         if (batchStatus) {
             if (status.isComplete) {
@@ -1975,16 +2018,47 @@ class PhotoVision {
             }
         }
 
-        // Update current job
-        const currentJobName = document.getElementById('currentJobName');
-        if (currentJobName) {
-            if (status.currentJob) {
-                currentJobName.textContent = status.currentJob.imageName || 'Processing...';
-            } else if (status.isComplete) {
-                currentJobName.textContent = 'All jobs completed';
+        // Update bottom progress status
+        const bottomBatchStatus = document.getElementById('bottomBatchStatus');
+        if (bottomBatchStatus) {
+            if (status.isComplete) {
+                bottomBatchStatus.textContent = 'Completed';
+                bottomBatchStatus.className = 'status-indicator completed';
+            } else if (status.isPaused) {
+                bottomBatchStatus.textContent = 'Paused';
+                bottomBatchStatus.className = 'status-indicator paused';
+            } else if (status.isProcessing) {
+                bottomBatchStatus.textContent = 'Processing';
+                bottomBatchStatus.className = 'status-indicator processing';
             } else {
-                currentJobName.textContent = 'Waiting...';
+                bottomBatchStatus.textContent = 'Idle';
+                bottomBatchStatus.className = 'status-indicator idle';
             }
+        }
+
+        // Update current job (both main and bottom)
+        const currentJobName = document.getElementById('currentJobName');
+        let currentJobText = 'Waiting...';
+        
+        if (status.currentJob) {
+            if (status.currentJob.albumHierarchy && Array.isArray(status.currentJob.albumHierarchy)) {
+                // Show just the album hierarchy
+                currentJobText = status.currentJob.albumHierarchy.join(' > ');
+            } else if (status.currentJob.albumName) {
+                // Fallback to album name if hierarchy not available
+                currentJobText = status.currentJob.albumName;
+            } else {
+                currentJobText = 'Processing...';
+            }
+        } else if (status.isComplete) {
+            currentJobText = 'All jobs completed';
+        } else if (status.isProcessing) {
+            currentJobText = 'Processing...';
+        }
+
+        if (currentJobName) {
+            currentJobName.textContent = currentJobText;
+            currentJobName.title = currentJobText; // Full text in tooltip
         }
     }
 

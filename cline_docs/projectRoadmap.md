@@ -57,13 +57,16 @@
    - [x] Add dark/light theme support with theme switcher
    - [x] Update iconography throughout the application
    - [x] Add lightbox functionality for images (change "View" to "Download")
-5. [ ] Improve search algorithms and query understanding
-6. [ ]Make chat responses sound more natural and human-like
+5. [x] Improve search algorithms and query understanding
+6. [ ] Make chat responses sound more natural and human-like
 7. [ ] Enable prompt customization for batch processing
 8. [ ] Additional UI improvements and polish
 9. [ ] Test: End-to-end user experience
-10. allow users to add their own keywords
-11. allow users to build their own albums
+10. [ ] allow users to add their own keywords
+11. [ ] allow users to build their own albums
+12. [ ] allow users to use the models they choose
+13. [ ] allow users to make duplicate handling less important
+14. [x]  move processing progress to a fixed bar at the bottom of the screen
 
 ## Completion Criteria
 

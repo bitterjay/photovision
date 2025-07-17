@@ -419,6 +419,29 @@
         </div>
     </div>
 
+    <!-- Fixed Bottom Progress Info Bar -->
+    <div id="bottomProgressBar" class="bottom-progress-bar" style="display: none;">
+        <div class="progress-info-container">
+            <div class="progress-bar-section">
+                <div class="progress-bar-mini">
+                    <div class="progress-fill-mini" id="bottomProgressFill"></div>
+                </div>
+                <span class="progress-percentage-mini" id="bottomProgressPercentage">0%</span>
+            </div>
+            
+            <div class="progress-details">
+                <span class="current-file" id="currentJobName" title="">Processing...</span>
+                <span class="progress-stats-mini">
+                    (<span id="bottomProcessedCount">0</span> of <span id="bottomTotalCount">0</span>)
+                </span>
+            </div>
+            
+            <div class="progress-status">
+                <span class="status-indicator" id="bottomBatchStatus">Processing</span>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="script.js"></script>
 </body>
