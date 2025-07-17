@@ -4036,3 +4036,8 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+#duplicateDetectionCard .admin-card-header {
+    display:flex;
+    flex-direction:column;
+}
