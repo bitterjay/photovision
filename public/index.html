@@ -138,6 +138,68 @@
                             <span class="album-count" id="albumCount">Loading...</span>
                         </div>
                         
+                        <!-- Filter and Sort Controls -->
+                        <div class="album-filters">
+                            <div class="filter-row">
+                                <div class="search-group">
+                                    <input type="text" id="albumSearch" placeholder="Search albums..." class="search-input">
+                                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="11" cy="11" r="8"></circle>
+                                        <path d="M21 21l-4.35-4.35"></path>
+                                    </svg>
+                                </div>
+                                
+                                <div class="filter-group">
+                                    <label for="statusFilter">Status:</label>
+                                    <select id="statusFilter" class="filter-select">
+                                        <option value="all">All Albums</option>
+                                        <option value="processed">Fully Processed</option>
+                                        <option value="partial">Partially Processed</option>
+                                        <option value="unprocessed">Unprocessed</option>
+                                        <option value="failed">Failed</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="filter-group">
+                                    <label for="levelFilter">Level:</label>
+                                    <select id="levelFilter" class="filter-select">
+                                        <option value="all">All Levels</option>
+                                        <option value="0">Root Only</option>
+                                        <option value="1">Level 1</option>
+                                        <option value="2">Level 2+</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="filter-group">
+                                    <label for="sortOrder">Sort:</label>
+                                    <select id="sortOrder" class="filter-select">
+                                        <option value="name-asc">Name A-Z</option>
+                                        <option value="name-desc">Name Z-A</option>
+                                        <option value="count-desc">Image Count (High-Low)</option>
+                                        <option value="count-asc">Image Count (Low-High)</option>
+                                        <option value="level-asc">Hierarchy Level</option>
+                                        <option value="date-desc">Date Created (Newest First)</option>
+                                        <option value="date-asc">Date Created (Oldest First)</option>
+                                        <option value="updated-desc">Last Updated (Newest First)</option>
+                                        <option value="updated-asc">Last Updated (Oldest First)</option>
+                                    </select>
+                                </div>
+                                
+                                <button id="clearFilters" class="btn btn-secondary filter-clear">
+                                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                    Clear
+                                </button>
+                            </div>
+                            
+                            <div class="active-filters" id="activeFilters" style="display: none;">
+                                <span class="filter-label">Active filters:</span>
+                                <div class="filter-tags" id="filterTags"></div>
+                            </div>
+                        </div>
+                        
                         <div class="albums-list" id="albumsList">
                             <div class="loading-albums">
                                 <div class="loading-spinner"></div> Loading albums...

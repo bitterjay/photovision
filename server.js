@@ -8,7 +8,7 @@ const ClaudeClient = require('./lib/claudeClient');
 const SmugMugClient = require('./lib/smugmugClient');
 const JobQueue = require('./lib/jobQueue');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 const dataManager = new DataManager();
 const claudeClient = new ClaudeClient(process.env.ANTHROPIC_API_KEY);
 const smugmugClient = new SmugMugClient(process.env.SMUGMUG_API_KEY, process.env.SMUGMUG_API_SECRET);
@@ -668,19 +668,36 @@ Remember: You're not just delivering search results - you're sharing exciting ph
           return sendError(res, 500, 'SmugMug user information not available');
         }
 
+        // Pagination parameters
+        const page = parseInt(query.page || '1', 10);
+        const pageSize = parseInt(query.pageSize || '12', 10);
+        const start = (page - 1) * pageSize + 1;
+
         // Use the base user URI (the getUserAlbums method will append !albums)
         const albumsResult = await smugmugClient.getUserAlbums(
           smugmugConfig.accessToken,
           smugmugConfig.accessTokenSecret,
-          smugmugConfig.user.Uri
+          smugmugConfig.user.Uri,
+          { start, count: pageSize }
         );
 
         if (!albumsResult.success) {
           return sendError(res, 500, 'Failed to get albums: ' + albumsResult.error);
         }
 
+        const totalAlbums = albumsResult.pagination.total;
+        const totalPages = Math.ceil(totalAlbums / pageSize);
+
         return sendSuccess(res, {
-          albums: albumsResult.albums
+          albums: albumsResult.albums,
+          pagination: {
+            page: page,
+            pageSize: pageSize,
+            totalAlbums: totalAlbums,
+            totalPages: totalPages,
+            hasNextPage: page < totalPages,
+            hasPrevPage: page > 1
+          }
         }, `Retrieved ${albumsResult.albums.length} albums`);
 
       } catch (error) {

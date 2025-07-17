@@ -22,6 +22,27 @@ class PhotoVision {
         this.smugmugStatusCard = document.getElementById('smugmugStatusCard');
         this.lastCheckedElement = document.getElementById('lastChecked');
         
+        // Album filter state
+        this.albumsData = [];
+        this.filteredAlbums = [];
+        this.filterState = {
+            search: '',
+            status: 'all',
+            level: 'all',
+            sort: 'name-asc'
+        };
+        
+        // Pagination state
+        this.paginationState = {
+            currentPage: 1,
+            pageSize: 12,
+            totalAlbums: 0,
+            totalPages: 0,
+            hasNextPage: false,
+            hasPrevPage: false,
+            isLoading: false
+        };
+        
         this.init();
     }
 
@@ -1364,43 +1385,117 @@ class PhotoVision {
         this.selectedAlbumKey = null;
     }
 
-    async loadAlbums() {
+    async loadAlbums(page = 1, append = false) {
         const albumsList = document.getElementById('albumsList');
         const albumCount = document.getElementById('albumCount');
         
         if (!albumsList) return;
 
-        albumsList.innerHTML = '<div class="loading-albums"><span class="loading"></span> Loading albums...</div>';
-        albumCount.textContent = 'Loading...';
+        // Prevent multiple simultaneous loads
+        if (this.paginationState.isLoading) return;
+        this.paginationState.isLoading = true;
+
+        if (!append) {
+            albumsList.innerHTML = '<div class="loading-albums"><div class="loading-spinner"></div> <span id="loadingText">Loading albums...</span></div>';
+            albumCount.textContent = 'Loading...';
+        } else {
+            // Add loading indicator for additional pages
+            const loadMoreBtn = document.getElementById('loadMoreAlbums');
+            if (loadMoreBtn) {
+                loadMoreBtn.innerHTML = '<div class="loading-spinner"></div> Loading...';
+                loadMoreBtn.disabled = true;
+            }
+        }
 
         try {
-            const response = await fetch('/api/smugmug/albums');
+            const response = await fetch(`/api/smugmug/albums?page=${page}&pageSize=${this.paginationState.pageSize}`);
             const data = await response.json();
 
             if (data.success && data.data.albums) {
                 const albums = data.data.albums;
-                albumCount.textContent = `${albums.length} albums`;
+                const pagination = data.data.pagination;
+                
+                // Update pagination state
+                this.paginationState.currentPage = pagination.page;
+                this.paginationState.totalAlbums = pagination.totalAlbums;
+                this.paginationState.totalPages = pagination.totalPages;
+                this.paginationState.hasNextPage = pagination.hasNextPage;
+                this.paginationState.hasPrevPage = pagination.hasPrevPage;
 
-                if (albums.length === 0) {
+                if (append) {
+                    // Append to existing albums
+                    this.albumsData = this.albumsData.concat(albums);
+                } else {
+                    // Replace albums data
+                    this.albumsData = albums;
+                }
+
+                albumCount.textContent = `${this.albumsData.length} of ${pagination.totalAlbums} albums`;
+
+                if (albums.length === 0 && !append) {
                     albumsList.innerHTML = '<div class="no-albums">No albums found in your SmugMug account.</div>';
                     return;
                 }
 
-                // Load processing status for each album
-                await this.loadAlbumsWithProcessingStatus(albums, albumsList);
+                // Load processing status for albums
+                await this.loadAlbumsWithProcessingStatus(this.albumsData, albumsList);
+                
+                // Add load more button if there are more pages
+                this.addLoadMoreButton(albumsList);
 
             } else {
-                albumsList.innerHTML = '<div class="error-message">Failed to load albums. Please check your SmugMug connection.</div>';
-                albumCount.textContent = 'Error';
+                if (!append) {
+                    albumsList.innerHTML = '<div class="error-message">Failed to load albums. Please check your SmugMug connection.</div>';
+                    albumCount.textContent = 'Error';
+                }
             }
         } catch (error) {
             console.error('Error loading albums:', error);
-            albumsList.innerHTML = '<div class="error-message">Error loading albums. Please try again.</div>';
-            albumCount.textContent = 'Error';
+            if (!append) {
+                albumsList.innerHTML = '<div class="error-message">Error loading albums. Please try again.</div>';
+                albumCount.textContent = 'Error';
+            }
+        } finally {
+            this.paginationState.isLoading = false;
+        }
+    }
+
+    addLoadMoreButton(albumsList) {
+        // Remove existing load more button
+        const existingBtn = document.getElementById('loadMoreAlbums');
+        if (existingBtn) {
+            existingBtn.remove();
+        }
+
+        // Add new load more button if there are more pages
+        if (this.paginationState.hasNextPage) {
+            const loadMoreBtn = document.createElement('button');
+            loadMoreBtn.id = 'loadMoreAlbums';
+            loadMoreBtn.className = 'load-more-btn';
+            loadMoreBtn.innerHTML = `Load More Albums (${this.albumsData.length} of ${this.paginationState.totalAlbums})`;
+            loadMoreBtn.onclick = () => this.loadMoreAlbums();
+            albumsList.appendChild(loadMoreBtn);
+        }
+    }
+
+    async loadMoreAlbums() {
+        if (this.paginationState.hasNextPage && !this.paginationState.isLoading) {
+            await this.loadAlbums(this.paginationState.currentPage + 1, true);
         }
     }
 
     async loadAlbumsWithProcessingStatus(albums, albumsList) {
+        // Store albums data for filtering
+        this.albumsData = albums;
+        this.filteredAlbums = [...albums];
+        
+        // Setup filter event listeners
+        this.setupAlbumFilters();
+        
+        // Apply initial filters and render
+        this.applyFilters();
+        return;
+        
         // Render albums list with card-style layout
         albumsList.innerHTML = albums.map(album => {
             // Generate hierarchical display elements
@@ -2136,6 +2231,365 @@ class PhotoVision {
         const section = document.getElementById('batchProcessingSection');
         if (section) {
             section.style.display = 'none';
+        }
+    }
+    
+    // Album Filter and Sort Methods
+    setupAlbumFilters() {
+        const searchInput = document.getElementById('albumSearch');
+        const statusFilter = document.getElementById('statusFilter');
+        const levelFilter = document.getElementById('levelFilter');
+        const sortOrder = document.getElementById('sortOrder');
+        const clearFilters = document.getElementById('clearFilters');
+        
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                this.filterState.search = e.target.value;
+                this.applyFilters();
+            });
+        }
+        
+        if (statusFilter) {
+            statusFilter.addEventListener('change', (e) => {
+                this.filterState.status = e.target.value;
+                this.applyFilters();
+            });
+        }
+        
+        if (levelFilter) {
+            levelFilter.addEventListener('change', (e) => {
+                this.filterState.level = e.target.value;
+                this.applyFilters();
+            });
+        }
+        
+        if (sortOrder) {
+            sortOrder.addEventListener('change', (e) => {
+                this.filterState.sort = e.target.value;
+                this.applyFilters();
+            });
+        }
+        
+        if (clearFilters) {
+            clearFilters.addEventListener('click', () => {
+                this.clearAllFilters();
+            });
+        }
+    }
+    
+    applyFilters() {
+        let filtered = [...this.albumsData];
+        
+        // Apply search filter
+        if (this.filterState.search.trim()) {
+            const searchTerm = this.filterState.search.toLowerCase().trim();
+            filtered = filtered.filter(album => {
+                const name = (album.Name || '').toLowerCase();
+                const path = (album.FullDisplayPath || '').toLowerCase();
+                return name.includes(searchTerm) || path.includes(searchTerm);
+            });
+        }
+        
+        // Apply status filter
+        if (this.filterState.status !== 'all') {
+            filtered = filtered.filter(album => {
+                const status = this.getAlbumProcessingStatus(album);
+                return status === this.filterState.status;
+            });
+        }
+        
+        // Apply level filter
+        if (this.filterState.level !== 'all') {
+            const level = this.filterState.level;
+            filtered = filtered.filter(album => {
+                const albumLevel = album.IndentLevel || 0;
+                if (level === '0') return albumLevel === 0;
+                if (level === '1') return albumLevel === 1;
+                if (level === '2') return albumLevel >= 2;
+                return true;
+            });
+        }
+        
+        // Apply sorting
+        this.sortAlbums(filtered);
+        
+        this.filteredAlbums = filtered;
+    this.renderFilteredAlbums();
+    this.addLoadMoreButton(albumsList);
+    this.updateActiveFilters();
+        this.updateAlbumCount();
+    }
+    
+    sortAlbums(albums) {
+        switch (this.filterState.sort) {
+            case 'name-asc':
+                albums.sort((a, b) => (a.Name || '').localeCompare(b.Name || ''));
+                break;
+            case 'name-desc':
+                albums.sort((a, b) => (b.Name || '').localeCompare(a.Name || ''));
+                break;
+            case 'count-desc':
+                albums.sort((a, b) => (b.ImageCount || 0) - (a.ImageCount || 0));
+                break;
+            case 'count-asc':
+                albums.sort((a, b) => (a.ImageCount || 0) - (b.ImageCount || 0));
+                break;
+            case 'level-asc':
+                albums.sort((a, b) => (a.IndentLevel || 0) - (b.IndentLevel || 0));
+                break;
+            case 'date-desc':
+                albums.sort((a, b) => this.compareDates(b.Date, a.Date));
+                break;
+            case 'date-asc':
+                albums.sort((a, b) => this.compareDates(a.Date, b.Date));
+                break;
+            case 'updated-desc':
+                albums.sort((a, b) => this.compareDates(b.LastUpdated, a.LastUpdated));
+                break;
+            case 'updated-asc':
+                albums.sort((a, b) => this.compareDates(a.LastUpdated, b.LastUpdated));
+                break;
+        }
+    }
+    
+    compareDates(dateA, dateB) {
+        // Handle missing dates (treat as very old)
+        const defaultDate = new Date('1970-01-01');
+        const parsedA = dateA ? new Date(dateA) : defaultDate;
+        const parsedB = dateB ? new Date(dateB) : defaultDate;
+        
+        // Handle invalid dates
+        const timeA = isNaN(parsedA.getTime()) ? defaultDate.getTime() : parsedA.getTime();
+        const timeB = isNaN(parsedB.getTime()) ? defaultDate.getTime() : parsedB.getTime();
+        
+        return timeA - timeB;
+    }
+    
+    getAlbumProcessingStatus(album) {
+        // Get the processing status from the DOM element since it's loaded asynchronously
+        const statusElement = document.getElementById(`processing-status-${album.AlbumKey}`);
+        if (!statusElement) return 'unprocessed';
+        
+        // Check the content to determine status
+        const statusHTML = statusElement.innerHTML;
+        
+        if (statusHTML.includes('processing-complete') || statusHTML.includes('All ') && statusHTML.includes('images processed')) {
+            return 'processed';
+        } else if (statusHTML.includes('processing-partial') || statusHTML.includes('remaining to process')) {
+            return 'partial';
+        } else if (statusHTML.includes('status-error') || statusHTML.includes('Error checking status')) {
+            return 'failed';
+        } else {
+            return 'unprocessed';
+        }
+    }
+    
+    renderFilteredAlbums() {
+        const albumsList = document.getElementById('albumsList');
+        if (!albumsList) return;
+        
+        if (this.filteredAlbums.length === 0) {
+            albumsList.innerHTML = '<div class="no-albums">No albums match the current filters.</div>';
+            return;
+        }
+        
+        // Use the existing album rendering logic
+        albumsList.innerHTML = this.filteredAlbums.map(album => {
+            const indentLevel = album.IndentLevel || 0;
+            const pathTags = album.PathTags || [];
+            const displayPath = album.FullDisplayPath || album.Name || 'Untitled Album';
+            
+            const hierarchyIndicator = indentLevel > 0 ? 
+                `${'📁'.repeat(Math.min(indentLevel, 3))} ` : '📁 ';
+
+            return `
+                <div class="album-item" data-album-key="${album.AlbumKey}">
+                    <div class="album-card-header">
+                        <div class="album-hierarchy">
+                            <span class="album-hierarchy-icon">${hierarchyIndicator}</span>
+                            <span class="hierarchy-level">Level ${indentLevel}</span>
+                        </div>
+                        <h4 class="album-name">${album.Name || 'Untitled Album'}</h4>
+                    </div>
+                    
+                    <div class="album-card-content">
+                        <div class="album-card-path">
+                            <strong>Path:</strong> ${displayPath}
+                        </div>
+                        
+                        <div class="album-metadata">
+                            <div class="metadata-item">
+                                <span class="metadata-label">Images:</span>
+                                <span class="metadata-value">${album.ImageCount || 0}</span>
+                            </div>
+                            <div class="metadata-item">
+                                <span class="metadata-label">Key:</span>
+                                <span class="metadata-value">${album.AlbumKey}</span>
+                            </div>
+                            ${album.Date ? `
+                                <div class="metadata-item">
+                                    <span class="metadata-label">Created:</span>
+                                    <span class="metadata-value">${this.formatDate(album.Date)}</span>
+                                </div>
+                            ` : ''}
+                            ${album.LastUpdated ? `
+                                <div class="metadata-item">
+                                    <span class="metadata-label">Updated:</span>
+                                    <span class="metadata-value">${this.formatDate(album.LastUpdated)}</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                        
+                        <div class="album-processing-status" id="processing-status-${album.AlbumKey}">
+                            <div class="processing-none">
+                                <span class="loading-spinner"></span>
+                                <span>Checking processing status...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        // Load processing status for filtered albums
+        this.loadProcessingStatusForFilteredAlbums();
+    }
+    
+    async loadProcessingStatusForFilteredAlbums() {
+        for (const album of this.filteredAlbums) {
+            if (album.AlbumKey) {
+                await this.loadAlbumProcessingStatus(album.AlbumKey);
+            }
+        }
+    }
+    
+    updateActiveFilters() {
+        const activeFiltersContainer = document.getElementById('activeFilters');
+        const filterTags = document.getElementById('filterTags');
+        
+        if (!activeFiltersContainer || !filterTags) return;
+        
+        const activeTags = [];
+        
+        if (this.filterState.search.trim()) {
+            activeTags.push({ type: 'search', label: `Search: "${this.filterState.search}"` });
+        }
+        
+        if (this.filterState.status !== 'all') {
+            const statusLabels = {
+                'processed': 'Fully Processed',
+                'partial': 'Partially Processed',
+                'unprocessed': 'Unprocessed',
+                'failed': 'Failed'
+            };
+            activeTags.push({ type: 'status', label: `Status: ${statusLabels[this.filterState.status]}` });
+        }
+        
+        if (this.filterState.level !== 'all') {
+            const levelLabels = {
+                '0': 'Root Only',
+                '1': 'Level 1',
+                '2': 'Level 2+'
+            };
+            activeTags.push({ type: 'level', label: `Level: ${levelLabels[this.filterState.level]}` });
+        }
+        
+        if (this.filterState.sort !== 'name-asc') {
+            const sortLabels = {
+                'name-desc': 'Name Z-A',
+                'count-desc': 'Image Count (High-Low)',
+                'count-asc': 'Image Count (Low-High)',
+                'level-asc': 'Hierarchy Level',
+                'date-desc': 'Date Created (Newest First)',
+                'date-asc': 'Date Created (Oldest First)',
+                'updated-desc': 'Last Updated (Newest First)',
+                'updated-asc': 'Last Updated (Oldest First)'
+            };
+            activeTags.push({ type: 'sort', label: `Sort: ${sortLabels[this.filterState.sort]}` });
+        }
+        
+        if (activeTags.length > 0) {
+            filterTags.innerHTML = activeTags.map(tag => `
+                <span class="filter-tag">
+                    ${tag.label}
+                    <button class="filter-tag-remove" onclick="photoVision.removeFilter('${tag.type}')">×</button>
+                </span>
+            `).join('');
+            activeFiltersContainer.style.display = 'flex';
+        } else {
+            activeFiltersContainer.style.display = 'none';
+        }
+    }
+    
+    removeFilter(filterType) {
+        switch (filterType) {
+            case 'search':
+                this.filterState.search = '';
+                document.getElementById('albumSearch').value = '';
+                break;
+            case 'status':
+                this.filterState.status = 'all';
+                document.getElementById('statusFilter').value = 'all';
+                break;
+            case 'level':
+                this.filterState.level = 'all';
+                document.getElementById('levelFilter').value = 'all';
+                break;
+            case 'sort':
+                this.filterState.sort = 'name-asc';
+                document.getElementById('sortOrder').value = 'name-asc';
+                break;
+        }
+        this.applyFilters();
+    }
+    
+    clearAllFilters() {
+        this.filterState = {
+            search: '',
+            status: 'all',
+            level: 'all',
+            sort: 'name-asc'
+        };
+        
+        // Reset form elements
+        const searchInput = document.getElementById('albumSearch');
+        const statusFilter = document.getElementById('statusFilter');
+        const levelFilter = document.getElementById('levelFilter');
+        const sortOrder = document.getElementById('sortOrder');
+        
+        if (searchInput) searchInput.value = '';
+        if (statusFilter) statusFilter.value = 'all';
+        if (levelFilter) levelFilter.value = 'all';
+        if (sortOrder) sortOrder.value = 'name-asc';
+        
+        this.applyFilters();
+    }
+    
+    updateAlbumCount() {
+        const albumCount = document.getElementById('albumCount');
+        if (albumCount) {
+            const totalCount = this.albumsData.length;
+            const filteredCount = this.filteredAlbums.length;
+            
+            if (filteredCount === totalCount) {
+                albumCount.textContent = `${totalCount} albums`;
+            } else {
+                albumCount.textContent = `${filteredCount} of ${totalCount} albums`;
+            }
+        }
+    }
+    
+    formatDate(dateString) {
+        if (!dateString) return 'Unknown';
+        
+        try {
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return 'Invalid Date';
+            
+            // Format as MM/DD/YYYY or localized short date
+            return date.toLocaleDateString();
+        } catch (error) {
+            return 'Invalid Date';
         }
     }
 }
