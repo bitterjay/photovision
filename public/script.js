@@ -3345,10 +3345,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const analysisTemplate = document.getElementById('analysisTemplate');
     const preContextInput = document.getElementById('preContextInput');
     const contextCharCount = document.getElementById('contextCharCount');
-    const previewPromptBtn = document.getElementById('previewPrompt');
-    const previewSection = document.getElementById('previewSection');
+    const previewAccordionBtn = document.getElementById('previewAccordionBtn');
+    const previewAccordionContent = document.getElementById('previewAccordionContent');
     const previewContent = document.getElementById('previewContent');
-    const hidePreviewBtn = document.getElementById('hidePreview');
+    const generatePreviewBtn = document.getElementById('generatePreview');
     const saveAnalysisConfigBtn = document.getElementById('saveAnalysisConfig');
     const resetAnalysisConfigBtn = document.getElementById('resetAnalysisConfig');
     
@@ -3481,8 +3481,26 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    if (previewPromptBtn) {
-        previewPromptBtn.addEventListener('click', async () => {
+    // Accordion functionality
+    if (previewAccordionBtn && previewAccordionContent) {
+        previewAccordionBtn.addEventListener('click', () => {
+            const isOpen = previewAccordionContent.classList.contains('open');
+            
+            if (isOpen) {
+                previewAccordionContent.classList.remove('open');
+                previewAccordionBtn.classList.remove('active');
+                previewAccordionBtn.setAttribute('aria-expanded', 'false');
+            } else {
+                previewAccordionContent.classList.add('open');
+                previewAccordionBtn.classList.add('active');
+                previewAccordionBtn.setAttribute('aria-expanded', 'true');
+            }
+        });
+    }
+    
+    // Generate preview functionality
+    if (generatePreviewBtn) {
+        generatePreviewBtn.addEventListener('click', async () => {
             const preContext = preContextInput.value;
             
             try {
@@ -3496,17 +3514,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 if (data.success) {
                     previewContent.textContent = data.data.completePrompt;
-                    previewSection.style.display = 'block';
+                    previewContent.parentElement.querySelector('.preview-placeholder').style.display = 'none';
                 }
             } catch (error) {
                 console.error('Error generating preview:', error);
             }
-        });
-    }
-    
-    if (hidePreviewBtn) {
-        hidePreviewBtn.addEventListener('click', () => {
-            previewSection.style.display = 'none';
         });
     }
     

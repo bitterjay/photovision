@@ -488,20 +488,7 @@ Be specific and descriptive to enable natural language searches like "photos of 
                                     </div>
                                 </div>
                                 
-                                <div class="preview-section" id="previewSection" style="display: none;">
-                                    <h5>Preview Complete Prompt:</h5>
-                                    <div class="preview-content" id="previewContent"></div>
-                                    <button id="hidePreview" class="btn btn-secondary btn-sm">Hide Preview</button>
-                                </div>
-                                
                                 <div class="control-group">
-                                    <button id="previewPrompt" class="btn btn-secondary">
-                                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                            <circle cx="12" cy="12" r="3"></circle>
-                                        </svg>
-                                        Preview Complete Prompt
-                                    </button>
                                     <button id="saveAnalysisConfig" class="btn btn-primary">
                                         <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                             <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"></path>
@@ -518,6 +505,33 @@ Be specific and descriptive to enable natural language searches like "photos of 
                                         </svg>
                                         Reset to Default
                                     </button>
+                                </div>
+                                
+                                <div class="accordion-wrapper">
+                                    <button class="accordion-header" id="previewAccordionBtn">
+                                        <div class="accordion-title">
+                                            <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                                <circle cx="12" cy="12" r="3"></circle>
+                                            </svg>
+                                            Preview Complete Prompt
+                                        </div>
+                                        <svg class="accordion-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="6,9 12,15 18,9"></polyline>
+                                        </svg>
+                                    </button>
+                                    
+                                    <div class="accordion-content" id="previewAccordionContent">
+                                        <div class="accordion-section">
+                                            <h5>Preview Complete Prompt:</h5>
+                                            <div class="preview-content" id="previewContent">
+                                                <p class="preview-placeholder">Click "Generate Preview" to see the complete prompt that will be used for image analysis.</p>
+                                            </div>
+                                            <button id="generatePreview" class="btn btn-secondary btn-sm">
+                                                Generate Preview
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                                 
                                 <div class="analysis-help">
