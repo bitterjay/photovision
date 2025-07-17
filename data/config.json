@@ -275,5 +275,48 @@
     "template": "sports-photography",
     "modifiedBy": "admin",
     "lastModified": "2025-07-17T18:32:39.037Z"
+  },
+  "claudeModelConfig": {
+    "chatModel": "claude-3-5-sonnet-20241022",
+    "batchProcessingModel": "claude-3-haiku-20240307",
+    "availableModels": [
+      {
+        "id": "claude-3-5-sonnet-20241022",
+        "name": "Claude 3.5 Sonnet",
+        "description": "Most intelligent model, best for complex tasks and conversations",
+        "speed": "medium",
+        "cost": "high"
+      },
+      {
+        "id": "claude-3-5-haiku-20241022",
+        "name": "Claude 3.5 Haiku",
+        "description": "Fastest model, good for quick responses and simple tasks",
+        "speed": "fast",
+        "cost": "low"
+      },
+      {
+        "id": "claude-3-opus-20240229",
+        "name": "Claude 3 Opus",
+        "description": "Most capable model for complex reasoning and analysis",
+        "speed": "slow",
+        "cost": "highest"
+      },
+      {
+        "id": "claude-3-sonnet-20240229",
+        "name": "Claude 3 Sonnet",
+        "description": "Balanced model for most tasks",
+        "speed": "medium",
+        "cost": "medium"
+      },
+      {
+        "id": "claude-3-haiku-20240307",
+        "name": "Claude 3 Haiku",
+        "description": "Fast and efficient for simple tasks",
+        "speed": "fast",
+        "cost": "low"
+      }
+    ],
+    "modifiedBy": "admin",
+    "lastModified": "2025-07-17T21:50:27.318Z"
   }
 }

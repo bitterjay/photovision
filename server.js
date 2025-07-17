@@ -171,12 +171,16 @@ async function handleAPIRoutes(req, res, parsedUrl) {
       log('Claude health check request received');
       
       try {
+        // Get model configuration
+        const modelConfig = await dataManager.getClaudeModelConfig();
+        const batchProcessingModel = modelConfig.batchProcessingModel;
+        
         // Perform a simple test to verify Claude API is accessible
-        const testResult = await claudeClient.testConnection();
+        const testResult = await claudeClient.testConnection(batchProcessingModel);
         
         return sendSuccess(res, { 
           status: 'connected',
-          model: testResult.model || 'claude-3-5-sonnet-20241022',
+          model: testResult.model,
           timestamp: new Date().toISOString()
         }, 'Claude AI connection test successful');
 
@@ -208,13 +212,17 @@ async function handleAPIRoutes(req, res, parsedUrl) {
       }
 
       try {
+        // Get model configuration
+        const modelConfig = await dataManager.getClaudeModelConfig();
+        const chatModel = modelConfig.chatModel;
+        
         // Import SearchFunctions
         const SearchFunctions = require('./lib/searchFunctions');
         const searchFunctions = new SearchFunctions();
         
         // Re-execute the original search to get all results
         const availableFunctions = searchFunctions.getFunctionDefinitions();
-        const claudeResponse = await claudeClient.processConversationalQuery(requestData.originalQuery, availableFunctions);
+        const claudeResponse = await claudeClient.processConversationalQuery(requestData.originalQuery, availableFunctions, chatModel);
         
         if (!claudeResponse.success) {
           throw new Error(claudeResponse.error);
@@ -270,17 +278,21 @@ async function handleAPIRoutes(req, res, parsedUrl) {
       }
 
       try {
+        // Get model configuration
+        const modelConfig = await dataManager.getClaudeModelConfig();
+        const chatModel = modelConfig.chatModel;
+        
         // Import SearchFunctions
         const SearchFunctions = require('./lib/searchFunctions');
         const searchFunctions = new SearchFunctions();
         
-        console.log(`[Chat] Processing query: "${requestData.message}"`);
+        console.log(`[Chat] Processing query: "${requestData.message}" with model: ${chatModel}`);
         
         // Get available search functions for Claude
         const availableFunctions = searchFunctions.getFunctionDefinitions();
         
         // Process query with Claude
-        const claudeResponse = await claudeClient.processConversationalQuery(requestData.message, availableFunctions);
+        const claudeResponse = await claudeClient.processConversationalQuery(requestData.message, availableFunctions, chatModel);
         
         if (!claudeResponse.success) {
           throw new Error(claudeResponse.error);
@@ -326,7 +338,7 @@ async function handleAPIRoutes(req, res, parsedUrl) {
           
           // Create a follow-up request with the search results
           const followUpBody = {
-            model: "claude-3-5-sonnet-20241022",
+            model: chatModel,
             max_tokens: 1000,
             system: `You're PhotoVision, the enthusiastic photo discovery friend! 📸 You just searched through the photo collection and found some results. Now craft a warm, conversational response that shows genuine excitement about what you discovered.
 
@@ -533,6 +545,56 @@ Be specific and descriptive to enable natural language searches like "photos of 
       }
     }
 
+    // Claude model configuration endpoints
+    if (pathname === '/api/config/models' && method === 'GET') {
+      log('Get model configuration request');
+      try {
+        const modelConfig = await dataManager.getClaudeModelConfig();
+        return sendSuccess(res, modelConfig, 'Model configuration retrieved');
+      } catch (error) {
+        return sendError(res, 500, 'Failed to retrieve model configuration', error);
+      }
+    }
+
+    if (pathname === '/api/config/models' && method === 'POST') {
+      log('Update model configuration request');
+      try {
+        const requestData = await parseJSON(req);
+        
+        // Validate required fields
+        if (!requestData.chatModel || !requestData.batchProcessingModel) {
+          return sendError(res, 400, 'chatModel and batchProcessingModel are required');
+        }
+        
+        // Get current config to preserve availableModels
+        const currentConfig = await dataManager.getClaudeModelConfig();
+        
+        // Validate model IDs exist in available models
+        const availableModelIds = currentConfig.availableModels.map(m => m.id);
+        if (!availableModelIds.includes(requestData.chatModel)) {
+          return sendError(res, 400, `Invalid chatModel: ${requestData.chatModel}`);
+        }
+        if (!availableModelIds.includes(requestData.batchProcessingModel)) {
+          return sendError(res, 400, `Invalid batchProcessingModel: ${requestData.batchProcessingModel}`);
+        }
+        
+        // Update configuration
+        const updatedConfig = {
+          ...currentConfig,
+          chatModel: requestData.chatModel,
+          batchProcessingModel: requestData.batchProcessingModel,
+          modifiedBy: requestData.modifiedBy || 'admin'
+        };
+        
+        const savedConfig = await dataManager.saveClaudeModelConfig(updatedConfig);
+        
+        log(`Model configuration updated: chatModel=${requestData.chatModel}, batchProcessingModel=${requestData.batchProcessingModel}`);
+        return sendSuccess(res, savedConfig, 'Model configuration updated successfully');
+      } catch (error) {
+        return sendError(res, 500, 'Failed to update model configuration', error);
+      }
+    }
+
     // Image analysis endpoint
     if (pathname === '/api/analyze' && method === 'POST') {
       log('Image analysis request received');
@@ -565,13 +627,18 @@ Be specific and descriptive to enable natural language searches like "photos of 
         // Get current image analysis configuration
         const analysisConfig = await dataManager.getImageAnalysisConfig();
         const preContext = analysisConfig.enabled ? analysisConfig.preContext : null;
+        
+        // Get model configuration
+        const modelConfig = await dataManager.getClaudeModelConfig();
+        const batchProcessingModel = modelConfig.batchProcessingModel;
 
         // Analyze image with Claude
         const analysisResult = await claudeClient.analyzeImage(
           formData.image.data,
           formData.image.type,
           formData.prompt || null,
-          preContext
+          preContext,
+          batchProcessingModel
         );
 
         if (!analysisResult.success) {
@@ -1199,8 +1266,12 @@ Be specific and descriptive to enable natural language searches like "photos of 
             const analysisConfig = await dataManager.getImageAnalysisConfig();
             const preContext = analysisConfig.enabled ? analysisConfig.preContext : null;
             
+            // Get model configuration
+            const modelConfig = await dataManager.getClaudeModelConfig();
+            const batchProcessingModel = modelConfig.batchProcessingModel;
+            
             // Analyze with Claude
-            const analysisResult = await claudeClient.analyzeImage(imageBuffer, contentType, null, preContext);
+            const analysisResult = await claudeClient.analyzeImage(imageBuffer, contentType, null, preContext, batchProcessingModel);
             
             if (!analysisResult.success) {
               throw new Error(analysisResult.error);
@@ -1371,7 +1442,11 @@ Be specific and descriptive to enable natural language searches like "photos of 
             const analysisConfig = await dataManager.getImageAnalysisConfig();
             const preContext = analysisConfig.enabled ? analysisConfig.preContext : null;
             
-            const analysisResult = await claudeClient.analyzeImage(imageBuffer, contentType, null, preContext);
+            // Get model configuration
+            const modelConfig = await dataManager.getClaudeModelConfig();
+            const batchProcessingModel = modelConfig.batchProcessingModel;
+            
+            const analysisResult = await claudeClient.analyzeImage(imageBuffer, contentType, null, preContext, batchProcessingModel);
             
             if (!analysisResult.success) {
               throw new Error(analysisResult.error);

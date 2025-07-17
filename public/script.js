@@ -3761,4 +3761,202 @@ Be specific and descriptive to enable natural language searches like "photos of 
         updateForceReprocessingToggle();
         updateCharCount(); // Initialize character count for default text
     }, 100);
+    
+    // === MODEL CONFIGURATION FUNCTIONALITY ===
+    
+    // DOM elements for model configuration
+    const chatModelSelect = document.getElementById('chatModelSelect');
+    const batchModelSelect = document.getElementById('batchModelSelect');
+    const saveModelConfigBtn = document.getElementById('saveModelConfig');
+    const resetModelConfigBtn = document.getElementById('resetModelConfig');
+    const modelInfo = document.getElementById('modelInfo');
+    const chatModelInfo = document.getElementById('chatModelInfo');
+    const batchModelInfo = document.getElementById('batchModelInfo');
+    
+    let currentModelConfig = null;
+    
+    // Load current model configuration
+    async function loadModelConfig() {
+        try {
+            const response = await fetch('/api/config/models');
+            const data = await response.json();
+            
+            if (data.success) {
+                currentModelConfig = data.data;
+                populateModelDropdowns();
+                updateModelSelections();
+                updateModelInfo();
+            } else {
+                console.error('Error loading model config:', data.error);
+            }
+        } catch (error) {
+            console.error('Error loading model config:', error);
+        }
+    }
+    
+    // Populate model dropdown options
+    function populateModelDropdowns() {
+        if (!currentModelConfig || !currentModelConfig.availableModels) return;
+        
+        const createOption = (model) => {
+            const option = document.createElement('option');
+            option.value = model.id;
+            option.textContent = `${model.name} (${model.speed} speed, ${model.cost} cost)`;
+            option.setAttribute('data-description', model.description);
+            option.setAttribute('data-speed', model.speed);
+            option.setAttribute('data-cost', model.cost);
+            return option;
+        };
+        
+        // Clear existing options
+        chatModelSelect.innerHTML = '';
+        batchModelSelect.innerHTML = '';
+        
+        // Add options for each model
+        currentModelConfig.availableModels.forEach(model => {
+            chatModelSelect.appendChild(createOption(model));
+            batchModelSelect.appendChild(createOption(model));
+        });
+    }
+    
+    // Update model selections based on current config
+    function updateModelSelections() {
+        if (!currentModelConfig) return;
+        
+        chatModelSelect.value = currentModelConfig.chatModel;
+        batchModelSelect.value = currentModelConfig.batchProcessingModel;
+    }
+    
+    // Update model info display
+    function updateModelInfo() {
+        if (!currentModelConfig) return;
+        
+        const chatModel = currentModelConfig.availableModels.find(m => m.id === currentModelConfig.chatModel);
+        const batchModel = currentModelConfig.availableModels.find(m => m.id === currentModelConfig.batchProcessingModel);
+        
+        if (chatModel) {
+            chatModelInfo.innerHTML = `
+                <div class="model-detail">
+                    <strong>${chatModel.name}</strong>
+                    <p>${chatModel.description}</p>
+                    <div class="model-stats">
+                        <span class="model-stat speed-${chatModel.speed}">Speed: ${chatModel.speed}</span>
+                        <span class="model-stat cost-${chatModel.cost}">Cost: ${chatModel.cost}</span>
+                    </div>
+                </div>
+            `;
+        }
+        
+        if (batchModel) {
+            batchModelInfo.innerHTML = `
+                <div class="model-detail">
+                    <strong>${batchModel.name}</strong>
+                    <p>${batchModel.description}</p>
+                    <div class="model-stats">
+                        <span class="model-stat speed-${batchModel.speed}">Speed: ${batchModel.speed}</span>
+                        <span class="model-stat cost-${batchModel.cost}">Cost: ${batchModel.cost}</span>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Show model info section
+        if (modelInfo) {
+            modelInfo.style.display = 'block';
+        }
+    }
+    
+    // Save model configuration
+    async function saveModelConfig() {
+        const chatModel = chatModelSelect.value;
+        const batchModel = batchModelSelect.value;
+        
+        if (!chatModel || !batchModel) {
+            alert('Please select both chat and batch processing models.');
+            return;
+        }
+        
+        try {
+            const response = await fetch('/api/config/models', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chatModel: chatModel,
+                    batchProcessingModel: batchModel,
+                    modifiedBy: 'admin'
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                currentModelConfig = data.data;
+                updateModelInfo();
+                alert('Model configuration saved successfully!');
+            } else {
+                alert('Error saving model configuration: ' + data.error);
+            }
+        } catch (error) {
+            console.error('Error saving model config:', error);
+            alert('Error saving model configuration. Please try again.');
+        }
+    }
+    
+    // Reset model configuration to defaults
+    async function resetModelConfig() {
+        if (!confirm('Are you sure you want to reset to default model configuration?')) {
+            return;
+        }
+        
+        try {
+            const response = await fetch('/api/config/models', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chatModel: 'claude-3-5-sonnet-20241022',
+                    batchProcessingModel: 'claude-3-haiku-20240307',
+                    modifiedBy: 'admin'
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                currentModelConfig = data.data;
+                updateModelSelections();
+                updateModelInfo();
+                alert('Model configuration reset to defaults!');
+            } else {
+                alert('Error resetting model configuration: ' + data.error);
+            }
+        } catch (error) {
+            console.error('Error resetting model config:', error);
+            alert('Error resetting model configuration. Please try again.');
+        }
+    }
+    
+    // Event listeners for model configuration
+    if (saveModelConfigBtn) {
+        saveModelConfigBtn.addEventListener('click', saveModelConfig);
+    }
+    
+    if (resetModelConfigBtn) {
+        resetModelConfigBtn.addEventListener('click', resetModelConfig);
+    }
+    
+    // Update model info when selections change
+    if (chatModelSelect) {
+        chatModelSelect.addEventListener('change', updateModelInfo);
+    }
+    
+    if (batchModelSelect) {
+        batchModelSelect.addEventListener('change', updateModelInfo);
+    }
+    
+    // Initialize model configuration
+    loadModelConfig();
 });
