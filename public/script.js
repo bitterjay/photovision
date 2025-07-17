@@ -3343,7 +3343,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Image Analysis Configuration functionality
     const enableCustomAnalysis = document.getElementById('enableCustomAnalysis');
     const analysisTemplate = document.getElementById('analysisTemplate');
-    const applyTemplateBtn = document.getElementById('applyTemplate');
     const preContextInput = document.getElementById('preContextInput');
     const contextCharCount = document.getElementById('contextCharCount');
     const previewPromptBtn = document.getElementById('previewPrompt');
@@ -3386,7 +3385,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (data.success) {
                 const templates = data.data;
-                analysisTemplate.innerHTML = '<option value="">Select a template...</option>';
+                // Start with custom user input option
+                analysisTemplate.innerHTML = '<option value="">Custom user input (use text area below)</option>';
                 
                 Object.values(templates).forEach(template => {
                     const option = document.createElement('option');
@@ -3456,8 +3456,9 @@ document.addEventListener('DOMContentLoaded', function() {
         preContextInput.addEventListener('input', updateCharCount);
     }
     
-    if (applyTemplateBtn) {
-        applyTemplateBtn.addEventListener('click', async () => {
+    // Auto-apply template when dropdown selection changes
+    if (analysisTemplate) {
+        analysisTemplate.addEventListener('change', async () => {
             const templateId = analysisTemplate.value;
             if (!templateId) {
                 // Custom user input - do nothing, user manages textarea directly
@@ -3471,6 +3472,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data.success) {
                     preContextInput.value = data.data.preContext || '';
                     updateCharCount();
+                } else {
+                    console.error('Error loading template:', data.error);
                 }
             } catch (error) {
                 console.error('Error applying template:', error);
