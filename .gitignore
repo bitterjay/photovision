@@ -38,3 +38,9 @@ coverage/
 # Build outputs
 dist/
 build/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
