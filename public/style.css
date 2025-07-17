@@ -2063,6 +2063,23 @@ body {
     font-size: 0.875rem;
 }
 
+/* Toggle switch in duplicate settings */
+.duplicate-settings-admin .toggle-switch-wrapper {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 0.75rem;
+    justify-content: space-between;
+    transition: all var(--transition-fast);
+}
+
+.duplicate-settings-admin .toggle-switch-wrapper:hover {
+    background: var(--bg-accent);
+    border-color: var(--accent-primary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
 .admin-tools-section::before {
     content: '';
     position: absolute;

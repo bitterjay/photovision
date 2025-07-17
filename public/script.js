@@ -3352,9 +3352,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const hidePreviewBtn = document.getElementById('hidePreview');
     const saveAnalysisConfigBtn = document.getElementById('saveAnalysisConfig');
     const resetAnalysisConfigBtn = document.getElementById('resetAnalysisConfig');
-    const configStatusDot = document.getElementById('configStatusDot');
-    const configStatusText = document.getElementById('configStatusText');
-    const configLastModified = document.getElementById('configLastModified');
     
     // Load current configuration
     async function loadAnalysisConfig() {
@@ -3369,7 +3366,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 enableCustomAnalysis.checked = config.enabled;
                 preContextInput.value = config.preContext || '';
                 updateCharCount();
-                updateStatusDisplay(config);
                 updateImageAnalysisToggle();
                 
                 // Update template selection
@@ -3379,7 +3375,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         } catch (error) {
             console.error('Error loading analysis config:', error);
-            configStatusText.textContent = 'Error loading configuration';
         }
     }
     
@@ -3420,21 +3415,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Update status display
-    function updateStatusDisplay(config) {
-        const enabled = config.enabled;
-        
-        configStatusDot.classList.remove('enabled', 'disabled');
-        configStatusDot.classList.add(enabled ? 'enabled' : 'disabled');
-        configStatusText.textContent = enabled ? 'Custom Analysis Enabled' : 'Default Analysis';
-        
-        if (config.lastModified) {
-            const date = new Date(config.lastModified);
-            configLastModified.textContent = `Last modified: ${date.toLocaleString()}`;
-        } else {
-            configLastModified.textContent = '';
-        }
-    }
     
     // Toggle switch functionality for image analysis
     function updateImageAnalysisToggle() {
@@ -3479,7 +3459,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (applyTemplateBtn) {
         applyTemplateBtn.addEventListener('click', async () => {
             const templateId = analysisTemplate.value;
-            if (!templateId) return;
+            if (!templateId) {
+                // Custom user input - do nothing, user manages textarea directly
+                return;
+            }
             
             try {
                 const response = await fetch(`/api/admin/image-analysis-templates/${templateId}`);
@@ -3543,7 +3526,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const data = await response.json();
                 
                 if (data.success) {
-                    updateStatusDisplay(data.data);
                     alert('Configuration saved successfully!');
                 } else {
                     alert('Error saving configuration: ' + data.error);
@@ -3573,7 +3555,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     preContextInput.value = '';
                     analysisTemplate.value = '';
                     updateCharCount();
-                    updateStatusDisplay(data.data);
                     updateImageAnalysisToggle();
                     alert('Configuration reset to default!');
                 } else {
@@ -3596,9 +3577,10 @@ document.addEventListener('DOMContentLoaded', function() {
     loadAnalysisConfig();
     loadTemplates();
     
-    // Initialize toggle states on page load
+    // Initialize toggle states and character count on page load
     setTimeout(() => {
         updateImageAnalysisToggle();
         updateForceReprocessingToggle();
+        updateCharCount(); // Initialize character count for default text
     }, 100);
 });
