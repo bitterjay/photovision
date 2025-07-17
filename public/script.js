@@ -52,6 +52,7 @@ class PhotoVision {
         this.initializeStatusDashboard();
         this.initializeThemeSystem();
         this.initializeTabSystem();
+        this.initializeImageLoading();
         console.log('PhotoVision initialized');
     }
 
@@ -130,6 +131,41 @@ class PhotoVision {
                 localStorage.setItem('photovision-active-tab', tabId);
             });
         });
+    }
+
+    initializeImageLoading() {
+        // Initialize enhanced image loading
+        console.log('Initializing enhanced image loading...');
+        
+        // Initialize intersection observer for lazy loading
+        initEnhancedLazyLoading();
+        
+        // Re-initialize image loading after content updates
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                    // Check if new images were added
+                    mutation.addedNodes.forEach((node) => {
+                        if (node.nodeType === Node.ELEMENT_NODE) {
+                            const newImages = node.querySelectorAll ? node.querySelectorAll('img[data-src]') : [];
+                            if (newImages.length > 0 && window.initEnhancedLazyLoading) {
+                                // Re-initialize lazy loading for new images
+                                setTimeout(() => initEnhancedLazyLoading(), 100);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+        
+        // Observe the results container for dynamic content
+        const resultsContainer = document.querySelector('.minimal-results-grid');
+        if (resultsContainer) {
+            observer.observe(resultsContainer, {
+                childList: true,
+                subtree: true
+            });
+        }
     }
 
     setActiveTab(tabId) {
@@ -500,21 +536,7 @@ class PhotoVision {
                 
                 messageHTML += `
                     <div class="minimal-result-card">
-                        ${photo.smugmugUrl ? `
-                            <img src="${photo.smugmugUrl}" 
-                                 alt="${photo.description || photo.filename || 'Image'}" 
-                                 class="card-image"
-                                 loading="lazy"
-                                 data-photo-id="${photoId}"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                            <div style="display: none; height: 120px; background: #f8f9fa; align-items: center; justify-content: center; color: #666; font-size: 0.9em;">
-                                <span>⚠️ Image unavailable</span>
-                            </div>
-                        ` : `
-                            <div style="height: 120px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; color: #666; font-size: 0.9em;">
-                                <span>📷 No image available</span>
-                            </div>
-                        `}
+                        ${createImageContainer(photo, photoId)}
                         <div class="card-actions">
                             <button class="card-btn info-btn" onclick="window.photoVision.showMetadataModal('${photoId}')">
                                 Details
@@ -696,21 +718,7 @@ class PhotoVision {
             
             newResultsHTML += `
                 <div class="minimal-result-card">
-                    ${photo.smugmugUrl ? `
-                        <img src="${photo.smugmugUrl}" 
-                             alt="${photo.description || photo.filename || 'Image'}" 
-                             class="card-image"
-                             loading="lazy"
-                             data-photo-id="${photoId}"
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div style="display: none; height: 120px; background: #f8f9fa; align-items: center; justify-content: center; color: #666; font-size: 0.9em;">
-                            <span>⚠️ Image unavailable</span>
-                        </div>
-                    ` : `
-                        <div style="height: 120px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; color: #666; font-size: 0.9em;">
-                            <span>📷 No image available</span>
-                        </div>
-                    `}
+                    ${createImageContainer(photo, photoId)}
                     <div class="card-actions">
                         <button class="card-btn info-btn" onclick="window.photoVision.showMetadataModal('${photoId}')">
                             Details
@@ -3960,3 +3968,269 @@ Be specific and descriptive to enable natural language searches like "photos of 
     // Initialize model configuration
     loadModelConfig();
 });
+
+// === IMAGE LOADING ENHANCEMENT FUNCTIONS ===
+
+/**
+ * Determine aspect ratio class based on image dimensions or filename
+ * @param {string} filename - Image filename
+ * @param {string} description - Image description
+ * @returns {string} Aspect ratio class
+ */
+function getImageAspectRatio(filename, description) {
+    // Default to unknown aspect ratio
+    let aspectClass = 'aspect-unknown';
+    
+    // Try to infer from description or filename
+    if (description) {
+        const desc = description.toLowerCase();
+        if (desc.includes('portrait') || desc.includes('vertical')) {
+            aspectClass = 'aspect-portrait';
+        } else if (desc.includes('landscape') || desc.includes('horizontal') || desc.includes('wide')) {
+            aspectClass = 'aspect-landscape';
+        } else if (desc.includes('square')) {
+            aspectClass = 'aspect-square';
+        }
+    }
+    
+    // Fallback to filename patterns
+    if (aspectClass === 'aspect-unknown' && filename) {
+        // Most photos are landscape by default
+        aspectClass = 'aspect-landscape';
+    }
+    
+    return aspectClass;
+}
+
+/**
+ * Create enhanced image container with skeleton loading
+ * @param {Object} photo - Photo object
+ * @param {string} photoId - Unique photo ID
+ * @returns {string} HTML string for image container
+ */
+function createImageContainer(photo, photoId) {
+    if (!photo.smugmugUrl) {
+        return `
+            <div class="image-container aspect-unknown">
+                <div style="height: 100%; background: var(--bg-tertiary); display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.875rem;">
+                    <span>📷 No image available</span>
+                </div>
+            </div>
+        `;
+    }
+    
+    const aspectClass = getImageAspectRatio(photo.filename, photo.description);
+    
+    return `
+        <div class="image-container ${aspectClass}">
+            <div class="image-skeleton">
+                <div class="loading-indicator"></div>
+            </div>
+            <img src="${photo.smugmugUrl}" 
+                 alt="${photo.description || photo.filename || 'Image'}" 
+                 class="card-image"
+                 data-photo-id="${photoId}"
+                 onload="handleImageLoad(this)"
+                 onerror="handleImageError(this)">
+        </div>
+    `;
+}
+
+/**
+ * Handle successful image loading
+ * @param {HTMLImageElement} img - Image element that loaded
+ */
+function handleImageLoad(img) {
+    // Prevent multiple load events
+    if (img.classList.contains('loaded')) return;
+    
+    try {
+        // Add loaded class for smooth transition
+        img.classList.add('loaded');
+        
+        // Hide skeleton loading
+        const skeleton = img.parentElement?.querySelector('.image-skeleton');
+        if (skeleton) {
+            skeleton.classList.add('hidden');
+            // Remove skeleton after transition with cleanup
+            setTimeout(() => {
+                if (skeleton.parentElement && skeleton.classList.contains('hidden')) {
+                    skeleton.remove();
+                }
+            }, 300);
+        }
+        
+        // Adjust aspect ratio based on actual image dimensions
+        const container = img.parentElement;
+        if (container && img.naturalWidth && img.naturalHeight) {
+            const aspectRatio = img.naturalWidth / img.naturalHeight;
+            
+            // Update container class based on actual aspect ratio
+            let newAspectClass = 'aspect-unknown';
+            if (aspectRatio > 1.5) {
+                newAspectClass = 'aspect-landscape';
+            } else if (aspectRatio < 0.8) {
+                newAspectClass = 'aspect-portrait';
+            } else if (aspectRatio >= 0.9 && aspectRatio <= 1.1) {
+                newAspectClass = 'aspect-square';
+            }
+            
+            // Only update if different to prevent layout thrashing
+            if (!container.classList.contains(newAspectClass)) {
+                container.className = container.className.replace(/aspect-\w+/, newAspectClass);
+            }
+        }
+        
+        // Emit custom event for analytics/tracking
+        img.dispatchEvent(new CustomEvent('photoLoaded', {
+            detail: { 
+                photoId: img.dataset.photoId,
+                loadTime: performance.now(),
+                dimensions: { 
+                    width: img.naturalWidth, 
+                    height: img.naturalHeight 
+                }
+            }
+        }));
+        
+    } catch (error) {
+        console.warn('Error in handleImageLoad:', error);
+        // Fallback to error handler
+        handleImageError(img);
+    }
+}
+
+/**
+ * Handle image loading errors
+ * @param {HTMLImageElement} img - Image element that failed to load
+ */
+function handleImageError(img) {
+    try {
+        const container = img.parentElement;
+        if (!container) return;
+        
+        const photoId = img.dataset.photoId;
+        const originalSrc = img.src;
+        
+        // Log error for debugging
+        console.warn('Image load failed:', { photoId, src: originalSrc });
+        
+        // Try to reload image once with cache busting
+        if (!img.dataset.retried && originalSrc) {
+            img.dataset.retried = 'true';
+            const retryUrl = originalSrc + (originalSrc.includes('?') ? '&' : '?') + 'retry=' + Date.now();
+            
+            setTimeout(() => {
+                img.src = retryUrl;
+            }, 1000);
+            return;
+        }
+        
+        // Replace with error message after retry failed
+        container.innerHTML = `
+            <div style="height: 100%; background: var(--bg-tertiary); display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.875rem; flex-direction: column; gap: 0.5rem; cursor: pointer;" onclick="retryImageLoad('${photoId}', '${originalSrc}')">
+                <span style="font-size: 1.5rem;">⚠️</span>
+                <span>Image unavailable</span>
+                <span style="font-size: 0.75rem; opacity: 0.7;">Click to retry</span>
+            </div>
+        `;
+        
+        // Emit custom event for error tracking
+        img.dispatchEvent(new CustomEvent('photoError', {
+            detail: { 
+                photoId: photoId,
+                src: originalSrc,
+                error: 'Load failed after retry'
+            }
+        }));
+        
+    } catch (error) {
+        console.error('Error in handleImageError:', error);
+    }
+}
+
+/**
+ * Retry loading a failed image
+ * @param {string} photoId - Photo ID
+ * @param {string} originalSrc - Original image URL
+ */
+function retryImageLoad(photoId, originalSrc) {
+    const errorDiv = event.target.closest('[style*="bg-tertiary"]');
+    if (!errorDiv || !originalSrc) return;
+    
+    // Replace error div with loading skeleton
+    errorDiv.outerHTML = `
+        <div class="image-skeleton">
+            <div class="loading-indicator"></div>
+        </div>
+        <img src="${originalSrc}" 
+             alt="Retry loading image" 
+             class="card-image"
+             data-photo-id="${photoId}"
+             onload="handleImageLoad(this)"
+             onerror="handleImageError(this)">
+    `;
+}
+
+/**
+ * Enhanced lazy loading with Intersection Observer
+ */
+function initEnhancedLazyLoading() {
+    if (!('IntersectionObserver' in window)) {
+        // Fallback for browsers without IntersectionObserver
+        console.warn('IntersectionObserver not supported, using immediate loading');
+        document.querySelectorAll('img[data-src]').forEach(img => {
+            img.src = img.dataset.src;
+            img.removeAttribute('data-src');
+        });
+        return;
+    }
+    
+    // Reuse existing observer if available
+    if (window.photoVisionImageObserver) {
+        // Re-observe new images
+        document.querySelectorAll('img[data-src]').forEach(img => {
+            window.photoVisionImageObserver.observe(img);
+        });
+        return;
+    }
+    
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                
+                // Start loading the image
+                if (img.dataset.src) {
+                    const startTime = performance.now();
+                    
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                    
+                    // Track loading performance
+                    img.addEventListener('load', () => {
+                        const loadTime = performance.now() - startTime;
+                        console.debug(`Image loaded in ${loadTime.toFixed(2)}ms:`, img.src.substring(0, 50) + '...');
+                    }, { once: true });
+                }
+                
+                // Stop observing this image
+                observer.unobserve(img);
+            }
+        });
+    }, {
+        // Start loading when image is 50px from viewport
+        rootMargin: '50px 0px',
+        threshold: 0
+    });
+    
+    // Store observer globally for reuse
+    window.photoVisionImageObserver = imageObserver;
+    
+    // Observe all images with data-src attribute
+    document.querySelectorAll('img[data-src]').forEach(img => {
+        imageObserver.observe(img);
+    });
+    
+    console.log('Enhanced lazy loading initialized');
+}
