@@ -29,7 +29,7 @@ class PhotoVision {
             search: '',
             status: 'all',
             level: 'all',
-            sort: 'name-asc'
+            sort: 'date-desc'
         };
         
         // Pagination state
@@ -2508,8 +2508,9 @@ class PhotoVision {
             activeTags.push({ type: 'level', label: `Level: ${levelLabels[this.filterState.level]}` });
         }
         
-        if (this.filterState.sort !== 'name-asc') {
+        if (this.filterState.sort !== 'date-desc') {
             const sortLabels = {
+                'name-asc': 'Name A-Z',
                 'name-desc': 'Name Z-A',
                 'count-desc': 'Image Count (High-Low)',
                 'count-asc': 'Image Count (Low-High)',
@@ -2550,8 +2551,8 @@ class PhotoVision {
                 document.getElementById('levelFilter').value = 'all';
                 break;
             case 'sort':
-                this.filterState.sort = 'name-asc';
-                document.getElementById('sortOrder').value = 'name-asc';
+                this.filterState.sort = 'date-desc';
+                document.getElementById('sortOrder').value = 'date-desc';
                 break;
         }
         this.applyFilters();
@@ -2562,7 +2563,7 @@ class PhotoVision {
             search: '',
             status: 'all',
             level: 'all',
-            sort: 'name-asc'
+            sort: 'date-desc'
         };
         
         // Reset form elements
