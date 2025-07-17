@@ -268,16 +268,5 @@
     "inProgress": false,
     "completed": 0,
     "failed": 0
-<<<<<<< HEAD
-  },
-  "ai": {
-    "provider": "claude",
-    "apiKeys": {},
-    "models": {
-      "claude": "claude-3-5-sonnet-20241022",
-      "openai": "gpt-4-vision-preview"
-    }
-=======
->>>>>>> parent of 389d97a (users can choose their llm)
   }
 }

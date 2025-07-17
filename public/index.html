@@ -156,26 +156,7 @@
                                 <label for="batchName">Batch Name:</label>
                                 <input type="text" id="batchName" placeholder="Optional batch name">
                             </div>
-                            
-                            <div class="duplicate-settings">
-                                <div class="setting-group">
-                                    <label for="duplicateHandling">Duplicate Handling:</label>
-                                    <select id="duplicateHandling">
-                                        <option value="skip">Skip duplicates (recommended)</option>
-                                        <option value="update">Update existing records</option>
-                                        <option value="replace">Replace existing records</option>
-                                    </select>
-                                </div>
-                                
-                                <label class="checkbox-label">
-                                    <input type="checkbox" id="forceReprocessing">
-                                    <span class="checkmark"></span>
-                                    Force reprocess all images
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <div class="control-buttons">
+                            <div class="control-buttons">
                             <button id="startBatch" class="btn btn-primary" disabled>
                                 <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <polygon points="5,3 19,12 5,21"></polygon>
@@ -203,6 +184,26 @@
                                 Cancel
                             </button>
                         </div>
+                            
+                            <div class="duplicate-settings">
+                                <div class="setting-group">
+                                    <label for="duplicateHandling">Duplicate Handling:</label>
+                                    <select id="duplicateHandling">
+                                        <option value="skip">Skip duplicates (recommended)</option>
+                                        <option value="update">Update existing records</option>
+                                        <option value="replace">Replace existing records</option>
+                                    </select>
+                                </div>
+                                
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="forceReprocessing">
+                                    <span class="checkmark"></span>
+                                    Force reprocess all images
+                                </label>
+                            </div>
+                        </div>
+                        
+                        
                     </div>
                     
                     <div class="batch-progress" id="batchProgress" style="display: none;">
