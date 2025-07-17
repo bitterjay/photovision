@@ -1954,6 +1954,7 @@ class PhotoVision {
             if (forceReprocessingCheckbox && fullStatus.processingRecommendation) {
                 const suggestedMode = fullStatus.processingRecommendation.suggestedMode;
                 forceReprocessingCheckbox.checked = suggestedMode === 'force_reprocessing';
+                updateForceReprocessingToggle();
             }
         }
     }
@@ -3369,7 +3370,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 preContextInput.value = config.preContext || '';
                 updateCharCount();
                 updateStatusDisplay(config);
-                updateToggleState();
+                updateImageAnalysisToggle();
                 
                 // Update template selection
                 if (config.template) {
@@ -3435,14 +3436,30 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Toggle switch functionality
-    function updateToggleState() {
-        const toggleSwitch = document.querySelector('.toggle-switch');
-        if (toggleSwitch && enableCustomAnalysis) {
+    // Toggle switch functionality for image analysis
+    function updateImageAnalysisToggle() {
+        const enableCustomAnalysis = document.getElementById('enableCustomAnalysis');
+        const imageAnalysisToggle = document.querySelector('[data-toggle="image-analysis"]');
+        
+        if (imageAnalysisToggle && enableCustomAnalysis) {
             if (enableCustomAnalysis.checked) {
-                toggleSwitch.classList.add('active');
+                imageAnalysisToggle.classList.add('active');
             } else {
-                toggleSwitch.classList.remove('active');
+                imageAnalysisToggle.classList.remove('active');
+            }
+        }
+    }
+    
+    // Force reprocessing toggle functionality
+    function updateForceReprocessingToggle() {
+        const forceReprocessingCheckbox = document.getElementById('forceReprocessing');
+        const forceReprocessingToggle = document.querySelector('[data-toggle="force-reprocessing"]');
+        
+        if (forceReprocessingToggle && forceReprocessingCheckbox) {
+            if (forceReprocessingCheckbox.checked) {
+                forceReprocessingToggle.classList.add('active');
+            } else {
+                forceReprocessingToggle.classList.remove('active');
             }
         }
     }
@@ -3451,7 +3468,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (enableCustomAnalysis) {
         enableCustomAnalysis.addEventListener('change', () => {
             updateCharCount();
-            updateToggleState();
+            updateImageAnalysisToggle();
         });
     }
     
@@ -3557,7 +3574,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     analysisTemplate.value = '';
                     updateCharCount();
                     updateStatusDisplay(data.data);
-                    updateToggleState();
+                    updateImageAnalysisToggle();
                     alert('Configuration reset to default!');
                 } else {
                     alert('Error resetting configuration: ' + data.error);
@@ -3569,12 +3586,19 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Add event listener for force reprocessing toggle
+    const forceReprocessingCheckbox = document.getElementById('forceReprocessing');
+    if (forceReprocessingCheckbox) {
+        forceReprocessingCheckbox.addEventListener('change', updateForceReprocessingToggle);
+    }
+    
     // Initialize analysis configuration
     loadAnalysisConfig();
     loadTemplates();
     
-    // Initialize toggle state on page load
+    // Initialize toggle states on page load
     setTimeout(() => {
-        updateToggleState();
+        updateImageAnalysisToggle();
+        updateForceReprocessingToggle();
     }, 100);
 });

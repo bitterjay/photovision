@@ -386,11 +386,12 @@
                                         </select>
                                     </div>
                                     
-                                    <label class="checkbox-label">
-                                        <input type="checkbox" id="forceReprocessing">
-                                        <span class="checkmark"></span>
-                                        Force reprocess all images
-                                    </label>
+                                    <div class="toggle-switch-wrapper">
+                                        <span class="toggle-switch-label">Force reprocess all images</span>
+                                        <label class="toggle-switch" data-toggle="force-reprocessing">
+                                            <input type="checkbox" id="forceReprocessing">
+                                        </label>
+                                    </div>
                                 </div>
                                 
                                 <div class="duplicate-analysis" id="duplicateAnalysis" style="display: none;">
@@ -431,7 +432,7 @@
                                 <div class="admin-card-header-controls">
                                     <div class="toggle-switch-wrapper">
                                         <span class="toggle-switch-label">Enable</span>
-                                        <label class="toggle-switch">
+                                        <label class="toggle-switch" data-toggle="image-analysis">
                                             <input type="checkbox" id="enableCustomAnalysis">
                                         </label>
                                     </div>
