@@ -142,6 +142,7 @@
     
     --success: #10b981;
     --warning: #f59e0b;
+    --warning-bg: rgba(245, 158, 11, 0.1);
     --error: #ef4444;
     
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
@@ -176,6 +177,7 @@
     
     --success: #34d399;
     --warning: #fbbf24;
+    --warning-bg: rgba(251, 191, 36, 0.15);
     --error: #f87171;
     
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
@@ -204,6 +206,7 @@
         
         --success: #34d399;
         --warning: #fbbf24;
+        --warning-bg: rgba(251, 191, 36, 0.15);
         --error: #f87171;
         
         --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
@@ -2494,9 +2497,10 @@ body {
 .analysis-help {
     margin-top: 1rem;
     padding: 1rem;
-    background: var(--bg-primary);
+    background: var(--warning-bg);
     border-radius: var(--radius-md);
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--warning);
+    border-left: 4px solid var(--warning);
 }
 
 .analysis-help h5 {
@@ -2514,6 +2518,7 @@ body {
 .analysis-help li {
     margin-bottom: 0.5rem;
     line-height: 1.5;
+    font-size: 0.8125rem;
 }
 
 .analysis-help li:last-child {
