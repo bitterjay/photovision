@@ -3366,6 +3366,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 preContextInput.value = config.preContext || '';
                 updateCharCount();
                 updateImageAnalysisToggle();
+                updatePreviewContent();
                 
                 // Update template selection
                 if (config.template) {
@@ -3453,7 +3454,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     if (preContextInput) {
-        preContextInput.addEventListener('input', updateCharCount);
+        preContextInput.addEventListener('input', () => {
+            updateCharCount();
+            debouncedUpdatePreview();
+        });
     }
     
     // Auto-apply template when dropdown selection changes
@@ -3472,6 +3476,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data.success) {
                     preContextInput.value = data.data.preContext || '';
                     updateCharCount();
+                    updatePreviewContent();
                 } else {
                     console.error('Error loading template:', data.error);
                 }
@@ -3498,28 +3503,68 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Generate preview functionality
-    if (generatePreviewBtn) {
-        generatePreviewBtn.addEventListener('click', async () => {
-            const preContext = preContextInput.value;
-            
-            try {
-                const response = await fetch('/api/admin/image-analysis-config/preview', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ preContext })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    previewContent.textContent = data.data.completePrompt;
-                    previewContent.parentElement.querySelector('.preview-placeholder').style.display = 'none';
-                }
-            } catch (error) {
-                console.error('Error generating preview:', error);
+    // Hot-load preview content function
+    let previewUpdateTimeout;
+    
+    function updatePreviewContent() {
+        const preContext = preContextInput.value.trim();
+        
+        // Default analysis instructions
+        const defaultInstructions = `Please analyze this image in detail. Provide a comprehensive description and generate relevant keywords for indexing. Return your response as a JSON object with the following structure:
+
+{
+  "description": "A detailed description of the image...",
+  "keywords": ["keyword1", "keyword2", "keyword3", ...]
+}
+
+For the description, include:
+1. Main subjects (people, objects, animals)
+2. Setting and location type
+3. Activities or actions taking place
+4. Mood, lighting, and atmosphere
+5. Colors, composition, and visual elements
+6. Any text or signs visible
+7. Time of day or season if apparent
+
+For keywords, provide 5-10 relevant terms that would help with searching and indexing, such as:
+- Main subjects (person, animal, object types)
+- Activities (running, eating, playing)
+- Settings (outdoor, indoor, beach, forest)
+- Emotions/moods (happy, serious, peaceful)
+- Visual elements (colorful, black and white, sunset)
+- Equipment or objects visible
+
+Be specific and descriptive to enable natural language searches like "photos of people laughing outdoors" or "sunset landscapes with mountains".`;
+        
+        // Combine pre-context with default instructions
+        let completePrompt = defaultInstructions;
+        if (preContext) {
+            completePrompt = preContext + '\n\n' + defaultInstructions;
+        }
+        
+        // Update preview content
+        if (previewContent) {
+            const placeholder = previewContent.querySelector('.preview-placeholder');
+            if (placeholder) {
+                placeholder.style.display = 'none';
             }
-        });
+            
+            // Create or update preview text
+            let previewText = previewContent.querySelector('.preview-text');
+            if (!previewText) {
+                previewText = document.createElement('pre');
+                previewText.className = 'preview-text';
+                previewContent.appendChild(previewText);
+            }
+            
+            previewText.textContent = completePrompt;
+        }
+    }
+    
+    // Debounced update function
+    function debouncedUpdatePreview() {
+        clearTimeout(previewUpdateTimeout);
+        previewUpdateTimeout = setTimeout(updatePreviewContent, 300);
     }
     
     if (saveAnalysisConfigBtn) {
