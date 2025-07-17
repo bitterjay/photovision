@@ -271,9 +271,7 @@
   },
   "ai": {
     "provider": "claude",
-    "apiKeys": {
-      "claude": "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"
-    },
+    "apiKeys": {},
     "models": {
       "claude": "claude-3-5-sonnet-20241022",
       "openai": "gpt-4-vision-preview"
