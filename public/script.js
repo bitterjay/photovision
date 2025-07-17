@@ -1380,6 +1380,20 @@ class PhotoVision {
             });
         }
 
+        // Sync slider and number input for max images
+        const maxImagesSlider = document.getElementById('maxImagesSlider');
+        const maxImagesInput = document.getElementById('maxImages');
+        
+        if (maxImagesSlider && maxImagesInput) {
+            maxImagesSlider.addEventListener('input', (e) => {
+                maxImagesInput.value = e.target.value;
+            });
+            
+            maxImagesInput.addEventListener('input', (e) => {
+                maxImagesSlider.value = e.target.value;
+            });
+        }
+
         // Initialize batch processing state
         this.batchProgressInterval = null;
         this.selectedAlbumKey = null;
@@ -1387,7 +1401,6 @@ class PhotoVision {
 
     async loadAlbums(page = 1, append = false) {
         const albumsList = document.getElementById('albumsList');
-        const albumCount = document.getElementById('albumCount');
         
         if (!albumsList) return;
 
@@ -1397,7 +1410,6 @@ class PhotoVision {
 
         if (!append) {
             albumsList.innerHTML = '<div class="loading-albums"><div class="loading-spinner"></div> <span id="loadingText">Loading albums...</span></div>';
-            albumCount.textContent = 'Loading...';
         } else {
             // Add loading indicator for additional pages
             const loadMoreBtn = document.getElementById('loadMoreAlbums');
@@ -1430,7 +1442,7 @@ class PhotoVision {
                     this.albumsData = albums;
                 }
 
-                albumCount.textContent = `${this.albumsData.length} of ${pagination.totalAlbums} albums`;
+                // Album count removed from UI
 
                 if (albums.length === 0 && !append) {
                     albumsList.innerHTML = '<div class="no-albums">No albums found in your SmugMug account.</div>';
@@ -1446,14 +1458,12 @@ class PhotoVision {
             } else {
                 if (!append) {
                     albumsList.innerHTML = '<div class="error-message">Failed to load albums. Please check your SmugMug connection.</div>';
-                    albumCount.textContent = 'Error';
                 }
             }
         } catch (error) {
             console.error('Error loading albums:', error);
             if (!append) {
                 albumsList.innerHTML = '<div class="error-message">Error loading albums. Please try again.</div>';
-                albumCount.textContent = 'Error';
             }
         } finally {
             this.paginationState.isLoading = false;
@@ -1604,7 +1614,6 @@ class PhotoVision {
             return;
         }
 
-        const newImages = totalImages - processedImages;
         const duplicateInfo = status.duplicateStatistics || {};
         const duplicateDetectionEnabled = status.duplicateDetectionEnabled || false;
 
@@ -1612,9 +1621,9 @@ class PhotoVision {
         
         if (isCompletelyProcessed) {
             statusHTML = `
-                <div class="processing-complete">
+                <div class="processing-complete" style="background: linear-gradient(90deg, var(--success) 100%, var(--bg-secondary) 100%)">
                     <span class="status-icon">✅</span>
-                    <span class="status-text">All ${totalImages} images processed</span>
+                    <span class="status-count">${totalImages}</span>
                     ${duplicateDetectionEnabled ? `
                         <div class="duplicate-info">
                             <small>Duplicate detection: Active</small>
@@ -1624,9 +1633,9 @@ class PhotoVision {
             `;
         } else if (processedImages === 0) {
             statusHTML = `
-                <div class="processing-none">
+                <div class="processing-none" style="background: linear-gradient(90deg, var(--warning) 0%, var(--bg-secondary) 0%)">
                     <span class="status-icon">⏳</span>
-                    <span class="status-text">0 processed, ${totalImages} new images</span>
+                    <span class="status-count">0/${totalImages}</span>
                     ${duplicateDetectionEnabled ? `
                         <div class="duplicate-info">
                             <small>Ready for duplicate-aware processing</small>
@@ -1636,12 +1645,10 @@ class PhotoVision {
             `;
         } else {
             statusHTML = `
-                <div class="processing-partial">
+                <div class="processing-partial" style="background: linear-gradient(90deg, var(--accent-primary) ${processingProgress}%, var(--bg-secondary) ${processingProgress}%)">
                     <span class="status-icon">🔄</span>
-                    <span class="status-text">${processedImages} processed, ${newImages} new images (${processingProgress}%)</span>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${processingProgress}%"></div>
-                    </div>
+                    <span class="status-count">${processedImages}/${totalImages}</span>
+                    <span class="status-percentage">${processingProgress}%</span>
                     ${duplicateDetectionEnabled ? `
                         <div class="duplicate-info">
                             <small>Duplicate detection: ${duplicateInfo.skippedDuplicates || 0} duplicates detected</small>
@@ -2396,46 +2403,45 @@ class PhotoVision {
         // Use the existing album rendering logic
         albumsList.innerHTML = this.filteredAlbums.map(album => {
             const indentLevel = album.IndentLevel || 0;
-            const pathTags = album.PathTags || [];
             const displayPath = album.FullDisplayPath || album.Name || 'Untitled Album';
+            
+            // Determine album name class based on hierarchy level
+            let albumNameClass = 'album-name';
+            if (indentLevel === 0 || indentLevel === 1) {
+                albumNameClass = 'album-name-small'; // Year level
+            } else if (indentLevel === 2) {
+                albumNameClass = 'path-level-2'; // Event level
+            } else {
+                albumNameClass = 'album-name-small'; // Sub-album level
+            }
             
             const hierarchyIndicator = indentLevel > 0 ? 
                 `${'📁'.repeat(Math.min(indentLevel, 3))} ` : '📁 ';
 
             return `
                 <div class="album-item" data-album-key="${album.AlbumKey}">
-                    <div class="album-card-header">
+                   <!-- <div class="album-card-header">
                         <div class="album-hierarchy">
-                            <span class="album-hierarchy-icon">${hierarchyIndicator}</span>
-                            <span class="hierarchy-level">Level ${indentLevel}</span>
+                            // <span class="album-hierarchy-icon">${hierarchyIndicator}</span>
+                            // <span class="hierarchy-level">Level ${indentLevel}</span>
                         </div>
-                        <h4 class="album-name">${album.Name || 'Untitled Album'}</h4>
-                    </div>
+                        <h4 class="${albumNameClass}">${album.Name || 'Untitled Album'}</h4>
+                    </div> -->
                     
                     <div class="album-card-content">
                         <div class="album-card-path">
-                            <strong>Path:</strong> ${displayPath}
+                            ${this.formatPathWithLevels(displayPath)}
                         </div>
                         
                         <div class="album-metadata">
                             <div class="metadata-item">
-                                <span class="metadata-label">Images:</span>
+                                <span class="metadata-label">📷</span>
                                 <span class="metadata-value">${album.ImageCount || 0}</span>
-                            </div>
-                            <div class="metadata-item">
-                                <span class="metadata-label">Key:</span>
-                                <span class="metadata-value">${album.AlbumKey}</span>
                             </div>
                             ${album.Date ? `
                                 <div class="metadata-item">
-                                    <span class="metadata-label">Created:</span>
+                                    <span class="metadata-label">📅</span>
                                     <span class="metadata-value">${this.formatDate(album.Date)}</span>
-                                </div>
-                            ` : ''}
-                            ${album.LastUpdated ? `
-                                <div class="metadata-item">
-                                    <span class="metadata-label">Updated:</span>
-                                    <span class="metadata-value">${this.formatDate(album.LastUpdated)}</span>
                                 </div>
                             ` : ''}
                         </div>
@@ -2450,6 +2456,14 @@ class PhotoVision {
                 </div>
             `;
         }).join('');
+        
+        // Add click handlers for album selection (entire card is clickable)
+        albumsList.querySelectorAll('.album-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                const albumKey = e.currentTarget.dataset.albumKey;
+                this.selectAlbum(albumKey);
+            });
+        });
         
         // Load processing status for filtered albums
         this.loadProcessingStatusForFilteredAlbums();
@@ -2566,17 +2580,7 @@ class PhotoVision {
     }
     
     updateAlbumCount() {
-        const albumCount = document.getElementById('albumCount');
-        if (albumCount) {
-            const totalCount = this.albumsData.length;
-            const filteredCount = this.filteredAlbums.length;
-            
-            if (filteredCount === totalCount) {
-                albumCount.textContent = `${totalCount} albums`;
-            } else {
-                albumCount.textContent = `${filteredCount} of ${totalCount} albums`;
-            }
-        }
+        // Album count display removed from UI
     }
     
     formatDate(dateString) {
@@ -2591,6 +2595,32 @@ class PhotoVision {
         } catch (error) {
             return 'Invalid Date';
         }
+    }
+    
+    formatPathWithLevels(displayPath) {
+        if (!displayPath) return '';
+        
+        // Split the path by '>' separator and clean up whitespace
+        const pathParts = displayPath.split('>').map(part => part.trim()).filter(part => part.length > 0);
+        
+        if (pathParts.length === 0) return displayPath;
+        
+        // Format each part with appropriate styling
+        const formattedParts = pathParts.map((part, index) => {
+            const level = index + 1;
+            let className = 'path-level-3'; // default for level 3+
+            
+            if (level === 1) {
+                className = 'path-level-1';
+            } else if (level === 2) {
+                className = 'path-level-2';
+            }
+            
+            return `<span class="${className}">${part}</span>`;
+        });
+        
+        // Join without separators
+        return formattedParts.join('');
     }
 }
 

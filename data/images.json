@@ -10812,5 +10812,415 @@
       "batchId": "batch_1752720327521_xaftakzkr",
       "jobId": "img_zkn3CW_nFfZXns"
     }
+  },
+  {
+    "id": "md7bccr2fo4onnikc0f",
+    "timestamp": "2025-07-17T11:34:55.892Z",
+    "filename": "GCP09187.jpg",
+    "smugmugImageKey": "kC6bVFz",
+    "smugmugUrl": "https://photos.smugmug.com/2025/SoCal-Showdown/50-awards/i-kC6bVFz/0/LjQnGPG6MWWVRMcgwBd8jNQP6V5HpmgDPxNCJgBpD/D/GCP09187-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "SJX8zV",
+    "albumName": "50+ awards",
+    "albumPath": "2025 > SoCal Showdown > 50+ awards",
+    "albumHierarchy": [
+      "2025",
+      "SoCal Showdown",
+      "50+ awards"
+    ],
+    "description": "The image depicts an archery shooting range with two large, colorful target boards in the center. The targets feature concentric rings in a range of bright colors including red, blue, yellow, and black. In the foreground, there are numerous medals and trophies arranged on a table, suggesting this is likely the site of an archery competition or tournament. The medals appear to be bronze, silver, and gold in color, with blue and red ribbons attached. The overall atmosphere is one of competition and achievement, with the vibrant colors and sheen of the medals creating a visually striking and dynamic scene. No people are visible in the image, but the presence of the targets and awards indicates this is a space dedicated to the sport of archery.",
+    "keywords": [
+      "archery",
+      "shooting range",
+      "targets",
+      "medals",
+      "trophies",
+      "competition",
+      "tournament",
+      "sport",
+      "colorful",
+      "vibrant"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T11:34:55.886Z",
+      "batchId": "batch_1752752089265_239mte3rt",
+      "jobId": "img_SJX8zV_kC6bVFz"
+    }
+  },
+  {
+    "id": "md7bcgxyka713puhxi",
+    "timestamp": "2025-07-17T11:35:01.321Z",
+    "filename": "GCP09189.jpg",
+    "smugmugImageKey": "XQfMbqN",
+    "smugmugUrl": "https://photos.smugmug.com/2025/SoCal-Showdown/50-awards/i-XQfMbqN/0/M22W3cnG24cRfHCnXgR45DVBQkqXbX4HHWpr3kfqc/D/GCP09189-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "SJX8zV",
+    "albumName": "50+ awards",
+    "albumPath": "2025 > SoCal Showdown > 50+ awards",
+    "albumHierarchy": [
+      "2025",
+      "SoCal Showdown",
+      "50+ awards"
+    ],
+    "description": "{\n  \"description\": \"The image shows three women standing on a podium at what appears to be a sporting or athletic event. The women are wearing medals around their necks, indicating they have won prizes or awards. \n\nThe background features a colorful display with palm tree graphics and the 'SoCal Showdown' logo, suggesting this is taking place at a competition or event in a coastal or tropical location. The women are standing on platforms labeled '2', '1', and '3', indicating they have placed in the top three positions of an event.\n\nThe woman in the center is wearing a patriotic blue and red United States of America jersey, while the other two women are wearing more casual athletic attire. All three women have cheerful, proud expressions on their faces, conveying a sense of accomplishment and celebration.\n\nThe overall mood is one of achievement, pride, and excitement, with the bright colors, tropical setting, and podium setup creating an energetic and festive atmosphere. The image captures the culmination of a competitive event, highlighting the joy and satisfaction of the top finishers.\",\n  \"keywords\": [\"podium\", \"medals\", \"athletics\", \"competition\", \"achievement\", \"celebration\", \"women\", \"tropical\", \"SoCal Showdown\", \"United States\", \"proud\", \"athletic wear\", \"colorful\", \"festive\"]\n}",
+    "keywords": [],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T11:35:01.318Z",
+      "batchId": "batch_1752752089265_239mte3rt",
+      "jobId": "img_SJX8zV_XQfMbqN"
+    }
+  },
+  {
+    "id": "md7bckmlslm6d386nm",
+    "timestamp": "2025-07-17T11:35:06.098Z",
+    "filename": "GCP09191.jpg",
+    "smugmugImageKey": "RvnHmSv",
+    "smugmugUrl": "https://photos.smugmug.com/2025/SoCal-Showdown/50-awards/i-RvnHmSv/0/MwC44tXMLQPgLS563mq8mSXC3kzD4VB6Qbb6VSckm/D/GCP09191-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "SJX8zV",
+    "albumName": "50+ awards",
+    "albumPath": "2025 > SoCal Showdown > 50+ awards",
+    "albumHierarchy": [
+      "2025",
+      "SoCal Showdown",
+      "50+ awards"
+    ],
+    "description": "The image shows three women standing together in front of a colorful backdrop with logos and branding for the 'SoCal Showdown' and 'Easton Foundation' events. The women are smiling and wearing athletic or casual clothing, with one wearing a blue 'United States of America' t-shirt and holding several medals around her neck, indicating she has likely participated in or won some sort of competition or event. The setting appears to be at an athletic or sporting event, with the backdrop featuring vibrant colors, palm trees, and various logos and signage. The overall mood is upbeat and celebratory, with the women appearing proud and happy. The composition is well-balanced, with the women positioned in the center of the frame and the brightly colored background providing a visually striking contrast.",
+    "keywords": [
+      "women",
+      "athletic event",
+      "competition",
+      "medals",
+      "celebration",
+      "sports",
+      "outdoor",
+      "colorful",
+      "branding",
+      "logos",
+      "happy",
+      "proud"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T11:35:06.093Z",
+      "batchId": "batch_1752752089265_239mte3rt",
+      "jobId": "img_SJX8zV_RvnHmSv"
+    }
+  },
+  {
+    "id": "md7bcnx0evicwov29be",
+    "timestamp": "2025-07-17T11:35:10.361Z",
+    "filename": "GCP09197.jpg",
+    "smugmugImageKey": "F76p5HQ",
+    "smugmugUrl": "https://photos.smugmug.com/2025/SoCal-Showdown/50-awards/i-F76p5HQ/0/MH7CPPXczDPCfSkj5QPqbBkNZH5cpxmQnX9QpZGXK/D/GCP09197-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "SJX8zV",
+    "albumName": "50+ awards",
+    "albumPath": "2025 > SoCal Showdown > 50+ awards",
+    "albumHierarchy": [
+      "2025",
+      "SoCal Showdown",
+      "50+ awards"
+    ],
+    "description": "The image shows three men standing on a podium at what appears to be an archery competition or event. The men are holding bows and arrows and are wearing medals, indicating they have placed in a competition. The background features a colorful backdrop with the logos and branding of the 'SoCal Showdown' event. The men are smiling and seem to be in a celebratory mood. The setting appears to be indoors, likely in a sports arena or convention center. The lighting is bright and the overall atmosphere is one of accomplishment and pride. The image's composition is well-balanced, with the three men evenly spaced on the podium and the branding and logos providing a vibrant visual context.",
+    "keywords": [
+      "archery",
+      "competition",
+      "podium",
+      "medals",
+      "bows",
+      "arrows",
+      "SoCal Showdown",
+      "event",
+      "indoor",
+      "sports",
+      "celebration",
+      "accomplishment",
+      "pride"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T11:35:10.356Z",
+      "batchId": "batch_1752752089265_239mte3rt",
+      "jobId": "img_SJX8zV_F76p5HQ"
+    }
+  },
+  {
+    "id": "md7bcs4nzssdc7zdose",
+    "timestamp": "2025-07-17T11:35:15.820Z",
+    "filename": "GCP09201.jpg",
+    "smugmugImageKey": "Z4Jx8Mh",
+    "smugmugUrl": "https://photos.smugmug.com/2025/SoCal-Showdown/50-awards/i-Z4Jx8Mh/0/MhqJ3gT9P6twc86WNtpHJZ4cmRWFhCNkp3L7pVsbd/D/GCP09201-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "SJX8zV",
+    "albumName": "50+ awards",
+    "albumPath": "2025 > SoCal Showdown > 50+ awards",
+    "albumHierarchy": [
+      "2025",
+      "SoCal Showdown",
+      "50+ awards"
+    ],
+    "description": "{\n  \"description\": \"The image shows three men standing on a podium, likely at some kind of sporting or athletic event. The men are all wearing medals and holding equipment like hiking poles, indicating they have just competed in an event or activity. \n\nThe setting appears to be indoors, with a large banner backdrop featuring the 'SoCal Showdown' and 'Easton' logos, which suggests this is a competitive event or tournament taking place. The podium they are standing on is blue, with the number '1' displayed prominently, indicating they have placed first in their event.\n\nThe men are dressed casually, with one wearing a colorful floral-patterned shirt, another in a gray t-shirt, and the third in a blue athletic top. They all have smiling, celebratory expressions, capturing the excitement and achievement of their accomplishment.\n\nThe overall mood is one of success, celebration, and camaraderie, with the vibrant colors and backdrop adding to the lively, festive atmosphere of the event. The composition draws the eye directly to the men on the podium, making them the central focus of the image.\",\n  \"keywords\": [\"competition\", \"athletic event\", \"podium\", \"medals\", \"hiking poles\", \"SoCal Showdown\", \"Easton\", \"celebration\", \"achievement\", \"success\", \"men\", \"casual clothing\", \"indoor setting\", \"colorful\", \"vibrant\", \"festive\"]\n}",
+    "keywords": [],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T11:35:15.815Z",
+      "batchId": "batch_1752752089265_239mte3rt",
+      "jobId": "img_SJX8zV_Z4Jx8Mh"
+    }
+  },
+  {
+    "id": "md7bcw7mjtp4gscypcf",
+    "timestamp": "2025-07-17T11:35:21.112Z",
+    "filename": "GCP09206.jpg",
+    "smugmugImageKey": "SDSx5fC",
+    "smugmugUrl": "https://photos.smugmug.com/2025/SoCal-Showdown/50-awards/i-SDSx5fC/0/Ln8sPFQ5wXrx2sGqX92bdxSbPGMQDf8Qh73NP9gG6/D/GCP09206-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "SJX8zV",
+    "albumName": "50+ awards",
+    "albumPath": "2025 > SoCal Showdown > 50+ awards",
+    "albumHierarchy": [
+      "2025",
+      "SoCal Showdown",
+      "50+ awards"
+    ],
+    "description": "The image shows three women standing on a podium, holding archery equipment and wearing USA-themed athletic uniforms. They appear to be at an archery competition or event, as evident from the backdrop which features the logo and branding of the 'Easton' sports company. The women are standing on the first, second, and third place podium steps, indicating they have won medals or awards. The setting seems to be an indoor or covered competition venue, with a large white backdrop featuring the Easton logo and palm tree graphics. The women have serious, focused expressions on their faces, suggesting a competitive atmosphere. The colors in the image are primarily red, white, and blue, as well as yellow and green from the Easton branding, creating a vibrant and patriotic visual. Overall, the image captures the accomplishment and pride of these female archers who have excelled in their sport.",
+    "keywords": [
+      "archery",
+      "competition",
+      "podium",
+      "medals",
+      "athletics",
+      "USA",
+      "Easton",
+      "women",
+      "sports",
+      "indoor",
+      "backdrop",
+      "branding",
+      "patriotic",
+      "accomplishment"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T11:35:21.106Z",
+      "batchId": "batch_1752752089265_239mte3rt",
+      "jobId": "img_SJX8zV_SDSx5fC"
+    }
+  },
+  {
+    "id": "md7bczyeu7vv0gyqcn",
+    "timestamp": "2025-07-17T11:35:25.964Z",
+    "filename": "GCP09207.jpg",
+    "smugmugImageKey": "zrsdhhG",
+    "smugmugUrl": "https://photos.smugmug.com/2025/SoCal-Showdown/50-awards/i-zrsdhhG/0/LQfGSnNr4VdBT4hSCZtK5SfWNgNdpvk2fMjXBp7dh/D/GCP09207-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "SJX8zV",
+    "albumName": "50+ awards",
+    "albumPath": "2025 > SoCal Showdown > 50+ awards",
+    "albumHierarchy": [
+      "2025",
+      "SoCal Showdown",
+      "50+ awards"
+    ],
+    "description": "The image shows three middle-aged women posing together in front of a colorful backdrop with logos and branding for an archery competition or event called the 'SoCal Showdown' hosted by Easton. The women are all wearing patriotic-themed athletic clothing with the United States flag, and they are holding archery equipment like bows and arrows. They have big, bright smiles on their faces, exuding an upbeat and enthusiastic mood. The setting appears to be an indoor venue with a backdrop that includes the Easton logo and tropical palm tree graphics, creating a lively and festive atmosphere. The overall composition is well-balanced, with the three women positioned evenly across the frame and the archery equipment featured prominently in the foreground.",
+    "keywords": [
+      "archery",
+      "competition",
+      "event",
+      "United States",
+      "patriotic",
+      "athletic clothing",
+      "bows",
+      "arrows",
+      "women",
+      "smiling",
+      "indoor",
+      "Easton",
+      "tropical",
+      "palm trees",
+      "graphics",
+      "logos",
+      "festive"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T11:35:25.958Z",
+      "batchId": "batch_1752752089265_239mte3rt",
+      "jobId": "img_SJX8zV_zrsdhhG"
+    }
+  },
+  {
+    "id": "md7bd3nh2ma20wu34l7",
+    "timestamp": "2025-07-17T11:35:30.756Z",
+    "filename": "GCP09218.jpg",
+    "smugmugImageKey": "z5mr7zb",
+    "smugmugUrl": "https://photos.smugmug.com/2025/SoCal-Showdown/50-awards/i-z5mr7zb/0/MvnjM45RXd4zLhKShdT4S5sdBkVCfLQdPRvMgd5Tm/D/GCP09218-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "SJX8zV",
+    "albumName": "50+ awards",
+    "albumPath": "2025 > SoCal Showdown > 50+ awards",
+    "albumHierarchy": [
+      "2025",
+      "SoCal Showdown",
+      "50+ awards"
+    ],
+    "description": "{\n  \"description\": \"The image shows three people standing on a podium at a sporting event or competition. The middle person, wearing a blue jersey with the United States of America logo, is holding a gold medal and appears to be the winner of the event. The person on the left is also wearing a USA jersey and appears to be the second-place finisher, while the person on the right is wearing a white Nike-branded jacket.\n\nThe background is filled with large banners and logos for the 'SoCal Showdown' event, which appears to be some kind of sporting or athletic competition. The logos feature bright, vibrant colors like yellow, blue, and orange, creating a festive and energetic atmosphere. The lighting seems to be natural, with the subjects well-illuminated, suggesting an outdoor or well-lit indoor setting.\n\nThe overall mood of the image is one of celebration and accomplishment, with the medal-winning athletes beaming with pride and joy. The composition places the winners front and center, with the colorful event branding creating a visually striking and eye-catching backdrop.\",\n  \"keywords\": [\"sporting event\", \"competition\", \"medal ceremony\", \"United States of America\", \"gold medal\", \"podium\", \"SoCal Showdown\", \"athletic\", \"celebration\", \"accomplishment\", \"proud\"]\n}",
+    "keywords": [],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T11:35:30.749Z",
+      "batchId": "batch_1752752089265_239mte3rt",
+      "jobId": "img_SJX8zV_z5mr7zb"
+    }
+  },
+  {
+    "id": "md7bd7iehaqryo1mp3d",
+    "timestamp": "2025-07-17T11:35:35.755Z",
+    "filename": "GCP09223.jpg",
+    "smugmugImageKey": "mWHdHCq",
+    "smugmugUrl": "https://photos.smugmug.com/2025/SoCal-Showdown/50-awards/i-mWHdHCq/0/Ls5LV9SCfQ3vxGHQdbM9t4ZFWrQsRHb5vffS9qJxm/D/GCP09223-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "SJX8zV",
+    "albumName": "50+ awards",
+    "albumPath": "2025 > SoCal Showdown > 50+ awards",
+    "albumHierarchy": [
+      "2025",
+      "SoCal Showdown",
+      "50+ awards"
+    ],
+    "description": "{\n  \"description\": \"The image shows three people standing together in front of a backdrop featuring the logos and designs of the 'SoCal Showdown' and 'Easton' events. The people are all wearing clothing and accessories with the United States of America flag and logos, indicating they are likely participants or organizers of these events. \n\nThe setting appears to be at an athletic or sporting event, with the backdrop and their attire suggesting it is related to outdoor sports or activities. The people are standing on a platform or stage, with a '1' number visible below them, suggesting they may have achieved some kind of award or recognition.\n\nThe people are all smiling and appear to be in a celebratory mood, with the bright colors and graphics of the backdrop adding to the upbeat and energetic atmosphere. The lighting is even and natural, creating a cheerful and welcoming ambiance.\n\nOverall, the image conveys a sense of achievement, teamwork, and national pride, with the American flags and sports-themed logos emphasizing the competitive and patriotic nature of the event.\"\n\n  \"keywords\": [\"people\", \"United States\", \"sports\", \"competition\", \"celebration\", \"backdrop\", \"logos\", \"flags\", \"awards\", \"platform\", \"outdoor\", \"lighting\", \"cheerful\", \"energetic\", \"achievement\", \"teamwork\", \"pride\"]\n}",
+    "keywords": [],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T11:35:35.750Z",
+      "batchId": "batch_1752752089265_239mte3rt",
+      "jobId": "img_SJX8zV_mWHdHCq"
+    }
+  },
+  {
+    "id": "md7bdbdz5onwqgjoggl",
+    "timestamp": "2025-07-17T11:35:40.779Z",
+    "filename": "GCP09227.jpg",
+    "smugmugImageKey": "X6FKPSG",
+    "smugmugUrl": "https://photos.smugmug.com/2025/SoCal-Showdown/50-awards/i-X6FKPSG/0/KjcSTqK6hgwvcFkZLKww3TJbJCbTrdhzRHggtj3L6/D/GCP09227-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "SJX8zV",
+    "albumName": "50+ awards",
+    "albumPath": "2025 > SoCal Showdown > 50+ awards",
+    "albumHierarchy": [
+      "2025",
+      "SoCal Showdown",
+      "50+ awards"
+    ],
+    "description": "{\n  \"description\": \"The image shows three men standing on a podium at what appears to be a sporting event or competition. The men are wearing medals around their necks, indicating they have won awards or placed in an event. \n\nThe setting is an indoor venue with a colorful backdrop featuring event logos and branding. The lighting is bright and the atmosphere seems celebratory, with the men looking happy and proud of their achievements.\n\nThe men are dressed casually, wearing t-shirts, shorts, and hats. The man in the middle is wearing a red shirt, the man on the left a blue shirt, and the man on the right a black and white patterned shirt. All three are smiling and holding their medals.\n\nThe composition of the image is symmetrical, with the men evenly spaced on the podium steps. The backdrop features a repetitive pattern of logos and palm tree graphics, adding to the tropical or beach-themed feel of the event.\n\nOverall, the image captures the excitement and pride of these athletes who have just won an award or competition, likely related to some kind of outdoor or water sport given the branding and visuals.\",\n  \"keywords\": [\"competition\", \"awards\", \"podium\", \"medals\", \"sporting event\", \"outdoor sport\", \"celebration\", \"tropical\", \"beach\", \"men\", \"winners\", \"champion\", \"trophy\", \"athletic\", \"proud\"]\n}",
+    "keywords": [],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T11:35:40.775Z",
+      "batchId": "batch_1752752089265_239mte3rt",
+      "jobId": "img_SJX8zV_X6FKPSG"
+    }
+  },
+  {
+    "id": "md7bdf0iqxxipqyo4j",
+    "timestamp": "2025-07-17T11:35:45.479Z",
+    "filename": "GCP09231.jpg",
+    "smugmugImageKey": "GbXzs4J",
+    "smugmugUrl": "https://photos.smugmug.com/2025/SoCal-Showdown/50-awards/i-GbXzs4J/0/M7jsPsb2CsGJX68PdZzNc4F5XqfcdH5krcMpvkJMR/D/GCP09231-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "SJX8zV",
+    "albumName": "50+ awards",
+    "albumPath": "2025 > SoCal Showdown > 50+ awards",
+    "albumHierarchy": [
+      "2025",
+      "SoCal Showdown",
+      "50+ awards"
+    ],
+    "description": "{\n  \"description\": \"The image shows three men posing together on a stage or platform. They are all wearing medals around their necks, indicating they have recently participated in some kind of athletic or competitive event. The background features colorful banners and logos for the 'SoCal Showdown' and 'Easton' organizations, suggesting this is likely an awards or recognition ceremony at a sports or fitness-related event.\n\nThe men appear to be in good spirits, with wide smiles on their faces as they stand side-by-side. They are dressed casually, with one man wearing a blue sports jersey, another a red t-shirt, and the third a patterned black and white shirt. The setting has a festive, celebratory atmosphere, with the bright colors and signage creating an upbeat and lively mood.\n\nOverall, the image conveys a sense of achievement, camaraderie, and enjoyment, with the three men seemingly celebrating a successful competition or event together.\",\n  \"keywords\": [\"athletes\", \"competition\", \"awards\", \"sports\", \"fitness\", \"celebration\", \"medals\", \"teamwork\", \"outdoor\", \"signage\", \"banners\", \"group portrait\"]\n}",
+    "keywords": [],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T11:35:45.474Z",
+      "batchId": "batch_1752752089265_239mte3rt",
+      "jobId": "img_SJX8zV_GbXzs4J"
+    }
+  },
+  {
+    "id": "md7bdiowzzbyjjlsef",
+    "timestamp": "2025-07-17T11:35:50.245Z",
+    "filename": "GCP09235.jpg",
+    "smugmugImageKey": "vVn3tFj",
+    "smugmugUrl": "https://photos.smugmug.com/2025/SoCal-Showdown/50-awards/i-vVn3tFj/0/MqBQdSS9xL8q85d42GqJ3WcRzF4FSP2ZrV9jXBwrX/D/GCP09235-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "SJX8zV",
+    "albumName": "50+ awards",
+    "albumPath": "2025 > SoCal Showdown > 50+ awards",
+    "albumHierarchy": [
+      "2025",
+      "SoCal Showdown",
+      "50+ awards"
+    ],
+    "description": "The image shows two smiling people posing for a photograph in front of a backdrop featuring logos and graphics related to the 'SoCal Showdown' and 'Easton Foundation' events. The man is wearing a red long-sleeved shirt and the woman is wearing a blue t-shirt with the text 'United States of America'. They are both wearing baseball caps and appear to be at some kind of sports or athletic event. The backdrop includes tropical-themed elements like palm trees, along with the logos of the event organizers. The overall mood is friendly and celebratory, with the participants appearing enthusiastic and happy. The composition and lighting create a vibrant, colorful scene that seems to capture a moment of achievement or participation in the event.",
+    "keywords": [
+      "sports event",
+      "athletics",
+      "people",
+      "celebration",
+      "tropical",
+      "competition",
+      "medal",
+      "champion",
+      "outdoor",
+      "activity",
+      "happiness",
+      "colorful",
+      "logo"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T11:35:50.240Z",
+      "batchId": "batch_1752752089265_239mte3rt",
+      "jobId": "img_SJX8zV_vVn3tFj"
+    }
+  },
+  {
+    "id": "md7bdmoe2l3qa7ojy24",
+    "timestamp": "2025-07-17T11:35:55.411Z",
+    "filename": "GCP09236.jpg",
+    "smugmugImageKey": "BXwD9TF",
+    "smugmugUrl": "https://photos.smugmug.com/2025/SoCal-Showdown/50-awards/i-BXwD9TF/0/L8GJzwqXwR33KL26Z2wJ6gxVtQhS2zRL2FkhvB9WL/D/GCP09236-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "SJX8zV",
+    "albumName": "50+ awards",
+    "albumPath": "2025 > SoCal Showdown > 50+ awards",
+    "albumHierarchy": [
+      "2025",
+      "SoCal Showdown",
+      "50+ awards"
+    ],
+    "description": "{\n  \"description\": \"The image shows three men standing on a podium at a sports event or competition. The men are wearing athletic clothing and holding various sports equipment, including bows and arrows. They appear to have just completed a competition or event, as they are standing on the 1st, 2nd, and 3rd place podium spots. \n\nThe background features a large backdrop with the logos and branding of the 'SoCal Showdown' event, which appears to be some kind of outdoor sporting or recreational competition. The backdrop has tropical, beach-themed imagery with palm trees and a sunset, suggesting the event is taking place in a warm, coastal location.\n\nThe overall mood of the image is one of accomplishment and celebration, with the men proudly displaying their medals and trophies. The lighting is bright and evenly distributed, creating a vibrant and energetic atmosphere. The composition places the podium and competitors as the central focus, with the branding and backdrop elements framing them in a visually appealing way.\",\n  \"keywords\": [\n    \"sports competition\",\n    \"podium\",\n    \"medals\",\n    \"trophies\",\n    \"outdoor event\",\n    \"beach\",\n    \"tropical\",\n    \"sunset\",\n    \"archery\",\n    \"athletics\",\n    \"competition\",\n    \"celebration\"\n  ]\n}",
+    "keywords": [],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-17T11:35:55.406Z",
+      "batchId": "batch_1752752089265_239mte3rt",
+      "jobId": "img_SJX8zV_BXwD9TF"
+    }
   }
 ]
