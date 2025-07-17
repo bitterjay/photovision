@@ -180,7 +180,6 @@ PhotoVision is a conversational image discovery platform that transforms SmugMug
    - Add dark/light theme support with theme switcher
    - Update iconography throughout the application
    - Add lightbox functionality for images (change "View" to "Download")
-   - ✅ **Enhanced Batch Controls Design**: Improved styling with modern gradients, better visual hierarchy, enhanced input fields with hover/focus states, organized settings groups, and responsive design
 
 4. **Improved search algorithms and query understanding**
    - Enhanced search relevance and accuracy
