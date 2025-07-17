@@ -3369,6 +3369,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 preContextInput.value = config.preContext || '';
                 updateCharCount();
                 updateStatusDisplay(config);
+                updateToggleState();
                 
                 // Update template selection
                 if (config.template) {
@@ -3434,9 +3435,24 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    // Toggle switch functionality
+    function updateToggleState() {
+        const toggleSwitch = document.querySelector('.toggle-switch');
+        if (toggleSwitch && enableCustomAnalysis) {
+            if (enableCustomAnalysis.checked) {
+                toggleSwitch.classList.add('active');
+            } else {
+                toggleSwitch.classList.remove('active');
+            }
+        }
+    }
+    
     // Event listeners
     if (enableCustomAnalysis) {
-        enableCustomAnalysis.addEventListener('change', updateCharCount);
+        enableCustomAnalysis.addEventListener('change', () => {
+            updateCharCount();
+            updateToggleState();
+        });
     }
     
     if (preContextInput) {
@@ -3541,6 +3557,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     analysisTemplate.value = '';
                     updateCharCount();
                     updateStatusDisplay(data.data);
+                    updateToggleState();
                     alert('Configuration reset to default!');
                 } else {
                     alert('Error resetting configuration: ' + data.error);
@@ -3555,4 +3572,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize analysis configuration
     loadAnalysisConfig();
     loadTemplates();
+    
+    // Initialize toggle state on page load
+    setTimeout(() => {
+        updateToggleState();
+    }, 100);
 });

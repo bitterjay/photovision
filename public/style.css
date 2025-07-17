@@ -2157,6 +2157,14 @@ body {
     padding: 1.5rem;
     border-bottom: 1px solid var(--border-color);
     background: var(--bg-primary);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.admin-card-header-content {
+    flex: 1;
 }
 
 .admin-card-header h4 {
@@ -2167,6 +2175,12 @@ body {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+}
+
+.admin-card-header-controls {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
 }
 
 .card-icon {
@@ -2204,6 +2218,13 @@ body {
     
     .admin-card-header {
         padding: 1.25rem;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+    
+    .admin-card-header-controls {
+        align-self: flex-start;
     }
     
     .admin-card-content {
@@ -2223,6 +2244,13 @@ body {
     
     .admin-card-header {
         padding: 1rem;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+    
+    .toggle-switch-wrapper {
+        font-size: 0.8125rem;
     }
     
     .admin-card-content {
@@ -2237,6 +2265,73 @@ body {
     .card-description {
         font-size: 0.8125rem;
     }
+}
+
+/* Toggle Switch Component */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 3rem;
+    height: 1.5rem;
+    background: var(--bg-accent);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+}
+
+.toggle-switch:hover {
+    background: var(--bg-tertiary);
+    border-color: var(--accent-primary);
+}
+
+.toggle-switch.active {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+}
+
+.toggle-switch::before {
+    content: '';
+    position: absolute;
+    top: 0.125rem;
+    left: 0.125rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    background: white;
+    border-radius: 50%;
+    transition: all var(--transition-fast);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch.active::before {
+    transform: translateX(1.5rem);
+}
+
+.toggle-switch input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+.toggle-switch input[type="checkbox"]:focus + .toggle-switch::before {
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+}
+
+/* Toggle Switch Label */
+.toggle-switch-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+}
+
+.toggle-switch-label {
+    font-weight: 500;
+    cursor: pointer;
 }
 
 /* Image Analysis Configuration Styles */
