@@ -1,0 +1,15 @@
+/* PhotoVision - Responsive Design Styles */
+
+/* Mobile responsive improvements for load more button */
+@media (max-width: 768px) {
+    .load-more-btn {
+        padding: 1rem 2rem;
+        font-size: 0.9rem;
+        min-width: 180px;
+        gap: 0.5rem;
+    }
+    
+    .load-more-section {
+        padding: 20px 15px;
+    }
+}

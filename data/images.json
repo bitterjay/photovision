@@ -28281,5 +28281,77 @@
       "batchId": "batch_1752865335466_1qhuxf6qm",
       "jobId": "img_ndwb5J_n2wWXBZ"
     }
+  },
+  {
+    "id": "md998n9yra3kmkdzi",
+    "timestamp": "2025-07-18T20:11:36.023Z",
+    "filename": "GCP05523.jpg",
+    "smugmugImageKey": "dxQNKDt",
+    "smugmugUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Friday-AM/i-dxQNKDt/0/NMDD5ZFzznXxsC4W34t3gXH6dHkvNn8wFFdxJztZZ/D/GCP05523-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "ndwb5J",
+    "albumName": "Friday AM",
+    "albumPath": "2025 > JOAD Target Nationals JOAD US Open > Friday AM",
+    "albumHierarchy": [
+      "2025",
+      "JOAD Target Nationals JOAD US Open",
+      "Friday AM"
+    ],
+    "description": "The image depicts a group of young children, likely between the ages of 8-12, sitting on chairs in an outdoor setting. The children are wearing various colorful and athletic-style clothing, including hats, jerseys, and shorts, suggesting they may be participating in some kind of sports or recreational activity. The setting appears to be a grassy, open area with some tents or structures visible in the background, indicating this could be a campground, park, or sporting event venue. The children have a mix of expressions, some appear focused or serious, while others seem more relaxed or engaged in conversation. The overall mood is active and energetic, with the bright colors and outdoor environment creating a vibrant and lively atmosphere. The composition of the image is balanced, with the children arranged in a natural, casual manner. There are no visible signs or text, but the children's attire and context suggest this is likely a youth sports or outdoor recreation event.",
+    "keywords": [
+      "children",
+      "youth",
+      "sports",
+      "outdoor recreation",
+      "camping",
+      "athletic wear",
+      "colorful",
+      "active",
+      "energetic",
+      "casual"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-18T20:11:36.020Z",
+      "batchId": "batch_1752869492268_jzkgsemoj",
+      "jobId": "img_ndwb5J_dxQNKDt"
+    }
+  },
+  {
+    "id": "md998q9he2riegm9xan",
+    "timestamp": "2025-07-18T20:11:39.893Z",
+    "filename": "GCP05525.jpg",
+    "smugmugImageKey": "52SKHfr",
+    "smugmugUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Friday-AM/i-52SKHfr/0/MwRVTw4xmdTxMW2kzCMd3WtpH4c4bkKsMkSFhrz4x/D/GCP05525-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "ndwb5J",
+    "albumName": "Friday AM",
+    "albumPath": "2025 > JOAD Target Nationals JOAD US Open > Friday AM",
+    "albumHierarchy": [
+      "2025",
+      "JOAD Target Nationals JOAD US Open",
+      "Friday AM"
+    ],
+    "description": "The image shows a group of people, including several young children, engaged in an archery competition or training event. The setting appears to be an outdoor park or recreation area, with tents and equipment set up on a grassy field. A man in dark clothing is assisting one of the young archers, likely providing instruction or guidance. The other children are also holding bows and arrows, suggesting they are all participating in the archery activities. The overall mood seems lively and energetic, with the participants focused on their tasks. The composition of the image highlights the archery equipment and the interaction between the instructor and the young archer. The bright colors of the clothing and equipment, as well as the natural setting, contribute to the vibrant and active atmosphere of the scene.",
+    "keywords": [
+      "archery",
+      "outdoor recreation",
+      "youth activities",
+      "sports training",
+      "instructor",
+      "equipment",
+      "field",
+      "active",
+      "colorful",
+      "energy"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-18T20:11:39.893Z",
+      "batchId": "batch_1752869492268_jzkgsemoj",
+      "jobId": "img_ndwb5J_52SKHfr"
+    }
   }
 ]

@@ -217,3 +217,5 @@ afplay /System/Library/Sounds/Funk.aiff
 ## IMPORTANT: sServer Information
 
 the app is using nodemon, so when testing you don't need to start the server, just test.
+
+for tasks that seem that they will require extra tokens, use gemini mcp server to have gemini help you with solving the problem.

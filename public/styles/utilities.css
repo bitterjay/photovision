@@ -1,0 +1,54 @@
+/* Focus styles for accessibility */
+button:focus,
+input:focus,
+select:focus {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-tertiary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+/* Print styles */
+@media print {
+    .header-controls,
+    .tab-navigation,
+    .btn,
+    button {
+        display: none !important;
+    }
+    
+    .container {
+        max-width: none;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .main {
+        padding: 1rem;
+    }
+    
+    .tab-panel.active {
+        display: block !important;
+    }
+    
+    .tab-panel:not(.active) {
+        display: none !important;
+    }
+}
+

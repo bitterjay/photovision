@@ -1,0 +1,32 @@
+/* PhotoVision - Main CSS File */
+/* This file imports all CSS modules in the correct order */
+
+/* Import variables first - needed by all other modules */
+@import url('variables.css');
+
+/* Reset and base styles */
+@import url('reset.css');
+
+/* Layout components */
+@import url('layout.css');
+
+/* Navigation components */
+@import url('navigation.css');
+
+/* Forms and buttons */
+@import url('forms.css');
+
+/* Feature-specific styles */
+@import url('batch.css');
+@import url('admin.css');
+@import url('search.css');
+@import url('lightbox.css');
+
+/* Animation and interaction styles */
+@import url('animations.css');
+
+/* Responsive design */
+@import url('responsive.css');
+
+/* Utility classes */
+@import url('utilities.css');
