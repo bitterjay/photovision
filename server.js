@@ -668,6 +668,159 @@ Be specific and descriptive to enable natural language searches like "photos of 
       }
     }
 
+    // Image analysis testing endpoint (multiple files, no database storage)
+    if (pathname === '/api/analyze/test' && method === 'POST') {
+      log('Image analysis test request received');
+      
+      // Check if Claude API key is configured
+      if (!process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY === 'your_anthropic_api_key_here') {
+        return sendError(res, 500, 'Claude API key not configured');
+      }
+      
+      const contentType = req.headers['content-type'];
+      if (!contentType || !contentType.startsWith('multipart/form-data')) {
+        return sendError(res, 400, 'Expected multipart/form-data');
+      }
+      
+      try {
+        const formData = await parseMultipartData(req);
+        
+        // Extract all image files from form data
+        const imageFiles = [];
+        for (const [key, value] of Object.entries(formData)) {
+          if (key.startsWith('image') && value && value.data) {
+            imageFiles.push(value);
+          }
+        }
+        
+        if (imageFiles.length === 0) {
+          return sendError(res, 400, 'No images provided');
+        }
+        
+        // Validate image types
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        for (const imageFile of imageFiles) {
+          if (!allowedTypes.includes(imageFile.type)) {
+            return sendError(res, 400, `Unsupported image type: ${imageFile.type}`);
+          }
+        }
+        
+        log(`Starting analysis of ${imageFiles.length} test images...`);
+        
+        // Get current image analysis configuration
+        const analysisConfig = await dataManager.getImageAnalysisConfig();
+        const preContext = analysisConfig.enabled ? analysisConfig.preContext : null;
+        
+        // Get model configuration
+        const modelConfig = await dataManager.getClaudeModelConfig();
+        const batchProcessingModel = modelConfig.batchProcessingModel;
+        
+        // Process each image with both custom and default analysis
+        const results = [];
+        for (let i = 0; i < imageFiles.length; i++) {
+          const imageFile = imageFiles[i];
+          
+          try {
+            log(`Analyzing test image ${i + 1}/${imageFiles.length}: ${imageFile.filename || 'unnamed'} (custom + default)`);
+            
+            // Run custom analysis (with preContext if enabled)
+            const customAnalysisResult = await claudeClient.analyzeImage(
+              imageFile.data,
+              imageFile.type,
+              null, // No custom prompt for testing
+              preContext,
+              batchProcessingModel
+            );
+            
+            // Run default analysis (without preContext)
+            const defaultAnalysisResult = await claudeClient.analyzeImage(
+              imageFile.data,
+              imageFile.type,
+              null, // No custom prompt for testing
+              null, // No preContext for default
+              batchProcessingModel
+            );
+            
+            const result = {
+              filename: imageFile.filename || `image_${i + 1}`,
+              mimeType: imageFile.type,
+              size: imageFile.data.length,
+              customAnalysis: {
+                success: customAnalysisResult.success,
+                ...(customAnalysisResult.success ? {
+                  description: customAnalysisResult.description,
+                  keywords: customAnalysisResult.keywords || [],
+                  metadata: {
+                    model: customAnalysisResult.model,
+                    usage: customAnalysisResult.usage,
+                    timestamp: customAnalysisResult.timestamp
+                  }
+                } : {
+                  error: customAnalysisResult.error
+                })
+              },
+              defaultAnalysis: {
+                success: defaultAnalysisResult.success,
+                ...(defaultAnalysisResult.success ? {
+                  description: defaultAnalysisResult.description,
+                  keywords: defaultAnalysisResult.keywords || [],
+                  metadata: {
+                    model: defaultAnalysisResult.model,
+                    usage: defaultAnalysisResult.usage,
+                    timestamp: defaultAnalysisResult.timestamp
+                  }
+                } : {
+                  error: defaultAnalysisResult.error
+                })
+              },
+              // Overall success if at least one analysis succeeded
+              success: customAnalysisResult.success || defaultAnalysisResult.success
+            };
+            
+            results.push(result);
+            
+          } catch (error) {
+            log(`Error analyzing test image ${i + 1}: ${error.message}`, 'ERROR');
+            results.push({
+              filename: imageFile.filename || `image_${i + 1}`,
+              mimeType: imageFile.type,
+              size: imageFile.data.length,
+              success: false,
+              customAnalysis: {
+                success: false,
+                error: error.message
+              },
+              defaultAnalysis: {
+                success: false,
+                error: error.message
+              }
+            });
+          }
+        }
+        
+        const successCount = results.filter(r => r.success).length;
+        const failureCount = results.length - successCount;
+        
+        log(`Test analysis completed: ${successCount} successful, ${failureCount} failed`);
+        
+        return sendSuccess(res, {
+          totalImages: imageFiles.length,
+          successful: successCount,
+          failed: failureCount,
+          results: results,
+          configuration: {
+            customAnalysisEnabled: analysisConfig.enabled,
+            preContext: preContext,
+            model: batchProcessingModel
+          }
+        }, `Test analysis completed: ${successCount} successful, ${failureCount} failed`);
+        
+      } catch (error) {
+        log(`Test analysis error: ${error.message}`, 'ERROR');
+        return sendError(res, 500, 'Failed to process test images', error);
+      }
+    }
+
     // SmugMug OAuth start endpoint
     if (pathname === '/api/smugmug/auth-start' && method === 'POST') {
       log('SmugMug OAuth start request');
@@ -1928,6 +2081,7 @@ server.listen(PORT, () => {
   log('  GET  /api/config    - Get configuration');
   log('  POST /api/config    - Update configuration');
   log('  POST /api/analyze   - Analyze image with Claude');
+  log('  POST /api/analyze/test - Test analysis configuration with multiple images');
   log('  POST /api/smugmug/auth-start     - Start SmugMug OAuth');
   log('  GET  /api/smugmug/callback       - OAuth callback');
   log('  POST /api/smugmug/disconnect     - Disconnect SmugMug');

@@ -271,14 +271,14 @@
   },
   "imageAnalysisConfig": {
     "enabled": false,
-    "preContext": "You are analyzing photos from a sports competition. Focus on athletic performance, technique, equipment, and competitive atmosphere. Emphasize participant achievements, skill demonstration, and event organization. Pay attention to sports-specific terminology and competitive elements.",
+    "preContext": "You are analyzing photos from a sports competition. Focus on athletic performance, technique, equipment, and competitive atmosphere. Emphasize participant achievements, skill demonstration, and event organization. Pay attention to sports-specific terminology and competitive elements. If there are images of people, be extremely descriptive of what those people look like. Their skin color, age, if they have a disability and if they do, describe that disability.",
     "template": "sports-photography",
     "modifiedBy": "admin",
-    "lastModified": "2025-07-17T18:32:39.037Z"
+    "lastModified": "2025-07-18T21:18:31.483Z"
   },
   "claudeModelConfig": {
     "chatModel": "claude-3-5-haiku-20241022",
-    "batchProcessingModel": "claude-3-haiku-20240307",
+    "batchProcessingModel": "claude-3-opus-20240229",
     "availableModels": [
       {
         "id": "claude-3-5-sonnet-20241022",
@@ -317,6 +317,6 @@
       }
     ],
     "modifiedBy": "admin",
-    "lastModified": "2025-07-18T14:03:22.499Z"
+    "lastModified": "2025-07-18T21:19:40.350Z"
   }
 }

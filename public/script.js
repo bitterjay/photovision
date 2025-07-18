@@ -3831,6 +3831,476 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Configuration Testing Accordion functionality
+    const testingAccordionBtn = document.getElementById('testingAccordionBtn');
+    const testingAccordionContent = document.getElementById('testingAccordionContent');
+    
+    if (testingAccordionBtn && testingAccordionContent) {
+        testingAccordionBtn.addEventListener('click', () => {
+            const isOpen = testingAccordionContent.classList.contains('open');
+            
+            if (isOpen) {
+                testingAccordionContent.classList.remove('open');
+                testingAccordionBtn.classList.remove('active');
+                testingAccordionBtn.setAttribute('aria-expanded', 'false');
+            } else {
+                testingAccordionContent.classList.add('open');
+                testingAccordionBtn.classList.add('active');
+                testingAccordionBtn.setAttribute('aria-expanded', 'true');
+            }
+        });
+    }
+    
+    // Configuration testing functionality
+    const testUploadArea = document.getElementById('testUploadArea');
+    const testFileInput = document.getElementById('testFileInput');
+    const testProgress = document.getElementById('testProgress');
+    const testProgressFill = document.getElementById('testProgressFill');
+    const testProgressPercentage = document.getElementById('testProgressPercentage');
+    const testStatus = document.getElementById('testStatus');
+    const testCurrentFile = document.getElementById('testCurrentFile');
+    const testProcessedCount = document.getElementById('testProcessedCount');
+    const testTotalCount = document.getElementById('testTotalCount');
+    const testResultsSummary = document.getElementById('testResultsSummary');
+    const resultsSummaryText = document.getElementById('resultsSummaryText');
+    const viewTestResults = document.getElementById('viewTestResults');
+    const clearTestResults = document.getElementById('clearTestResults');
+    const testResultsModal = document.getElementById('testResultsModal');
+    const testResultsModalBody = document.getElementById('testResultsModalBody');
+    const modalResultsContainer = document.getElementById('modalResultsContainer');
+    const modalResultsCount = document.getElementById('modalResultsCount');
+    const closeTestResultsModal = document.getElementById('closeTestResultsModal');
+    const closeTestResultsModalBtn = document.getElementById('closeTestResultsModalBtn');
+    const clearTestResultsModal = document.getElementById('clearTestResultsModal');
+    const enableComparison = document.getElementById('enableComparison');
+    
+    // Set up drag and drop for test upload area
+    if (testUploadArea) {
+        testUploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            testUploadArea.classList.add('drag-over');
+        });
+
+        testUploadArea.addEventListener('dragleave', () => {
+            testUploadArea.classList.remove('drag-over');
+        });
+
+        testUploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            testUploadArea.classList.remove('drag-over');
+            
+            const files = Array.from(e.dataTransfer.files).filter(file => 
+                file.type.startsWith('image/')
+            );
+            
+            if (files.length > 0) {
+                handleConfigTestUpload(files);
+            }
+        });
+    }
+    
+    // Set up file input for test upload
+    if (testFileInput) {
+        testFileInput.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            if (files.length > 0) {
+                handleConfigTestUpload(files);
+            }
+        });
+    }
+    
+    // Modal event listeners
+    if (viewTestResults) {
+        viewTestResults.addEventListener('click', () => {
+            showTestResultsModal();
+        });
+    }
+    
+    if (closeTestResultsModal) {
+        closeTestResultsModal.addEventListener('click', () => {
+            hideTestResultsModal();
+        });
+    }
+    
+    if (closeTestResultsModalBtn) {
+        closeTestResultsModalBtn.addEventListener('click', () => {
+            hideTestResultsModal();
+        });
+    }
+    
+    // Clear test results
+    if (clearTestResults) {
+        clearTestResults.addEventListener('click', () => {
+            clearAllTestResults();
+        });
+    }
+    
+    if (clearTestResultsModal) {
+        clearTestResultsModal.addEventListener('click', () => {
+            clearAllTestResults();
+            hideTestResultsModal();
+        });
+    }
+    
+    // Modal overlay click to close
+    if (testResultsModal) {
+        testResultsModal.addEventListener('click', (e) => {
+            if (e.target.classList.contains('test-results-modal-overlay')) {
+                hideTestResultsModal();
+            }
+        });
+    }
+    
+    
+    // Comparison toggle functionality
+    if (enableComparison) {
+        enableComparison.addEventListener('change', () => {
+            // Re-display results if they exist
+            if (testResultsContainer && testResultsContainer.children.length > 0) {
+                // Get the current results data from the last analysis
+                // For now, we'll need to re-run the analysis or store the results
+                // Since we can't easily access the previous results, we'll add a note
+                console.log('Comparison mode toggled. Upload new images to see the effect.');
+            }
+        });
+    }
+    
+    // Keyboard accessibility for modal
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && testResultsModal && testResultsModal.style.display === 'flex') {
+            hideTestResultsModal();
+        }
+    });
+    
+    // Handle configuration test upload
+    async function handleConfigTestUpload(files) {
+        if (!files || files.length === 0) return;
+        
+        // Validate files
+        const validFiles = files.filter(file => {
+            const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            const maxSize = 10 * 1024 * 1024; // 10MB
+            
+            if (!validTypes.includes(file.type)) {
+                alert(`Invalid file type: ${file.name}. Please select JPEG, PNG, GIF, or WebP images.`);
+                return false;
+            }
+            
+            if (file.size > maxSize) {
+                alert(`File too large: ${file.name}. Maximum size is 10MB.`);
+                return false;
+            }
+            
+            return true;
+        });
+        
+        if (validFiles.length === 0) return;
+        
+        // Show progress
+        testProgress.style.display = 'block';
+        testResultsSummary.style.display = 'none';
+        testProgressFill.style.width = '0%';
+        testProgressPercentage.textContent = '0%';
+        testStatus.textContent = 'Preparing...';
+        testTotalCount.textContent = validFiles.length;
+        testProcessedCount.textContent = '0';
+        
+        try {
+            // Create FormData with multiple files
+            const formData = new FormData();
+            validFiles.forEach((file, index) => {
+                formData.append(`image${index}`, file);
+            });
+            
+            // Process files one by one for progress tracking
+            const results = [];
+            
+            for (let i = 0; i < validFiles.length; i++) {
+                const file = validFiles[i];
+                testCurrentFile.textContent = file.name;
+                testStatus.textContent = `Processing ${file.name}...`;
+                
+                try {
+                    // Create individual FormData for this file
+                    const singleFormData = new FormData();
+                    singleFormData.append('image0', file);
+                    
+                    const response = await fetch('/api/analyze/test', {
+                        method: 'POST',
+                        body: singleFormData
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success && data.data.results && data.data.results.length > 0) {
+                        results.push(data.data.results[0]);
+                    } else {
+                        results.push({
+                            filename: file.name,
+                            success: false,
+                            error: data.error || 'Unknown error'
+                        });
+                    }
+                } catch (error) {
+                    results.push({
+                        filename: file.name,
+                        success: false,
+                        error: error.message
+                    });
+                }
+                
+                // Update progress
+                const progress = Math.round(((i + 1) / validFiles.length) * 100);
+                testProgressFill.style.width = `${progress}%`;
+                testProgressPercentage.textContent = `${progress}%`;
+                testProcessedCount.textContent = (i + 1).toString();
+            }
+            
+            // Hide progress and show summary
+            testProgress.style.display = 'none';
+            
+            // Store results for modal display
+            window.lastTestResults = results;
+            
+            // Show summary
+            showTestResultsSummary(results);
+            
+        } catch (error) {
+            console.error('Test upload error:', error);
+            testProgress.style.display = 'none';
+            alert('Test upload failed. Please try again.');
+        }
+    }
+    
+    // Show test results summary
+    function showTestResultsSummary(results) {
+        const successCount = results.filter(r => r.success).length;
+        const totalCount = results.length;
+        
+        resultsSummaryText.textContent = `${successCount} of ${totalCount} images analyzed successfully`;
+        testResultsSummary.style.display = 'block';
+    }
+    
+    // Show test results modal
+    function showTestResultsModal() {
+        if (!window.lastTestResults) return;
+        
+        displayTestResults(window.lastTestResults);
+        testResultsModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        
+        // Focus management
+        closeTestResultsModal.focus();
+    }
+    
+    // Hide test results modal
+    function hideTestResultsModal() {
+        testResultsModal.style.display = 'none';
+        document.body.style.overflow = ''; // Restore scrolling
+    }
+    
+    // Clear all test results
+    function clearAllTestResults() {
+        window.lastTestResults = null;
+        testResultsSummary.style.display = 'none';
+        modalResultsContainer.innerHTML = '';
+    }
+    
+    // Display test results in modal
+    function displayTestResults(results) {
+        modalResultsContainer.innerHTML = '';
+        
+        // Update modal header count
+        const successCount = results.filter(r => r.success).length;
+        const totalCount = results.length;
+        modalResultsCount.textContent = `${successCount} of ${totalCount} images analyzed`;
+        
+        results.forEach((result, index) => {
+            const resultCard = document.createElement('div');
+            resultCard.className = `test-result-card ${result.success ? 'success' : 'error'}`;
+            
+            // Check if we have the new comparison format
+            const hasComparison = result.customAnalysis && result.defaultAnalysis;
+            const customSuccess = hasComparison ? result.customAnalysis.success : result.success;
+            const defaultSuccess = hasComparison ? result.defaultAnalysis.success : null;
+            
+            let statusText = '';
+            if (hasComparison) {
+                const customStatus = customSuccess ? 'Custom: Success' : 'Custom: Failed';
+                const defaultStatus = defaultSuccess ? 'Default: Success' : 'Default: Failed';
+                statusText = `${customStatus} • ${defaultStatus}`;
+            } else {
+                statusText = result.success ? 'Analysis Successful' : 'Analysis Failed';
+            }
+            
+            const statusIcon = result.success ? 
+                '<svg class="result-icon success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"></path><circle cx="12" cy="12" r="10"></circle></svg>' :
+                '<svg class="result-icon error" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
+            
+            let contentHTML = `
+                <div class="result-header-simple">
+                    ${statusIcon}
+                    <div class="result-info">
+                        <h6>${result.filename}</h6>
+                        <span class="result-status">${statusText}</span>
+                    </div>
+                </div>
+                <div class="result-content">
+            `;
+            
+            if (hasComparison) {
+                // Show comparison view directly (no accordion)
+                contentHTML += '<div class="comparison-container">';
+                
+                // Custom Analysis Column
+                contentHTML += '<div class="analysis-column custom-analysis">';
+                contentHTML += '<h6 class="analysis-header"><span class="analysis-badge custom">Custom Configuration</span></h6>';
+                
+                if (customSuccess) {
+                    contentHTML += `
+                        <div class="result-section">
+                            <h6>Description:</h6>
+                            <p class="analysis-description">${result.customAnalysis.description}</p>
+                        </div>
+                        <div class="result-section">
+                            <h6>Keywords:</h6>
+                            <div class="keywords-list">
+                                ${result.customAnalysis.keywords.map(keyword => 
+                                    `<span class="keyword-tag custom">${keyword}</span>`
+                                ).join('')}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    contentHTML += `
+                        <div class="result-section error">
+                            <h6>Error:</h6>
+                            <p class="error-message">${result.customAnalysis.error || 'Analysis failed'}</p>
+                        </div>
+                    `;
+                }
+                
+                contentHTML += '</div>';
+                
+                // Default Analysis Column
+                contentHTML += '<div class="analysis-column default-analysis">';
+                contentHTML += '<h6 class="analysis-header"><span class="analysis-badge default">Default Analysis</span></h6>';
+                
+                if (defaultSuccess) {
+                    contentHTML += `
+                        <div class="result-section">
+                            <h6>Description:</h6>
+                            <p class="analysis-description">${result.defaultAnalysis.description}</p>
+                        </div>
+                        <div class="result-section">
+                            <h6>Keywords:</h6>
+                            <div class="keywords-list">
+                                ${result.defaultAnalysis.keywords.map(keyword => 
+                                    `<span class="keyword-tag default">${keyword}</span>`
+                                ).join('')}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    contentHTML += `
+                        <div class="result-section error">
+                            <h6>Error:</h6>
+                            <p class="error-message">${result.defaultAnalysis.error || 'Analysis failed'}</p>
+                        </div>
+                    `;
+                }
+                
+                contentHTML += '</div>';
+                contentHTML += '</div>'; // Close comparison-container
+                
+                // Add metadata section for comparison view
+                if (customSuccess || defaultSuccess) {
+                    const metadata = customSuccess ? result.customAnalysis.metadata : result.defaultAnalysis.metadata;
+                    contentHTML += `
+                        <div class="result-section metadata">
+                            <h6>Metadata:</h6>
+                            <div class="metadata-grid">
+                                <div class="metadata-item">
+                                    <span class="metadata-label">Model:</span>
+                                    <span class="metadata-value">${metadata?.model || 'Unknown'}</span>
+                                </div>
+                                <div class="metadata-item">
+                                    <span class="metadata-label">File Size:</span>
+                                    <span class="metadata-value">${formatFileSize(result.size)}</span>
+                                </div>
+                                <div class="metadata-item">
+                                    <span class="metadata-label">Type:</span>
+                                    <span class="metadata-value">${result.mimeType}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            } else {
+                // Show single analysis view
+                if (result.success && result.description) {
+                    contentHTML += `
+                        <div class="result-section">
+                            <h6>Description:</h6>
+                            <p class="analysis-description">${result.description}</p>
+                        </div>
+                        <div class="result-section">
+                            <h6>Keywords:</h6>
+                            <div class="keywords-list">
+                                ${(result.keywords || []).map(keyword => 
+                                    `<span class="keyword-tag">${keyword}</span>`
+                                ).join('')}
+                            </div>
+                        </div>
+                    `;
+                    
+                    if (result.metadata) {
+                        contentHTML += `
+                            <div class="result-section metadata">
+                                <h6>Metadata:</h6>
+                                <div class="metadata-grid">
+                                    <div class="metadata-item">
+                                        <span class="metadata-label">Model:</span>
+                                        <span class="metadata-value">${result.metadata.model || 'Unknown'}</span>
+                                    </div>
+                                    <div class="metadata-item">
+                                        <span class="metadata-label">File Size:</span>
+                                        <span class="metadata-value">${formatFileSize(result.size)}</span>
+                                    </div>
+                                    <div class="metadata-item">
+                                        <span class="metadata-label">Type:</span>
+                                        <span class="metadata-value">${result.mimeType}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                } else {
+                    contentHTML += `
+                        <div class="result-section error">
+                            <h6>Error:</h6>
+                            <p class="error-message">${result.error || 'Unknown error occurred'}</p>
+                        </div>
+                    `;
+                }
+            }
+            
+            contentHTML += '</div>'; // Close result-content
+            resultCard.innerHTML = contentHTML;
+            modalResultsContainer.appendChild(resultCard);
+        });
+    }
+    
+    // Helper function to format file size
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+    
+    
     // Hot-load preview content function
     let previewUpdateTimeout;
     

@@ -544,6 +544,101 @@ Be specific and descriptive to enable natural language searches like "photos of 
                                     </div>
                                 </div>
                                 
+                                <!-- Configuration Testing Section -->
+                                <div class="accordion-wrapper">
+                                    <button class="accordion-header" id="testingAccordionBtn">
+                                        <div class="accordion-title">
+                                            <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M9 12l2 2 4-4"></path>
+                                                <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"></path>
+                                                <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3"></path>
+                                            </svg>
+                                            Test Configuration with Images
+                                        </div>
+                                        <svg class="accordion-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="6,9 12,15 18,9"></polyline>
+                                        </svg>
+                                    </button>
+                                    
+                                    <div class="accordion-content" id="testingAccordionContent">
+                                        <p class="testing-description">Upload one or more images to test your current analysis configuration. This helps you verify your custom prompts before running batch processing.</p>
+                                        
+                                        <div class="testing-controls">
+                                            <div class="comparison-toggle-wrapper">
+                                                <label class="comparison-toggle">
+                                                    <input type="checkbox" id="enableComparison" checked>
+                                                    <span class="toggle-slider"></span>
+                                                </label>
+                                                <div class="toggle-info">
+                                                    <span class="toggle-label">Show comparison with default analysis</span>
+                                                    <p class="toggle-description">When enabled, each image will be analyzed with both your custom configuration and the default settings to show the difference.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="config-testing-section">
+                                            <div class="test-upload-area" id="testUploadArea">
+                                                <div class="test-upload-content">
+                                                    <div class="upload-icon">
+                                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
+                                                            <polyline points="7,10 12,15 17,10"></polyline>
+                                                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                                                        </svg>
+                                                    </div>
+                                                    <h4>Test Images Upload</h4>
+                                                    <p>Drag and drop images here or click to select multiple files</p>
+                                                    <input type="file" id="testFileInput" accept="image/*" multiple style="display: none;">
+                                                    <button class="btn btn-secondary" onclick="document.getElementById('testFileInput').click()">
+                                                        Choose Images
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="test-progress" id="testProgress" style="display: none;">
+                                                <div class="progress-header">
+                                                    <h5>Testing Progress</h5>
+                                                    <span class="test-status" id="testStatus">Processing...</span>
+                                                </div>
+                                                <div class="progress-bar-container">
+                                                    <div class="progress-bar">
+                                                        <div class="progress-fill" id="testProgressFill"></div>
+                                                    </div>
+                                                    <span class="progress-percentage" id="testProgressPercentage">0%</span>
+                                                </div>
+                                                <div class="progress-stats">
+                                                    <span class="stat-text">Processing <span id="testCurrentFile">file</span>... (<span id="testProcessedCount">0</span> of <span id="testTotalCount">0</span>)</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="test-results-summary" id="testResultsSummary" style="display: none;">
+                                                <div class="results-summary-card">
+                                                    <div class="summary-info">
+                                                        <h5>Analysis Complete</h5>
+                                                        <p id="resultsSummaryText">0 images processed successfully</p>
+                                                    </div>
+                                                    <div class="summary-actions">
+                                                        <button id="viewTestResults" class="btn btn-primary">
+                                                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                                                <circle cx="12" cy="12" r="3"></circle>
+                                                            </svg>
+                                                            View Results
+                                                        </button>
+                                                        <button id="clearTestResults" class="btn btn-secondary">
+                                                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                            </svg>
+                                                            Clear
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
                             </div>
                         </div>
 
@@ -669,6 +764,44 @@ Be specific and descriptive to enable natural language searches like "photos of 
             <div class="image-info" id="imageInfo">
                 <div class="image-counter" id="imageCounter">1 / 1</div>
                 <div class="image-title" id="imageTitle">Image Title</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Results Modal -->
+    <div id="testResultsModal" class="test-results-modal" style="display: none;">
+        <div class="test-results-modal-overlay"></div>
+        <div class="test-results-modal-content">
+            <div class="test-results-modal-header">
+                <div class="modal-header-left">
+                    <h3>Test Results</h3>
+                    <span class="results-count" id="modalResultsCount">0 images analyzed</span>
+                </div>
+                <div class="modal-header-right">
+                    <button class="modal-close" id="closeTestResultsModal">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="test-results-modal-body" id="testResultsModalBody">
+                <div class="modal-results-container" id="modalResultsContainer">
+                    <!-- Results will be populated here -->
+                </div>
+            </div>
+            <div class="test-results-modal-footer">
+                <button id="clearTestResultsModal" class="btn btn-secondary">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                    Clear All Results
+                </button>
+                <button id="closeTestResultsModalBtn" class="btn btn-primary">
+                    Close
+                </button>
             </div>
         </div>
     </div>
