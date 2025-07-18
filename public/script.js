@@ -1820,76 +1820,47 @@ class PhotoVision {
         
         // Apply initial filters and render
         this.applyFilters();
-        return;
         
-        // Render albums list with card-style layout
-        albumsList.innerHTML = albums.map(album => {
-            // Generate hierarchical display elements
-            const indentLevel = album.IndentLevel || 0;
-            const pathTags = album.PathTags || [];
-            const displayPath = album.FullDisplayPath || album.Name || 'Untitled Album';
-            
-            // Create hierarchy indicator
-            const hierarchyIndicator = indentLevel > 0 ? 
-                `${'📁'.repeat(Math.min(indentLevel, 3))} ` : '📁 ';
-
-            return `
-                <div class="album-item" data-album-key="${album.AlbumKey}">
-                    <div class="album-card-header">
-                        <div class="album-hierarchy">
-                            <span class="album-hierarchy-icon">${hierarchyIndicator}</span>
-                            <span class="hierarchy-level">Level ${indentLevel}</span>
-                        </div>
-                        <h4 class="album-name">${album.Name || 'Untitled Album'}</h4>
-                    </div>
-                    
-                    <div class="album-card-path">
-                        <svg class="album-card-path-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"></path>
-                        </svg>
-                        <span class="path-text">${this.escapeHtml(displayPath)}</span>
-                    </div>
-                    
-                    <div class="album-card-details">
-                        <div class="album-image-count">
-                            <svg class="album-image-count-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                <polyline points="21,15 16,10 5,21"></polyline>
-                            </svg>
-                            <span>${album.ImageCount || 0} images</span>
-                        </div>
-                        
-                        ${album.Description ? `<div class="album-description">${this.escapeHtml(album.Description)}</div>` : ''}
-                        
-                        <div class="album-processing-status" id="processing-status-${album.AlbumKey}">
-                            <span class="loading-status">Checking processing status...</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-
-        // Add click handlers for album selection (entire card is clickable)
-        albumsList.querySelectorAll('.album-item').forEach(item => {
-            item.addEventListener('click', (e) => {
-                const albumKey = e.currentTarget.dataset.albumKey;
-                this.selectAlbum(albumKey);
-            });
-        });
-
-        // Load processing status for each album (in batches to avoid overwhelming the server)
-        const batchSize = 3;
-        for (let i = 0; i < albums.length; i += batchSize) {
-            const batch = albums.slice(i, i + batchSize);
-            await Promise.allSettled(
-                batch.map(album => this.loadAlbumProcessingStatus(album.AlbumKey))
-            );
-            // Small delay between batches
-            if (i + batchSize < albums.length) {
-                await new Promise(resolve => setTimeout(resolve, 500));
-            }
+        // Initialize progressive loading for album statuses
+        this.initializeAlbumStatusObserver();
+    }
+    
+    initializeAlbumStatusObserver() {
+        // Clean up existing observer if it exists
+        if (this.albumStatusObserver) {
+            this.albumStatusObserver.disconnect();
+            this.albumStatusObserver = null;
         }
+        
+        // Create Intersection Observer for progressive loading
+        this.albumStatusObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const albumItem = entry.target;
+                    const albumKey = albumItem.dataset.albumKey;
+                    
+                    // Check if we haven't already loaded this album's status
+                    const statusElement = albumItem.querySelector('.album-processing-status');
+                    if (statusElement && !statusElement.dataset.loaded) {
+                        statusElement.dataset.loaded = 'true';
+                        this.loadAlbumProcessingStatus(albumKey);
+                    }
+                    
+                    // Stop observing this album once loaded
+                    this.albumStatusObserver.unobserve(albumItem);
+                }
+            });
+        }, {
+            // Start loading when album is 100px from viewport
+            rootMargin: '100px 0px',
+            threshold: 0
+        });
+        
+        // Start observing all album items
+        const albumItems = document.querySelectorAll('.album-item[data-album-key]');
+        albumItems.forEach(item => {
+            this.albumStatusObserver.observe(item);
+        });
     }
 
     // Helper method to escape HTML
@@ -2077,6 +2048,38 @@ class PhotoVision {
                 
                 // Update processing recommendation
                 this.updateProcessingRecommendation(status.processingRecommendation);
+                
+                // Auto-update the max images slider to show unprocessed count
+                const unprocessedCount = status.totalImages - status.processedImages;
+                const maxImagesSlider = document.getElementById('maxImagesSlider');
+                const maxImagesInput = document.getElementById('maxImages');
+                
+                console.log('Auto-updating slider:', {
+                    unprocessedCount,
+                    totalImages: status.totalImages,
+                    processedImages: status.processedImages,
+                    sliderElement: maxImagesSlider,
+                    inputElement: maxImagesInput
+                });
+                
+                if (maxImagesSlider && maxImagesInput && unprocessedCount > 0) {
+                    // Ensure the slider max is at least the unprocessed count
+                    if (parseInt(maxImagesSlider.max) < unprocessedCount) {
+                        maxImagesSlider.max = unprocessedCount;
+                        maxImagesInput.max = unprocessedCount; // Also update input max
+                    }
+                    
+                    // Update slider value
+                    maxImagesSlider.value = unprocessedCount;
+                    
+                    // Manually update the number input value (since it's readonly)
+                    maxImagesInput.value = unprocessedCount;
+                    
+                    console.log('After update:', {
+                        sliderValue: maxImagesSlider.value,
+                        inputValue: maxImagesInput.value
+                    });
+                }
                 
             } else {
                 this.updateDuplicateStatistics({
@@ -2900,11 +2903,8 @@ class PhotoVision {
     }
     
     async loadProcessingStatusForFilteredAlbums() {
-        for (const album of this.filteredAlbums) {
-            if (album.AlbumKey) {
-                await this.loadAlbumProcessingStatus(album.AlbumKey);
-            }
-        }
+        // Use the same progressive loading approach as the main album loading
+        this.initializeAlbumStatusObserver();
     }
     
     updateActiveFilters() {
