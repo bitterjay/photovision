@@ -2053,6 +2053,7 @@ class PhotoVision {
                 const unprocessedCount = status.totalImages - status.processedImages;
                 const maxImagesSlider = document.getElementById('maxImagesSlider');
                 const maxImagesInput = document.getElementById('maxImages');
+                const maxImagesLabel = document.querySelector('label[for="maxImages"]');
                 
                 console.log('Auto-updating slider:', {
                     unprocessedCount,
@@ -2075,10 +2076,18 @@ class PhotoVision {
                     // Manually update the number input value (since it's readonly)
                     maxImagesInput.value = unprocessedCount;
                     
+                    // Update label text to show unprocessed count
+                    if (maxImagesLabel) {
+                        maxImagesLabel.textContent = `Amount of Images to Batch Process (${unprocessedCount} unprocessed)`;
+                    }
+                    
                     console.log('After update:', {
                         sliderValue: maxImagesSlider.value,
                         inputValue: maxImagesInput.value
                     });
+                } else if (maxImagesLabel) {
+                    // Reset label when no unprocessed images
+                    maxImagesLabel.textContent = 'Amount of Images to Batch Process';
                 }
                 
             } else {

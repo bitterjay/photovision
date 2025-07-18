@@ -28206,5 +28206,80 @@
       "batchId": "batch_1752861011565_0fn8kv613",
       "jobId": "img_59qb9g_RN7mpGq"
     }
+  },
+  {
+    "id": "md96rjpysv5ce8aqer",
+    "timestamp": "2025-07-18T19:02:19.037Z",
+    "filename": "GCP05521.jpg",
+    "smugmugImageKey": "BDsZCWK",
+    "smugmugUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Friday-AM/i-BDsZCWK/0/Kjwc5dB6gfsQsKWSRLCkGp4b6BrZ5trDJF7qSPwM9/D/GCP05521-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "ndwb5J",
+    "albumName": "Friday AM",
+    "albumPath": "2025 > JOAD Target Nationals JOAD US Open > Friday AM",
+    "albumHierarchy": [
+      "2025",
+      "JOAD Target Nationals JOAD US Open",
+      "Friday AM"
+    ],
+    "description": "The image shows a young boy wearing a colorful, tropical-patterned shirt and holding a ski-like sports equipment. He has a serious, slightly displeased expression on his face. The setting appears to be an outdoor event or fair, with a large blue tent or structure visible in the background. The lighting is bright and the atmosphere seems lively. The boy's outfit and equipment suggest he may be participating in some kind of winter or snow-related activity, though the setting does not seem like a typical ski or snowboarding location. The overall composition and vibrant colors create an energetic and visually striking scene.",
+    "keywords": [
+      "child",
+      "boy",
+      "winter sports",
+      "tropical",
+      "outdoor event",
+      "colorful",
+      "serious expression",
+      "bright lighting",
+      "lively atmosphere",
+      "sports equipment"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-18T19:02:19.030Z",
+      "batchId": "batch_1752865335466_1qhuxf6qm",
+      "jobId": "img_ndwb5J_BDsZCWK"
+    }
+  },
+  {
+    "id": "md96rmxa8dpvqtn73a6",
+    "timestamp": "2025-07-18T19:02:23.188Z",
+    "filename": "GCP05522.jpg",
+    "smugmugImageKey": "n2wWXBZ",
+    "smugmugUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Friday-AM/i-n2wWXBZ/0/Nfp7VS2xXz8g7hQQQV83jhLtjpcQ7K5wBV7j9spf8/D/GCP05522-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "ndwb5J",
+    "albumName": "Friday AM",
+    "albumPath": "2025 > JOAD Target Nationals JOAD US Open > Friday AM",
+    "albumHierarchy": [
+      "2025",
+      "JOAD Target Nationals JOAD US Open",
+      "Friday AM"
+    ],
+    "description": "The image shows two young people, one male and one female, participating in some kind of outdoor activity or sport. The male has dark skin and a shaved head, wearing a black and red jersey with the word 'ULTISPORT' printed on it. He is holding several orange-tipped arrows or darts. The female has longer hair and is wearing a purple hat and dark clothing. They appear to be in a grassy, outdoor setting with some buildings or structures visible in the background. The lighting suggests it is a bright, sunny day, creating a lively, energetic atmosphere. The overall composition and body language of the two individuals indicate they are engaged in a collaborative or competitive activity, possibly archery or a similar target sport. The image conveys a sense of youthful energy, athleticism, and teamwork.",
+    "keywords": [
+      "people",
+      "outdoor",
+      "activity",
+      "sport",
+      "archery",
+      "darts",
+      "competition",
+      "teamwork",
+      "sunny",
+      "athletic",
+      "youth",
+      "jerseys",
+      "hats"
+    ],
+    "metadata": {
+      "model": "claude-3-haiku-20240307",
+      "timestamp": "2025-07-18T19:02:23.181Z",
+      "batchId": "batch_1752865335466_1qhuxf6qm",
+      "jobId": "img_ndwb5J_n2wWXBZ"
+    }
   }
 ]
