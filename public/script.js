@@ -353,56 +353,6 @@ class PhotoVision {
         }
     }
 
-    handleSendMessage() {
-        const message = this.messageInput.value.trim();
-        if (!message) return;
-
-        // Add user message to chat
-        this.addMessage(message, 'user');
-        
-        // Clear input
-        this.messageInput.value = '';
-        this.updateSendButtonState();
-
-        // Show typing indicator
-        this.showTypingIndicator();
-
-        // Process message with API
-        this.processMessage(message);
-    }
-
-    async processMessage(message) {
-        try {
-            const response = await fetch('/api/chat', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ message }),
-            });
-
-            const data = await response.json();
-            
-            this.hideTypingIndicator();
-            
-            if (data.success) {
-                // Check if this is a conversational search response with results
-                if (data.data.response && data.data.results !== undefined) {
-                    this.addConversationalSearchMessage(data.data);
-                } else {
-                    // Fallback to simple message
-                    this.addMessage(data.data.message || data.data.response, 'assistant');
-                }
-            } else {
-                this.addMessage('Sorry, I encountered an error processing your request.', 'assistant');
-            }
-        } catch (error) {
-            console.error('Chat error:', error);
-            this.hideTypingIndicator();
-            this.addMessage('Sorry, I\'m having trouble connecting right now.', 'assistant');
-        }
-    }
-
     addMessage(content, type = 'assistant') {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${type}`;
@@ -2016,38 +1966,20 @@ class PhotoVision {
             batchNameInput.value = albumName;
         }
 
+        // Update batch slider instantly from DOM
+        this.updateBatchSliderFromDOM(albumKey);
+
         // Load and display duplicate statistics for selected album
         this.loadDuplicateStatistics(albumKey);
     }
 
-    async loadDuplicateStatistics(albumKey) {
-        const statisticsSection = document.getElementById('duplicateStatistics');
-        const refreshStatsBtn = document.getElementById('refreshStats');
-        
-        if (!statisticsSection) return;
-
-        // Show loading state
-        statisticsSection.style.display = 'block';
-        this.updateDuplicateStatistics({
-            totalImages: 0,
-            processedImages: 0,
-            newImages: 0,
-            duplicates: 0
-        }, 'Loading duplicate statistics...');
-
+    async updateBatchSliderForAlbum(albumKey) {
         try {
             const response = await fetch(`/api/smugmug/album/${albumKey}/processing-status`);
             const data = await response.json();
 
             if (data.success) {
                 const status = data.data;
-                const stats = status.imageBreakdown || {};
-                
-                // Display comprehensive duplicate statistics
-                this.updateDuplicateStatistics(stats, null, status);
-                
-                // Update processing recommendation
-                this.updateProcessingRecommendation(status.processingRecommendation);
                 
                 // Auto-update the max images slider to show unprocessed count
                 const unprocessedCount = status.totalImages - status.processedImages;
@@ -2089,6 +2021,124 @@ class PhotoVision {
                     // Reset label when no unprocessed images
                     maxImagesLabel.textContent = 'Amount of Images to Batch Process';
                 }
+            }
+        } catch (error) {
+            console.error('Error updating batch slider:', error);
+        }
+    }
+
+    updateBatchSliderFromDOM(albumKey) {
+        // Extract album status directly from the DOM
+        const statusElement = document.getElementById(`processing-status-${albumKey}`);
+        if (!statusElement) return;
+
+        // Find the status count element
+        const statusCountElement = statusElement.querySelector('.status-count');
+        if (!statusCountElement) return;
+
+        // Parse the status count text (format: "25/100" or "100 images")
+        const statusText = statusCountElement.textContent.trim();
+        let processedImages = 0;
+        let totalImages = 0;
+
+        // Check if it's in "X/Y" format
+        if (statusText.includes('/')) {
+            const parts = statusText.split('/');
+            processedImages = parseInt(parts[0]) || 0;
+            totalImages = parseInt(parts[1]) || 0;
+        } else {
+            // It's probably in "X images" format (fully processed)
+            const match = statusText.match(/(\d+)\s*images?/i);
+            if (match) {
+                totalImages = parseInt(match[1]) || 0;
+                // If it shows just "X images", it's likely fully processed
+                processedImages = totalImages;
+            }
+        }
+
+        // Calculate unprocessed count
+        const unprocessedCount = Math.max(0, totalImages - processedImages);
+
+        // Update slider elements
+        const maxImagesSlider = document.getElementById('maxImagesSlider');
+        const maxImagesInput = document.getElementById('maxImages');
+        const maxImagesLabel = document.querySelector('label[for="maxImages"]');
+        
+        console.log('Auto-updating slider from DOM:', {
+            unprocessedCount,
+            totalImages,
+            processedImages,
+            statusText,
+            sliderElement: maxImagesSlider,
+            inputElement: maxImagesInput
+        });
+        
+        if (maxImagesSlider && maxImagesInput) {
+            if (unprocessedCount > 0) {
+                // Ensure the slider max is at least the unprocessed count
+                if (parseInt(maxImagesSlider.max) < unprocessedCount) {
+                    maxImagesSlider.max = unprocessedCount;
+                    maxImagesInput.max = unprocessedCount; // Also update input max
+                }
+                
+                // Update slider value
+                maxImagesSlider.value = unprocessedCount;
+                
+                // Manually update the number input value (since it's readonly)
+                maxImagesInput.value = unprocessedCount;
+                
+                // Update label text to show unprocessed count
+                if (maxImagesLabel) {
+                    maxImagesLabel.textContent = `Amount of Images to Batch Process (${unprocessedCount} unprocessed)`;
+                }
+            } else {
+                // No unprocessed images - set to default
+                const defaultMax = 100;
+                maxImagesSlider.max = defaultMax;
+                maxImagesInput.max = defaultMax;
+                maxImagesSlider.value = 0;
+                maxImagesInput.value = 0;
+                
+                if (maxImagesLabel) {
+                    maxImagesLabel.textContent = 'Amount of Images to Batch Process (fully processed)';
+                }
+            }
+            
+            console.log('After update:', {
+                sliderValue: maxImagesSlider.value,
+                inputValue: maxImagesInput.value
+            });
+        }
+    }
+
+    async loadDuplicateStatistics(albumKey) {
+        const statisticsSection = document.getElementById('duplicateStatistics');
+        const refreshStatsBtn = document.getElementById('refreshStats');
+        
+        if (!statisticsSection) return;
+
+        // Show loading state
+        statisticsSection.style.display = 'block';
+        this.updateDuplicateStatistics({
+            totalImages: 0,
+            processedImages: 0,
+            newImages: 0,
+            duplicates: 0
+        }, 'Loading duplicate statistics...');
+
+        try {
+            const response = await fetch(`/api/smugmug/album/${albumKey}/processing-status`);
+            const data = await response.json();
+
+            if (data.success) {
+                const status = data.data;
+                const stats = status.imageBreakdown || {};
+                
+                // Display comprehensive duplicate statistics
+                this.updateDuplicateStatistics(stats, null, status);
+                
+                // Update processing recommendation
+                this.updateProcessingRecommendation(status.processingRecommendation);
                 
             } else {
                 this.updateDuplicateStatistics({
@@ -2763,9 +2813,9 @@ class PhotoVision {
         this.sortAlbums(filtered);
         
         this.filteredAlbums = filtered;
-    this.renderFilteredAlbums();
-    this.addInfiniteScrollLoader(albumsList);
-    this.updateActiveFilters();
+        this.renderFilteredAlbums();
+        this.addInfiniteScrollLoader(albumsList);
+        this.updateActiveFilters();
         this.updateAlbumCount();
     }
     
@@ -2826,8 +2876,6 @@ class PhotoVision {
             return 'processed';
         } else if (statusHTML.includes('processing-partial') || statusHTML.includes('remaining to process')) {
             return 'partial';
-        } else if (statusHTML.includes('status-error') || statusHTML.includes('Error checking status')) {
-            return 'failed';
         } else {
             return 'unprocessed';
         }
