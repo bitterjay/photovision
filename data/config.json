@@ -277,7 +277,7 @@
     "lastModified": "2025-07-17T18:32:39.037Z"
   },
   "claudeModelConfig": {
-    "chatModel": "claude-3-5-sonnet-20241022",
+    "chatModel": "claude-3-5-haiku-20241022",
     "batchProcessingModel": "claude-3-haiku-20240307",
     "availableModels": [
       {
@@ -317,6 +317,6 @@
       }
     ],
     "modifiedBy": "admin",
-    "lastModified": "2025-07-17T21:50:27.318Z"
+    "lastModified": "2025-07-18T14:03:22.499Z"
   }
 }

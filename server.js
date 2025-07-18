@@ -1005,7 +1005,7 @@ Be specific and descriptive to enable natural language searches like "photos of 
             processingProgress: albumProcessingStatus.processingProgress
           }
         };
-
+              
         return sendSuccess(res, enhancedStatus, `Retrieved enhanced processing status for album ${albumKey}`);
 
       } catch (error) {
@@ -1092,9 +1092,9 @@ Be specific and descriptive to enable natural language searches like "photos of 
         log(`  - Path: ${albumDetails.FullDisplayPath}`, 'DEBUG');
         log(`  - Hierarchy: [${albumDetails.PathHierarchy.join(', ')}]`, 'DEBUG');
 
-        // Get album images from SmugMug
+        // Get album images from SmugMug (all images with pagination)
         const albumUri = `/api/v2/album/${albumKey}`;
-        const imagesResult = await smugmugClient.getAlbumImages(
+        const imagesResult = await smugmugClient.getAllAlbumImages(
           smugmugConfig.accessToken,
           smugmugConfig.accessTokenSecret,
           albumUri

@@ -974,12 +974,23 @@ class PhotoVision {
                         <div class="swiper-wrapper">
                             ${validResults.map((result, index) => `
                                 <div class="swiper-slide">
-                                    <img src="${result.smugmugUrl}" 
-                                         alt="${result.description || result.filename || 'Image'}" 
-                                         loading="lazy"
-                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                    <div style="display: none; height: 200px; background: #f8f9fa; align-items: center; justify-content: center; color: #666; font-size: 1em;">
-                                        <span>⚠️ Image failed to load</span>
+                                    <div class="slide-image">
+                                        <img src="${result.smugmugUrl}" 
+                                             alt="${result.description || result.filename || 'Image'}" 
+                                             loading="lazy"
+                                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                        <div class="image-error" style="display: none;">
+                                            <span>⚠️ Image failed to load</span>
+                                        </div>
+                                    </div>
+                                    <div class="slide-metadata">
+                                        <div class="slide-metadata-header">
+                                            <div class="slide-metadata-title">${result.originalFilename || result.filename || 'Image'}</div>
+                                            <div class="slide-metadata-counter">${index + 1} / ${validResults.length}</div>
+                                        </div>
+                                        <div class="slide-metadata-content">
+                                            ${this.generateMetadataHTML(result)}
+                                        </div>
                                     </div>
                                 </div>
                             `).join('')}
@@ -987,10 +998,6 @@ class PhotoVision {
                         <div class="swiper-pagination"></div>
                         <div class="swiper-button-next"></div>
                         <div class="swiper-button-prev"></div>
-                    </div>
-                    <div class="image-info">
-                        <div class="image-counter" id="lightboxCounter">1 / ${validResults.length}</div>
-                        <div class="image-title" id="lightboxTitle">${validResults[adjustedStartIndex]?.description || validResults[adjustedStartIndex]?.filename || 'Image'}</div>
                     </div>
                 </div>
             </div>
@@ -1023,25 +1030,6 @@ class PhotoVision {
                 el: '.swiper-pagination',
                 clickable: true,
                 dynamicBullets: true,
-            },
-            on: {
-                slideChange: (swiper) => {
-                    // Use the swiper parameter or activeIndex directly
-                    const activeIndex = swiper.realIndex || swiper.activeIndex;
-                    const currentResult = results[activeIndex];
-                    
-                    // Update counter
-                    const counter = document.getElementById('lightboxCounter');
-                    if (counter) {
-                        counter.textContent = `${activeIndex + 1} / ${results.length}`;
-                    }
-                    
-                    // Update title
-                    const title = document.getElementById('lightboxTitle');
-                    if (title) {
-                        title.textContent = currentResult?.description || currentResult?.filename || 'Image';
-                    }
-                }
             }
         });
     }
@@ -1091,6 +1079,151 @@ class PhotoVision {
         
         // Remove from DOM
         lightbox.remove();
+    }
+
+    generateMetadataHTML(imageData) {
+        if (!imageData) return '<div class="slide-metadata-empty">No metadata available</div>';
+
+        let sections = [];
+
+        // Description section
+        if (imageData.claudeDescription || imageData.description) {
+            sections.push(`
+                <div class="metadata-section">
+                    <div class="metadata-section-header" onclick="this.parentElement.classList.toggle('collapsed')">
+                        <div class="metadata-section-title">
+                            📝 Description
+                        </div>
+                        <div class="metadata-section-toggle">▼</div>
+                    </div>
+                    <div class="metadata-section-body">
+                        <div class="metadata-description">
+                            ${imageData.claudeDescription || imageData.description || 'No description available'}
+                        </div>
+                    </div>
+                </div>
+            `);
+        }
+
+        // Keywords section
+        if (imageData.keywords && imageData.keywords.length > 0) {
+            sections.push(`
+                <div class="metadata-section">
+                    <div class="metadata-section-header" onclick="this.parentElement.classList.toggle('collapsed')">
+                        <div class="metadata-section-title">
+                            🏷️ Keywords
+                        </div>
+                        <div class="metadata-section-toggle">▼</div>
+                    </div>
+                    <div class="metadata-section-body">
+                        <div class="metadata-keywords">
+                            ${imageData.keywords.map(keyword => `<span class="metadata-keyword">${keyword}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `);
+        }
+
+        // Album Information
+        if (imageData.albumName || imageData.albumPath || imageData.albumHierarchy) {
+            sections.push(`
+                <div class="metadata-section">
+                    <div class="metadata-section-header" onclick="this.parentElement.classList.toggle('collapsed')">
+                        <div class="metadata-section-title">
+                            📁 Album Information
+                        </div>
+                        <div class="metadata-section-toggle">▼</div>
+                    </div>
+                    <div class="metadata-section-body">
+                        ${imageData.albumName ? `
+                            <div class="metadata-row">
+                                <div class="metadata-label">Album</div>
+                                <div class="metadata-value">${imageData.albumName}</div>
+                            </div>
+                        ` : ''}
+                        ${imageData.albumPath ? `
+                            <div class="metadata-row">
+                                <div class="metadata-label">Path</div>
+                                <div class="metadata-value">${imageData.albumPath}</div>
+                            </div>
+                        ` : ''}
+                        ${imageData.albumHierarchy ? `
+                            <div class="metadata-row">
+                                <div class="metadata-label">Hierarchy</div>
+                                <div class="metadata-value">${imageData.albumHierarchy}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `);
+        }
+
+        // Technical Details
+        const technicalInfo = [];
+        if (imageData.analysisTimestamp || imageData.metadata?.timestamp) {
+            const timestamp = imageData.analysisTimestamp || imageData.metadata?.timestamp;
+            technicalInfo.push(`
+                <div class="metadata-row">
+                    <div class="metadata-label">Analyzed</div>
+                    <div class="metadata-value">${new Date(timestamp).toLocaleString()}</div>
+                </div>
+            `);
+        }
+        if (imageData.originalFilename || imageData.filename) {
+            technicalInfo.push(`
+                <div class="metadata-row">
+                    <div class="metadata-label">Filename</div>
+                    <div class="metadata-value"><code>${imageData.originalFilename || imageData.filename}</code></div>
+                </div>
+            `);
+        }
+        if (imageData.smugmugUrl) {
+            technicalInfo.push(`
+                <div class="metadata-row">
+                    <div class="metadata-label">Source</div>
+                    <div class="metadata-value">
+                        <a href="${imageData.smugmugUrl}" target="_blank">View on SmugMug →</a>
+                    </div>
+                </div>
+            `);
+        }
+
+        if (technicalInfo.length > 0) {
+            sections.push(`
+                <div class="metadata-section">
+                    <div class="metadata-section-header" onclick="this.parentElement.classList.toggle('collapsed')">
+                        <div class="metadata-section-title">
+                            ⚙️ Technical Details
+                        </div>
+                        <div class="metadata-section-toggle">▼</div>
+                    </div>
+                    <div class="metadata-section-body">
+                        ${technicalInfo.join('')}
+                    </div>
+                </div>
+            `);
+        }
+
+        // If no sections available, show a message
+        if (sections.length === 0) {
+            sections.push(`
+                <div class="metadata-section">
+                    <div class="metadata-section-body">
+                        <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                            No metadata available for this image
+                        </div>
+                    </div>
+                </div>
+            `);
+        }
+
+        return sections.join('');
+    }
+
+    updateLightboxMetadata(imageData) {
+        const metadataContent = document.getElementById('metadataContent');
+        if (!metadataContent || !imageData) return;
+        metadataContent.innerHTML = this.generateMetadataHTML(imageData);
     }
 
     formatFileSize(bytes) {
@@ -1776,7 +1909,9 @@ class PhotoVision {
 
             if (data.success) {
                 const status = data.data;
-                this.displayAlbumProcessingStatus(statusElement, status);
+                // Find the album data from stored albums
+                const album = this.albumsData.find(a => a.AlbumKey === albumKey) || {};
+                this.displayAlbumProcessingStatus(statusElement, status, album);
             } else {
                 statusElement.innerHTML = '<span class="status-error">Unable to check processing status</span>';
             }
@@ -1789,8 +1924,18 @@ class PhotoVision {
         }
     }
 
-    displayAlbumProcessingStatus(statusElement, status) {
-        const { totalImages, processedImages, processingProgress, isCompletelyProcessed } = status;
+    displayAlbumProcessingStatus(statusElement, status, album) {
+        const { totalImages, processedImageKeys, processedImages, processingProgress, isCompletelyProcessed } = status;
+        
+        // Debug logging to track actual values
+        console.log('Album processing status debug:', {
+            totalImages,
+            processedImageKeys,
+            processedImages,
+            processingProgress,
+            isCompletelyProcessed,
+            albumKey: statusElement.id.replace('processing-status-', '')
+        });
 
         // Find the parent album card to add/remove the completely-processed class
         const albumCard = statusElement.closest('.album-item');
@@ -1819,7 +1964,7 @@ class PhotoVision {
             statusHTML = `
                 <div class="processing-complete" style="background: linear-gradient(90deg, var(--success) 100%, var(--bg-secondary) 100%)">
                     <span class="status-icon">✅</span>
-                    <span class="status-count">${totalImages}</span>
+                    <span class="status-count">${album.ImageCount || 0} images</span>
                     ${duplicateDetectionEnabled ? `
                         <div class="duplicate-info">
                             <small>Duplicate detection: Active</small>
@@ -1840,7 +1985,7 @@ class PhotoVision {
             statusHTML = `
                 <div class="processing-none" style="background: linear-gradient(90deg, var(--warning) 0%, var(--bg-secondary) 0%)">
                     <span class="status-icon">${statusIcon}</span>
-                    <span class="status-count">0/${totalImages}</span>
+                    <span class="status-count">0/${album.ImageCount || 0}</span>
                     ${showWaitingStatus ? `<small class="processing-status-text">${statusText}</small>` : ''}
                     ${duplicateDetectionEnabled ? `
                         <div class="duplicate-info">
@@ -1859,7 +2004,7 @@ class PhotoVision {
             statusHTML = `
                 <div class="processing-partial${activeClass}" style="background: linear-gradient(90deg, var(--accent-primary) ${processingProgress}%, var(--bg-secondary) ${processingProgress}%)">
                     <span class="status-icon">${isActivelyProcessing ? '⚡' : '🔄'}</span>
-                    <span class="status-count">${processedImages}/${totalImages}</span>
+                    <span class="status-count">${processedImages}/${album.ImageCount || 0}</span>
                     <span class="status-percentage">${processingProgress}%</span>
                     ${duplicateDetectionEnabled ? `
                         <div class="duplicate-info">

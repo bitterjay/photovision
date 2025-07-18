@@ -213,3 +213,7 @@ After finishing responding to my request or running a command, run this command 
 ```bash
 afplay /System/Library/Sounds/Funk.aiff
 ```
+
+## IMPORTANT: sServer Information
+
+the app is using nodemon, so when testing you don't need to start the server, just test.
