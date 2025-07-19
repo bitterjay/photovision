@@ -37301,5 +37301,41 @@
       "batchId": "batch_1752885702682_vzl5hzh24",
       "jobId": "img_JFsgfQ_qCVpqLK"
     }
+  },
+  {
+    "id": "mdaay1putioeu6ztrc8",
+    "timestamp": "2025-07-19T13:47:06.931Z",
+    "filename": "GCP04146.jpg",
+    "smugmugImageKey": "F5NPwZt",
+    "smugmugUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Kickoff-Social/i-F5NPwZt/0/KcNZFzXrSwsD5LcJbHQLNCMCXSkPZqwDn3QXM8dqV/D/GCP04146-D.jpg",
+    "title": "",
+    "caption": "",
+    "albumKey": "5Hdd4W",
+    "albumName": "Kickoff Social",
+    "albumPath": "2025 > JOAD Target Nationals JOAD US Open > Kickoff Social",
+    "albumHierarchy": [
+      "2025",
+      "JOAD Target Nationals JOAD US Open",
+      "Kickoff Social"
+    ],
+    "description": "A large group of young people, likely students, posing together for a photo outdoors in what appears to be an athletic field or park. The group consists of both boys and girls in their teens, wearing matching blue athletic jerseys with white text, some with baseball caps. In the background there are flags including an American flag, metal bleachers, and a sculpture resembling a crashed spaceship or satellite dish. The weather seems sunny and clear, with a few wispy clouds in the blue sky. The overall mood is cheerful and proud, as if commemorating a team event or sports achievement.",
+    "keywords": [
+      "students",
+      "teenagers",
+      "team photo",
+      "sports jerseys",
+      "athletic field",
+      "outdoors",
+      "sunny",
+      "American flag",
+      "metal bleachers",
+      "space sculpture"
+    ],
+    "metadata": {
+      "model": "claude-3-opus-20240229",
+      "timestamp": "2025-07-19T13:47:06.930Z",
+      "batchId": "batch_1752932818111_x2kcv775b",
+      "jobId": "img_5Hdd4W_F5NPwZt"
+    }
   }
 ]
