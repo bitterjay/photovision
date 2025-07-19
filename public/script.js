@@ -270,6 +270,53 @@ class PhotoVision {
         });
     }
 
+    async handleSendMessage() {
+        const message = this.messageInput.value.trim();
+        if (!message) return;
+        
+        // Add user message
+        this.addMessage(message, 'user');
+        
+        // Clear input and update button state
+        this.messageInput.value = '';
+        this.updateSendButtonState();
+        
+        // Show typing indicator
+        this.showTypingIndicator();
+        
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json' 
+                },
+                body: JSON.stringify({ message })
+            });
+            
+            const data = await response.json();
+            
+            // Hide typing indicator
+            this.hideTypingIndicator();
+            
+            if (data.success && data.data) {
+                // Handle conversational search response
+                this.addConversationalSearchMessage(data.data);
+            } else {
+                // Handle error message
+                const errorMessage = data.error || 'Sorry, I encountered an error processing your request.';
+                this.addMessage(errorMessage, 'assistant');
+            }
+        } catch (error) {
+            console.error('Error sending message:', error);
+            
+            // Hide typing indicator
+            this.hideTypingIndicator();
+            
+            // Show error message
+            this.addMessage('Error: Unable to send message. Please check your connection and try again.', 'assistant');
+        }
+    }
+
     async handleFileUpload(file) {
         // Validate file type
         const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
