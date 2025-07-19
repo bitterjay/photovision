@@ -1256,7 +1256,8 @@ Be specific and descriptive to enable natural language searches like "photos of 
           duplicateHandling = 'skip',
           forceReprocessing = false,
           maxImages = 50,
-          batchName
+          batchName,
+          excludedImages = []
         } = requestData;
         
         // Debug logging
@@ -1345,17 +1346,33 @@ Be specific and descriptive to enable natural language searches like "photos of 
         // Filter images based on duplicate detection and force reprocessing
         let imagesToProcess = imagesResult.images;
         let skippedImages = [];
+        let userExcludedImages = [];
+
+        // First, filter out user-excluded images
+        if (excludedImages && excludedImages.length > 0) {
+          imagesToProcess = imagesToProcess.filter(img => 
+            !excludedImages.includes(img.ImageKey)
+          );
+          
+          userExcludedImages = imagesResult.images.filter(img => 
+            excludedImages.includes(img.ImageKey)
+          );
+          
+          log(`User excluded ${userExcludedImages.length} images from processing`, 'DEBUG');
+        }
 
         if (!forceReprocessing) {
           // Filter out already processed images
-          imagesToProcess = imagesResult.images.filter(img => 
+          const alreadyProcessed = imagesToProcess.filter(img => 
+            processingStatus.processedImageKeys.includes(img.ImageKey)
+          );
+          
+          imagesToProcess = imagesToProcess.filter(img => 
             !processingStatus.processedImageKeys.includes(img.ImageKey)
           );
           
-          // Track skipped images
-          skippedImages = imagesResult.images.filter(img => 
-            processingStatus.processedImageKeys.includes(img.ImageKey)
-          );
+          // Track skipped images (already processed)
+          skippedImages = alreadyProcessed;
           
           log(`Filtered ${imagesToProcess.length} unprocessed images, skipped ${skippedImages.length} duplicates`, 'DEBUG');
         } else {
@@ -1368,6 +1385,7 @@ Be specific and descriptive to enable natural language searches like "photos of 
           processedImages: processingStatus.processedImages,
           newImages: imagesToProcess.length,
           skippedImages: skippedImages.length,
+          userExcludedImages: userExcludedImages.length,
           duplicateHandling: duplicateHandling,
           forceReprocessing: forceReprocessing,
           processingProgress: processingStatus.processingProgress,
@@ -1378,6 +1396,7 @@ Be specific and descriptive to enable natural language searches like "photos of 
         log(`Batch statistics:`, 'INFO');
         log(`  Total images: ${statistics.totalImages}`, 'INFO');
         log(`  Already processed: ${statistics.processedImages}`, 'INFO');
+        log(`  User excluded: ${statistics.userExcludedImages}`, 'INFO');
         log(`  New to process: ${statistics.newImages}`, 'INFO');
         log(`  Skipped duplicates: ${statistics.skippedImages}`, 'INFO');
         log(`  Duplicate handling: ${statistics.duplicateHandling}`, 'INFO');

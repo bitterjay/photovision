@@ -1195,8 +1195,8 @@
 }
 
 .metadata-item {
-    /* display: flex; */
-    flex-direction: column;
+    display: flex;
+    flex-direction: row;
     gap: 0.25rem;
 }
 

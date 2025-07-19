@@ -377,7 +377,7 @@
 }
 
 .metadata-item {
-    /* display: flex; */
+    display: flex;
     align-items: center;
     gap: 0.5rem;
     background: var(--bg-secondary);
@@ -385,6 +385,20 @@
     border-radius: var(--radius-sm);
     border: 1px solid var(--border-color);
     font-size: 0.875rem;
+}
+
+.metadata-item.excluded-count {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+.metadata-item.excluded-count .metadata-label {
+    color: var(--error);
+}
+
+.metadata-item.excluded-count .metadata-value {
+    color: var(--error);
+    font-weight: 600;
 }
 
 .album-card-details {

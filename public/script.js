@@ -14,6 +14,9 @@ class PhotoVision {
         this.uploadProgress = document.getElementById('uploadProgress');
         this.progressFill = document.getElementById('progressFill');
         this.progressText = document.getElementById('progressText');
+        
+        // Image selection state management
+        this.albumImageSelections = new Map(); // Map<albumKey, Set<excludedImageKeys>>
         this.analysisResult = document.getElementById('analysisResult');
         this.resultContent = document.getElementById('resultContent');
         
@@ -1119,7 +1122,9 @@ class PhotoVision {
                 caption: img.caption,
                 description: img.caption || img.filename,
                 keywords: [],
-                albumName: albumName
+                albumName: albumName,
+                imageKey: img.imageKey,
+                smugmugImageKey: img.imageKey
             }));
             
             // Open the lightbox with grid view
@@ -1138,10 +1143,110 @@ class PhotoVision {
         }
     }
     
-    openAlbumPreviewLightbox(images, albumName, albumKey) {
+    async openAlbumImageSelection(albumKey, albumName) {
+        try {
+            // Show loading state on the button
+            const button = document.querySelector(`.album-select-images-btn[data-album-key="${albumKey}"]`);
+            if (button) {
+                button.disabled = true;
+                button.innerHTML = '<span class="loading-spinner"></span> Loading...';
+            }
+            
+            // Fetch album preview data
+            console.log(`Fetching images for selection: ${albumKey}`);
+            const response = await fetch(`/api/smugmug/album/${albumKey}/preview`);
+            
+            if (!response.ok) {
+                let errorMessage = `HTTP ${response.status}`;
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.error || errorData.message || errorMessage;
+                } catch (e) {
+                    errorMessage = `${errorMessage} - ${response.statusText}`;
+                }
+                throw new Error(errorMessage);
+            }
+            
+            const result = await response.json();
+            
+            // Check if we have valid data
+            if (!result.data || !result.data.images) {
+                throw new Error('Invalid preview data received');
+            }
+            
+            // Transform images for lightbox format
+            const lightboxImages = result.data.images.map(img => ({
+                smugmugUrl: img.largeUrl || img.thumbnailUrl,
+                thumbnail: img.thumbnailUrl,
+                filename: img.filename,
+                caption: img.caption,
+                description: img.caption || img.filename,
+                keywords: [],
+                albumName: albumName,
+                imageKey: img.imageKey,
+                smugmugImageKey: img.imageKey
+            }));
+            
+            // Open the lightbox in selection mode
+            this.openAlbumPreviewLightbox(lightboxImages, albumName, albumKey, true);
+            
+        } catch (error) {
+            console.error('Error loading images for selection:', error);
+            alert(`Error loading images: ${error.message}`);
+        } finally {
+            // Reset button state
+            const button = document.querySelector(`.album-select-images-btn[data-album-key="${albumKey}"]`);
+            if (button) {
+                button.disabled = false;
+                button.innerHTML = '<span class="select-text">Select Images</span>';
+            }
+        }
+    }
+    
+    openAlbumPreviewLightbox(images, albumName, albumKey, selectionMode = false) {
         if (images.length === 0) {
             this.addMessage('No images found in this album', 'assistant');
             return;
+        }
+        
+        // Build header HTML based on selection mode
+        let headerHTML = '';
+        if (selectionMode) {
+            const excludedCount = this.getAlbumExcludedCount(albumKey);
+            headerHTML = `
+                <div class="preview-header">
+                    <h2 class="preview-title">${albumName}</h2>
+                    <div class="preview-info">
+                        <div class="selection-controls">
+                            <button class="select-all-btn" title="Select all images">
+                                <span class="icon">☑</span> Select All
+                            </button>
+                            <button class="deselect-all-btn" title="Deselect all images">
+                                <span class="icon">☐</span> Deselect All
+                            </button>
+                            <span class="selection-count">${excludedCount} excluded</span>
+                        </div>
+                        <span class="image-count">${images.length} images</span>
+                        <button class="refresh-preview-btn" data-album-key="${albumKey}" title="Refresh from SmugMug">
+                            <span class="refresh-icon">🔄</span> Refresh
+                        </button>
+                    </div>
+                    <button class="modal-close" id="closeLightbox">&times;</button>
+                </div>
+            `;
+        } else {
+            headerHTML = `
+                <div class="preview-header">
+                    <h2 class="preview-title">${albumName}</h2>
+                    <div class="preview-info">
+                        <span class="image-count">${images.length} images</span>
+                        <button class="refresh-preview-btn" data-album-key="${albumKey}" title="Refresh from SmugMug">
+                            <span class="refresh-icon">🔄</span> Refresh
+                        </button>
+                    </div>
+                    <button class="modal-close" id="closeLightbox">&times;</button>
+                </div>
+            `;
         }
         
         // Create lightbox HTML with grid layout
@@ -1149,29 +1254,29 @@ class PhotoVision {
             <div id="imageLightbox" class="image-modal album-preview-modal">
                 <div class="modal-overlay"></div>
                 <div class="modal-container preview-container">
-                    <div class="preview-header">
-                        <h2 class="preview-title">${albumName}</h2>
-                        <div class="preview-info">
-                            <span class="image-count">${images.length} images</span>
-                            <button class="refresh-preview-btn" data-album-key="${albumKey}" title="Refresh from SmugMug">
-                                <span class="refresh-icon">🔄</span> Refresh
-                            </button>
-                        </div>
-                        <button class="modal-close" id="closeLightbox">&times;</button>
-                    </div>
+                    ${headerHTML}
                     <div class="preview-grid-container">
-                        <div class="preview-grid">
-                            ${images.map((img, index) => `
-                                <div class="preview-thumbnail" data-index="${index}">
-                                    <img src="${img.thumbnail}" 
-                                         alt="${img.filename}" 
-                                         loading="lazy"
-                                         title="${img.caption || img.filename}">
-                                    <div class="thumbnail-info">
-                                        <span class="thumbnail-name">${img.filename}</span>
+                        <div class="preview-grid${selectionMode ? ' selection-mode' : ''}">
+                            ${images.map((img, index) => {
+                                const isExcluded = selectionMode ? this.isImageExcluded(albumKey, img.smugmugImageKey || img.imageKey) : false;
+                                return `
+                                    <div class="preview-thumbnail${isExcluded ? ' excluded' : ''}" data-index="${index}" data-image-key="${img.smugmugImageKey || img.imageKey || ''}">
+                                        ${selectionMode ? `
+                                            <input type="checkbox" 
+                                                   class="image-checkbox" 
+                                                   ${isExcluded ? 'checked' : ''}
+                                                   data-image-key="${img.smugmugImageKey || img.imageKey || ''}">
+                                        ` : ''}
+                                        <img src="${img.thumbnail}" 
+                                             alt="${img.filename}" 
+                                             loading="lazy"
+                                             title="${img.caption || img.filename}">
+                                        <div class="thumbnail-info">
+                                            <span class="thumbnail-name">${img.filename}</span>
+                                        </div>
                                     </div>
-                                </div>
-                            `).join('')}
+                                `;
+                            }).join('')}
                         </div>
                     </div>
                 </div>
@@ -1206,6 +1311,93 @@ class PhotoVision {
         document.addEventListener('keydown', escapeHandler);
         this.currentLightboxEscapeHandler = escapeHandler;
         
+        // Add selection control handlers if in selection mode
+        if (selectionMode) {
+            const selectAllBtn = lightbox.querySelector('.select-all-btn');
+            const deselectAllBtn = lightbox.querySelector('.deselect-all-btn');
+            const selectionCount = lightbox.querySelector('.selection-count');
+            
+            // Handle checkbox changes
+            lightbox.querySelectorAll('.image-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                });
+                
+                checkbox.addEventListener('change', () => {
+                    const imageKey = checkbox.getAttribute('data-image-key');
+                    const thumbnail = checkbox.closest('.preview-thumbnail');
+                    
+                    this.toggleImageSelection(albumKey, imageKey);
+                    
+                    if (checkbox.checked) {
+                        thumbnail.classList.add('excluded');
+                    } else {
+                        thumbnail.classList.remove('excluded');
+                    }
+                    
+                    // Update count
+                    const count = this.getAlbumExcludedCount(albumKey);
+                    selectionCount.textContent = `${count} excluded`;
+                    
+                    // Update album display
+                    this.updateAlbumExcludedDisplay(albumKey);
+                });
+            });
+            
+            // Select all button
+            selectAllBtn.addEventListener('click', () => {
+                const imageKeys = images.map(img => img.smugmugImageKey || img.imageKey).filter(key => key);
+                this.selectAllInAlbum(albumKey, imageKeys);
+                
+                // Update UI
+                lightbox.querySelectorAll('.image-checkbox').forEach(checkbox => {
+                    checkbox.checked = true;
+                    checkbox.closest('.preview-thumbnail').classList.add('excluded');
+                });
+                selectionCount.textContent = `${images.length} excluded`;
+                
+                // Update album display
+                this.updateAlbumExcludedDisplay(albumKey);
+            });
+            
+            // Deselect all button
+            deselectAllBtn.addEventListener('click', () => {
+                this.deselectAllInAlbum(albumKey);
+                
+                // Update UI
+                lightbox.querySelectorAll('.image-checkbox').forEach(checkbox => {
+                    checkbox.checked = false;
+                    checkbox.closest('.preview-thumbnail').classList.remove('excluded');
+                });
+                selectionCount.textContent = '0 excluded';
+                
+                // Update album display
+                this.updateAlbumExcludedDisplay(albumKey);
+            });
+            
+            // Thumbnail clicks in selection mode
+            lightbox.querySelectorAll('.preview-thumbnail').forEach(thumb => {
+                thumb.addEventListener('click', (e) => {
+                    if (e.target.tagName !== 'INPUT') {
+                        const checkbox = thumb.querySelector('.image-checkbox');
+                        if (checkbox) {
+                            checkbox.checked = !checkbox.checked;
+                            checkbox.dispatchEvent(new Event('change'));
+                        }
+                    }
+                });
+            });
+        } else {
+            // Normal mode - thumbnail clicks open full lightbox
+            lightbox.querySelectorAll('.preview-thumbnail').forEach(thumb => {
+                thumb.addEventListener('click', () => {
+                    const index = parseInt(thumb.dataset.index);
+                    this.closeLightbox();
+                    this.openLightbox(images, index);
+                });
+            });
+        }
+        
         // Refresh button
         refreshBtn.addEventListener('click', async () => {
             refreshBtn.disabled = true;
@@ -1220,15 +1412,6 @@ class PhotoVision {
             } catch (error) {
                 console.error('Error refreshing preview:', error);
             }
-        });
-        
-        // Thumbnail clicks - open full lightbox
-        lightbox.querySelectorAll('.preview-thumbnail').forEach(thumb => {
-            thumb.addEventListener('click', () => {
-                const index = parseInt(thumb.dataset.index);
-                this.closeLightbox();
-                this.openLightbox(images, index);
-            });
         });
     }
 
@@ -1383,6 +1566,91 @@ class PhotoVision {
         const sizes = ['Bytes', 'KB', 'MB', 'GB'];
         const i = Math.floor(Math.log(bytes) / Math.log(k));
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+    
+    // Image Selection Management Methods
+    
+    initializeAlbumSelection(albumKey, images) {
+        if (!this.albumImageSelections.has(albumKey)) {
+            this.albumImageSelections.set(albumKey, new Set());
+        }
+        // Return count of selected images
+        const excluded = this.albumImageSelections.get(albumKey);
+        return images.length - excluded.size;
+    }
+    
+    toggleImageSelection(albumKey, imageKey) {
+        const excluded = this.albumImageSelections.get(albumKey) || new Set();
+        if (excluded.has(imageKey)) {
+            excluded.delete(imageKey);
+        } else {
+            excluded.add(imageKey);
+        }
+        this.albumImageSelections.set(albumKey, excluded);
+    }
+    
+    isImageSelected(albumKey, imageKey) {
+        const excluded = this.albumImageSelections.get(albumKey);
+        return !excluded || !excluded.has(imageKey);
+    }
+    
+    getExcludedImages(albumKey) {
+        return Array.from(this.albumImageSelections.get(albumKey) || []);
+    }
+    
+    getSelectedImagesCount(albumKey, totalImages) {
+        const excluded = this.albumImageSelections.get(albumKey) || new Set();
+        return totalImages - excluded.size;
+    }
+    
+    selectAllImages(albumKey) {
+        this.albumImageSelections.set(albumKey, new Set());
+    }
+    
+    deselectAllImages(albumKey, imageKeys) {
+        this.albumImageSelections.set(albumKey, new Set(imageKeys));
+    }
+    
+    clearAlbumSelection(albumKey) {
+        this.albumImageSelections.delete(albumKey);
+    }
+    
+    // Helper methods for selection management
+    isImageExcluded(albumKey, imageKey) {
+        const excluded = this.albumImageSelections.get(albumKey);
+        return excluded && excluded.has(imageKey);
+    }
+    
+    getAlbumExcludedCount(albumKey) {
+        const excluded = this.albumImageSelections.get(albumKey);
+        return excluded ? excluded.size : 0;
+    }
+    
+    selectAllInAlbum(albumKey, imageKeys) {
+        // Select all means exclude all images
+        this.albumImageSelections.set(albumKey, new Set(imageKeys));
+    }
+    
+    deselectAllInAlbum(albumKey) {
+        // Deselect all means exclude no images
+        this.albumImageSelections.set(albumKey, new Set());
+    }
+    
+    updateAlbumExcludedDisplay(albumKey) {
+        const excludedCount = this.getAlbumExcludedCount(albumKey);
+        const excludedElement = document.getElementById(`excluded-count-${albumKey}`);
+        
+        if (excludedElement) {
+            if (excludedCount > 0) {
+                excludedElement.style.display = 'flex';
+                const valueElement = excludedElement.querySelector('.excluded-value');
+                if (valueElement) {
+                    valueElement.textContent = excludedCount;
+                }
+            } else {
+                excludedElement.style.display = 'none';
+            }
+        }
     }
 
     showTypingIndicator() {
@@ -2457,16 +2725,23 @@ class PhotoVision {
         console.log('Max Images:', maxImages);
         console.log('Batch Name:', batchName);
 
+        // Get excluded images for the selected album
+        const excludedImages = this.getExcludedImages(this.selectedAlbumKey);
+        
         const requestData = {
             albumKey: this.selectedAlbumKey,
             maxImages: maxImages,
-            batchName: batchName
+            batchName: batchName,
+            excludedImages: excludedImages
         };
         
         console.log('Request Data:', JSON.stringify(requestData, null, 2));
+        console.log('Excluded Images:', excludedImages.length, excludedImages);
         console.log('========================');
 
-        this.addMessage(`Starting batch processing for ${batchName} (max ${maxImages} images)...`, 'assistant');
+        // Update message to show excluded images count
+        const excludedText = excludedImages.length > 0 ? ` (excluding ${excludedImages.length} images)` : '';
+        this.addMessage(`Starting batch processing for ${batchName} (max ${maxImages} images${excludedText})...`, 'assistant');
 
         try {
             const response = await fetch('/api/batch/start', {
@@ -2482,11 +2757,20 @@ class PhotoVision {
             console.log('Response data:', data);
 
             if (data.success) {
-                this.addMessage(`Batch processing started! Processing ${data.data.jobCount} images.`, 'assistant');
+                const actualCount = data.data.jobCount;
+                const message = excludedImages.length > 0 
+                    ? `Batch processing started! Processing ${actualCount} images (${excludedImages.length} excluded).`
+                    : `Batch processing started! Processing ${actualCount} images.`;
+                this.addMessage(message, 'assistant');
+                
                 this.showBatchProgress();
                 this.showBottomProgressBar();
                 this.updateBatchControls('processing');
                 this.startProgressMonitoring();
+                
+                // Clear the selection after starting batch
+                this.clearAlbumSelection(this.selectedAlbumKey);
+                this.updateAlbumExcludedDisplay(this.selectedAlbumKey);
             } else {
                 this.addMessage(`Failed to start batch processing: ${data.error}`, 'assistant');
                 console.error('Batch start failed:', data);
@@ -3129,6 +3413,10 @@ class PhotoVision {
                                 <span class="metadata-label">📷</span>
                                 <span class="metadata-value">${album.ImageCount || 0}</span>
                             </div>
+                            <div class="metadata-item excluded-count" id="excluded-count-${album.AlbumKey}" style="display: none;">
+                                <span class="metadata-label">❌</span>
+                                <span class="metadata-value excluded-value">0</span>
+                            </div>
                             ${album.Date ? `
                                 <div class="metadata-item">
                                     <span class="metadata-label">📅</span>
@@ -3141,6 +3429,13 @@ class PhotoVision {
                                     onclick="event.stopPropagation();"
                                     title="Preview album images">
                                 <span class="preview-text">Preview</span>
+                            </button>
+                            <button class="album-select-images-btn" 
+                                    data-album-key="${album.AlbumKey}"
+                                    data-album-name="${album.Name}"
+                                    onclick="event.stopPropagation();"
+                                    title="Select images to process">
+                                <span class="select-text">Select Images</span>
                             </button>
                         </div>
                         
@@ -3173,8 +3468,23 @@ class PhotoVision {
             });
         });
         
+        // Add click handlers for select images buttons
+        albumsList.querySelectorAll('.album-select-images-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                const albumKey = btn.dataset.albumKey;
+                const albumName = btn.dataset.albumName;
+                await this.openAlbumImageSelection(albumKey, albumName);
+            });
+        });
+        
         // Load processing status for filtered albums
         this.loadProcessingStatusForFilteredAlbums();
+        
+        // Initialize excluded counts display for all albums
+        this.filteredAlbums.forEach(album => {
+            this.updateAlbumExcludedDisplay(album.AlbumKey);
+        });
     }
     
     async loadProcessingStatusForFilteredAlbums() {
