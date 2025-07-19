@@ -537,7 +537,7 @@
 }
 
 .preview-text {
-    background: var(--bg-secondary);
+    /* background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
     padding: 1rem;
@@ -549,7 +549,7 @@
     white-space: pre-wrap;
     word-wrap: break-word;
     max-height: 400px;
-    overflow-y: auto;
+    overflow-y: auto; */
 }
 
 .btn-sm {

@@ -1065,6 +1065,81 @@ Be specific and descriptive to enable natural language searches like "photos of 
         return sendError(res, 500, 'Album images request failed', error);
       }
     }
+    
+    // SmugMug album preview endpoint
+    if (pathname.startsWith('/api/smugmug/album/') && pathname.endsWith('/preview') && method === 'GET') {
+      const albumKey = pathname.split('/')[4]; // Extract album key from URL
+      const forceRefresh = req.url.includes('refresh=true');
+      log(`SmugMug album preview request for album: ${albumKey} (refresh: ${forceRefresh})`);
+      
+      try {
+        const config = await dataManager.getConfig();
+        const smugmugConfig = config.smugmug || {};
+        if (!smugmugConfig.connected || !smugmugConfig.accessToken) {
+          return sendError(res, 401, 'SmugMug not connected');
+        }
+        
+        // Check for stored preview data
+        if (!forceRefresh) {
+          const storedPreview = await dataManager.getAlbumPreview(albumKey);
+          if (storedPreview) {
+            log(`Returning stored preview for album ${albumKey}`);
+            return sendSuccess(res, {
+              ...storedPreview,
+              fromStorage: true
+            }, `Retrieved stored preview with ${storedPreview.images?.length || 0} images`);
+          }
+        }
+        
+        // Fetch fresh data from SmugMug
+        log(`Fetching fresh preview data for album ${albumKey}`);
+        const albumUri = `/api/v2/album/${albumKey}`;
+        
+        // Get album details first
+        const albumDetails = await smugmugClient.getAlbumDetails(
+          smugmugConfig.accessToken,
+          smugmugConfig.accessTokenSecret,
+          albumKey
+        );
+        
+        if (!albumDetails.success) {
+          return sendError(res, 500, 'Failed to get album details: ' + albumDetails.error);
+        }
+        
+        // Get preview images
+        const imagesResult = await smugmugClient.getAlbumPreviewImages(
+          smugmugConfig.accessToken,
+          smugmugConfig.accessTokenSecret,
+          albumUri
+        );
+        
+        if (!imagesResult.success) {
+          return sendError(res, 500, 'Failed to get album preview images: ' + imagesResult.error);
+        }
+        
+        // Prepare preview data
+        const previewData = {
+          albumKey: albumKey,
+          albumName: albumDetails.album.Name,
+          albumUri: albumUri,
+          imageCount: imagesResult.imageCount,
+          images: imagesResult.images
+        };
+        
+        // Save to storage
+        await dataManager.saveAlbumPreview(albumKey, previewData);
+        
+        return sendSuccess(res, {
+          ...previewData,
+          lastFetched: new Date().toISOString(),
+          fromStorage: false
+        }, `Retrieved and stored preview with ${imagesResult.imageCount} images`);
+        
+      } catch (error) {
+        log(`Album preview error: ${error.message}`, 'ERROR');
+        return sendError(res, 500, `Album preview request failed: ${error.message}`, error);
+      }
+    }
 
     // SmugMug album processing status endpoint
     if (pathname.startsWith('/api/smugmug/album/') && pathname.endsWith('/processing-status') && method === 'GET') {

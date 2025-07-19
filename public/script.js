@@ -1030,6 +1030,160 @@ class PhotoVision {
         // Remove from DOM
         lightbox.remove();
     }
+    
+    // Album Preview Methods
+    async previewAlbumImages(albumKey, albumName) {
+        try {
+            // Show loading state on the button
+            const button = document.querySelector(`button[data-album-key="${albumKey}"]`);
+            if (button) {
+                button.disabled = true;
+                button.innerHTML = '<span class="loading-spinner"></span> Loading...';
+            }
+            
+            // Fetch album preview data
+            console.log(`Fetching preview for album: ${albumKey}`);
+            const response = await fetch(`/api/smugmug/album/${albumKey}/preview`);
+            
+            if (!response.ok) {
+                let errorMessage = `HTTP ${response.status}`;
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.error || errorData.message || errorMessage;
+                } catch (e) {
+                    // If JSON parsing fails, use status text
+                    errorMessage = `${errorMessage} - ${response.statusText}`;
+                }
+                throw new Error(errorMessage);
+            }
+            
+            const result = await response.json();
+            
+            // Check if we have valid data
+            if (!result.data || !result.data.images) {
+                throw new Error('Invalid preview data received');
+            }
+            
+            // Transform images for lightbox format
+            const lightboxImages = result.data.images.map(img => ({
+                smugmugUrl: img.largeUrl || img.thumbnailUrl,
+                thumbnail: img.thumbnailUrl,
+                filename: img.filename,
+                caption: img.caption,
+                description: img.caption || img.filename,
+                keywords: [],
+                albumName: albumName
+            }));
+            
+            // Open the lightbox with grid view
+            this.openAlbumPreviewLightbox(lightboxImages, albumName, albumKey);
+            
+        } catch (error) {
+            console.error('Error previewing album:', error);
+            this.addMessage(`Error loading album preview: ${error.message}`, 'assistant');
+        } finally {
+            // Reset button state
+            const button = document.querySelector(`button[data-album-key="${albumKey}"]`);
+            if (button) {
+                button.disabled = false;
+                button.innerHTML = '<span class="preview-text">Preview</span>';
+            }
+        }
+    }
+    
+    openAlbumPreviewLightbox(images, albumName, albumKey) {
+        if (images.length === 0) {
+            this.addMessage('No images found in this album', 'assistant');
+            return;
+        }
+        
+        // Create lightbox HTML with grid layout
+        const lightboxHTML = `
+            <div id="imageLightbox" class="image-modal album-preview-modal">
+                <div class="modal-overlay"></div>
+                <div class="modal-container preview-container">
+                    <div class="preview-header">
+                        <h2 class="preview-title">${albumName}</h2>
+                        <div class="preview-info">
+                            <span class="image-count">${images.length} images</span>
+                            <button class="refresh-preview-btn" data-album-key="${albumKey}" title="Refresh from SmugMug">
+                                <span class="refresh-icon">🔄</span> Refresh
+                            </button>
+                        </div>
+                        <button class="modal-close" id="closeLightbox">&times;</button>
+                    </div>
+                    <div class="preview-grid-container">
+                        <div class="preview-grid">
+                            ${images.map((img, index) => `
+                                <div class="preview-thumbnail" data-index="${index}">
+                                    <img src="${img.thumbnail}" 
+                                         alt="${img.filename}" 
+                                         loading="lazy"
+                                         title="${img.caption || img.filename}">
+                                    <div class="thumbnail-info">
+                                        <span class="thumbnail-name">${img.filename}</span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Add to DOM
+        document.body.insertAdjacentHTML('beforeend', lightboxHTML);
+        
+        // Add event listeners
+        const lightbox = document.getElementById('imageLightbox');
+        const closeBtn = lightbox.querySelector('#closeLightbox');
+        const overlay = lightbox.querySelector('.modal-overlay');
+        const refreshBtn = lightbox.querySelector('.refresh-preview-btn');
+        
+        // Close button
+        closeBtn.addEventListener('click', () => {
+            this.closeLightbox();
+        });
+        
+        // Overlay click
+        overlay.addEventListener('click', () => {
+            this.closeLightbox();
+        });
+        
+        // Escape key
+        const escapeHandler = (e) => {
+            if (e.key === 'Escape') {
+                this.closeLightbox();
+            }
+        };
+        document.addEventListener('keydown', escapeHandler);
+        this.currentLightboxEscapeHandler = escapeHandler;
+        
+        // Refresh button
+        refreshBtn.addEventListener('click', async () => {
+            refreshBtn.disabled = true;
+            refreshBtn.innerHTML = '<span class="loading-spinner"></span> Refreshing...';
+            
+            try {
+                const response = await fetch(`/api/smugmug/album/${albumKey}/preview?refresh=true`);
+                if (response.ok) {
+                    this.closeLightbox();
+                    await this.previewAlbumImages(albumKey, albumName);
+                }
+            } catch (error) {
+                console.error('Error refreshing preview:', error);
+            }
+        });
+        
+        // Thumbnail clicks - open full lightbox
+        lightbox.querySelectorAll('.preview-thumbnail').forEach(thumb => {
+            thumb.addEventListener('click', () => {
+                const index = parseInt(thumb.dataset.index);
+                this.closeLightbox();
+                this.openLightbox(images, index);
+            });
+        });
+    }
 
     generateMetadataHTML(imageData) {
         if (!imageData) return '<div class="slide-metadata-empty">No metadata available</div>';
@@ -2934,6 +3088,13 @@ class PhotoVision {
                                     <span class="metadata-value">${this.formatDate(album.Date)}</span>
                                 </div>
                             ` : ''}
+                            <button class="album-preview-btn" 
+                                    data-album-key="${album.AlbumKey}"
+                                    data-album-name="${album.Name}"
+                                    onclick="event.stopPropagation();"
+                                    title="Preview album images">
+                                <span class="preview-text">Preview</span>
+                            </button>
                         </div>
                         
                         <div class="album-processing-status" id="processing-status-${album.AlbumKey}">
@@ -2952,6 +3113,16 @@ class PhotoVision {
             item.addEventListener('click', (e) => {
                 const albumKey = e.currentTarget.dataset.albumKey;
                 this.selectAlbum(albumKey);
+            });
+        });
+        
+        // Add click handlers for preview buttons
+        albumsList.querySelectorAll('.album-preview-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                const albumKey = btn.dataset.albumKey;
+                const albumName = btn.dataset.albumName;
+                await this.previewAlbumImages(albumKey, albumName);
             });
         });
         
