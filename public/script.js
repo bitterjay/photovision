@@ -952,7 +952,7 @@ class PhotoVision {
         });
     }
 
-    openLightbox(results, startIndex = 0) {
+    openLightbox(results, startIndex = 0, albumPreviewContext = null) {
         // Filter results to only include those with images
         const validResults = results.filter(result => result.smugmugUrl);
         
@@ -960,6 +960,9 @@ class PhotoVision {
             console.warn('No valid images to display in lightbox');
             return;
         }
+        
+        // Store album preview context for potential return
+        this.albumPreviewContext = albumPreviewContext;
         
         // Adjust start index for filtered results
         const adjustedStartIndex = Math.min(startIndex, validResults.length - 1);
@@ -969,6 +972,14 @@ class PhotoVision {
             <div id="imageLightbox" class="image-modal">
                 <div class="modal-overlay"></div>
                 <div class="modal-container">
+                    ${albumPreviewContext ? `
+                        <button class="back-to-grid-btn" id="backToGrid" title="Back to album grid">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 12H5M12 19l-7-7 7-7"/>
+                            </svg>
+                            <span>Back to Grid</span>
+                        </button>
+                    ` : ''}
                     <button class="modal-close" id="closeLightbox">&times;</button>
                     <div class="swiper-container" id="lightboxSwiper">
                         <div class="swiper-wrapper">
@@ -1037,12 +1048,25 @@ class PhotoVision {
     addLightboxEventListeners() {
         const lightbox = document.getElementById('imageLightbox');
         const closeBtn = document.getElementById('closeLightbox');
+        const backToGridBtn = document.getElementById('backToGrid');
         const overlay = lightbox.querySelector('.modal-overlay');
         
         // Close button
         closeBtn.addEventListener('click', () => {
             this.closeLightbox();
         });
+        
+        // Back to grid button
+        if (backToGridBtn && this.albumPreviewContext) {
+            backToGridBtn.addEventListener('click', () => {
+                this.closeLightbox();
+                // Reopen the album preview grid
+                this.previewAlbumImages(
+                    this.albumPreviewContext.albumKey,
+                    this.albumPreviewContext.albumName
+                );
+            });
+        }
         
         // Overlay click
         overlay.addEventListener('click', () => {
@@ -1115,17 +1139,24 @@ class PhotoVision {
             }
             
             // Transform images for lightbox format
-            const lightboxImages = result.data.images.map(img => ({
-                smugmugUrl: img.largeUrl || img.thumbnailUrl,
-                thumbnail: img.thumbnailUrl,
-                filename: img.filename,
-                caption: img.caption,
-                description: img.caption || img.filename,
-                keywords: [],
-                albumName: albumName,
-                imageKey: img.imageKey,
-                smugmugImageKey: img.imageKey
-            }));
+            const lightboxImages = result.data.images.map(img => {
+                // Debug: Log the raw image data
+                console.log('Raw image data:', img);
+                
+                return {
+                    smugmugUrl: img.largeUrl || img.thumbnailUrl,
+                    thumbnail: img.thumbnailUrl,
+                    filename: img.filename,
+                    caption: img.caption,
+                    description: img.description || img.caption || img.filename,
+                    keywords: img.keywords || [],
+                    albumName: albumName,
+                    imageKey: img.imageKey,
+                    smugmugImageKey: img.imageKey,
+                    isProcessed: img.isProcessed || false,
+                    analysisTimestamp: img.analysisTimestamp
+                };
+            });
             
             // Open the lightbox with grid view
             this.openAlbumPreviewLightbox(lightboxImages, albumName, albumKey);
@@ -1175,17 +1206,24 @@ class PhotoVision {
             }
             
             // Transform images for lightbox format
-            const lightboxImages = result.data.images.map(img => ({
-                smugmugUrl: img.largeUrl || img.thumbnailUrl,
-                thumbnail: img.thumbnailUrl,
-                filename: img.filename,
-                caption: img.caption,
-                description: img.caption || img.filename,
-                keywords: [],
-                albumName: albumName,
-                imageKey: img.imageKey,
-                smugmugImageKey: img.imageKey
-            }));
+            const lightboxImages = result.data.images.map(img => {
+                // Debug: Log the raw image data
+                console.log('Raw image data:', img);
+                
+                return {
+                    smugmugUrl: img.largeUrl || img.thumbnailUrl,
+                    thumbnail: img.thumbnailUrl,
+                    filename: img.filename,
+                    caption: img.caption,
+                    description: img.description || img.caption || img.filename,
+                    keywords: img.keywords || [],
+                    albumName: albumName,
+                    imageKey: img.imageKey,
+                    smugmugImageKey: img.imageKey,
+                    isProcessed: img.isProcessed || false,
+                    analysisTimestamp: img.analysisTimestamp
+                };
+            });
             
             // Open the lightbox in selection mode
             this.openAlbumPreviewLightbox(lightboxImages, albumName, albumKey, true);
@@ -1208,6 +1246,10 @@ class PhotoVision {
             this.addMessage('No images found in this album', 'assistant');
             return;
         }
+        
+        // Debug: Log images to see what data we have
+        console.log('Preview lightbox images:', images);
+        console.log('First image details:', images[0]);
         
         // Build header HTML based on selection mode
         let headerHTML = '';
@@ -1260,17 +1302,18 @@ class PhotoVision {
                             ${images.map((img, index) => {
                                 const isExcluded = selectionMode ? this.isImageExcluded(albumKey, img.smugmugImageKey || img.imageKey) : false;
                                 return `
-                                    <div class="preview-thumbnail${isExcluded ? ' excluded' : ''}" data-index="${index}" data-image-key="${img.smugmugImageKey || img.imageKey || ''}">
+                                    <div class="preview-thumbnail${isExcluded ? ' excluded' : ''}${img.isProcessed ? ' processed' : ''}" data-index="${index}" data-image-key="${img.smugmugImageKey || img.imageKey || ''}">
                                         ${selectionMode ? `
                                             <input type="checkbox" 
                                                    class="image-checkbox" 
                                                    ${isExcluded ? 'checked' : ''}
                                                    data-image-key="${img.smugmugImageKey || img.imageKey || ''}">
                                         ` : ''}
+                                        ${img.isProcessed ? '<div class="processed-indicator" title="This image has been analyzed">✓</div>' : ''}
                                         <img src="${img.thumbnail}" 
                                              alt="${img.filename}" 
                                              loading="lazy"
-                                             title="${img.caption || img.filename}">
+                                             title="${img.isProcessed && img.description ? img.description : (img.caption || img.filename)}">
                                         <div class="thumbnail-info">
                                             <span class="thumbnail-name">${img.filename}</span>
                                         </div>
@@ -1393,7 +1436,13 @@ class PhotoVision {
                 thumb.addEventListener('click', () => {
                     const index = parseInt(thumb.dataset.index);
                     this.closeLightbox();
-                    this.openLightbox(images, index);
+                    // Pass album preview context
+                    this.openLightbox(images, index, {
+                        fromAlbumPreview: true,
+                        albumKey: albumKey,
+                        albumName: albumName,
+                        selectionMode: false
+                    });
                 });
             });
         }

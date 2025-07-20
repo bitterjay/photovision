@@ -1143,9 +1143,59 @@ Be specific and descriptive to enable natural language searches like "photos of 
         if (!forceRefresh) {
           const storedPreview = await dataManager.getAlbumPreview(albumKey);
           if (storedPreview) {
-            log(`Returning stored preview for album ${albumKey}`);
+            log(`Enhancing stored preview for album ${albumKey} with fresh metadata`);
+            
+            // Get processed images to enhance stored preview
+            let processedImages = [];
+            try {
+              const storageMode = await dataManager.getStorageMode();
+              if (storageMode === 'album') {
+                const albumDataManager = dataManager.albumDataManager;
+                processedImages = await albumDataManager.loadAlbum(albumKey);
+              } else {
+                const allImages = await dataManager.getImages();
+                processedImages = allImages.filter(img => img.albumKey === albumKey);
+              }
+            } catch (error) {
+              console.log(`No processed images found for album ${albumKey}:`, error.message);
+            }
+            
+            // Create lookup map for processed images
+            const processedLookup = new Map();
+            processedImages.forEach(img => {
+              if (img.smugmugImageKey) {
+                processedLookup.set(img.smugmugImageKey, img);
+              }
+            });
+            
+            // Enhance stored images with fresh metadata
+            const enhancedImages = storedPreview.images.map(smugmugImage => {
+              const processedData = processedLookup.get(smugmugImage.imageKey || smugmugImage.ImageKey);
+              if (processedData) {
+                return {
+                  ...smugmugImage,
+                  isProcessed: true,
+                  description: processedData.description,
+                  keywords: processedData.keywords,
+                  analysisTimestamp: processedData.timestamp || processedData.metadata?.timestamp
+                };
+              }
+              return {
+                ...smugmugImage,
+                isProcessed: smugmugImage.isProcessed || false
+              };
+            });
+            
+            // Update processed count
+            const processedCount = processedLookup.size;
+            const processingProgress = storedPreview.imageCount > 0 ? 
+              Math.round((processedCount / storedPreview.imageCount) * 100) : 0;
+            
             return sendSuccess(res, {
               ...storedPreview,
+              images: enhancedImages,
+              processedCount: processedCount,
+              processingProgress: processingProgress,
               fromStorage: true
             }, `Retrieved stored preview with ${storedPreview.images?.length || 0} images`);
           }
@@ -1177,13 +1227,61 @@ Be specific and descriptive to enable natural language searches like "photos of 
           return sendError(res, 500, 'Failed to get album preview images: ' + imagesResult.error);
         }
         
+        // Enhance preview data with processed metadata
+        let processedImages = [];
+        try {
+          // Check if we're in album storage mode and load processed images
+          const storageMode = await dataManager.getStorageMode();
+          if (storageMode === 'album') {
+            const albumDataManager = dataManager.albumDataManager;
+            processedImages = await albumDataManager.loadAlbum(albumKey);
+          } else {
+            // In single mode, get all images and filter
+            const allImages = await dataManager.getImages();
+            processedImages = allImages.filter(img => img.albumKey === albumKey);
+          }
+        } catch (error) {
+          console.log(`No processed images found for album ${albumKey}:`, error.message);
+        }
+        
+        // Create lookup map for processed images
+        const processedLookup = new Map();
+        processedImages.forEach(img => {
+          if (img.smugmugImageKey) {
+            processedLookup.set(img.smugmugImageKey, img);
+          }
+        });
+        
+        // Merge processed metadata with preview images
+        const enhancedImages = imagesResult.images.map(smugmugImage => {
+          // Handle both imageKey and ImageKey for compatibility
+          const imageKey = smugmugImage.imageKey || smugmugImage.ImageKey;
+          const processedData = processedLookup.get(imageKey);
+          if (processedData) {
+            return {
+              ...smugmugImage,
+              isProcessed: true,
+              description: processedData.description,
+              keywords: processedData.keywords,
+              analysisTimestamp: processedData.timestamp || processedData.metadata?.timestamp
+            };
+          }
+          return {
+            ...smugmugImage,
+            isProcessed: false
+          };
+        });
+        
         // Prepare preview data
         const previewData = {
           albumKey: albumKey,
           albumName: albumDetails.album.Name,
           albumUri: albumUri,
           imageCount: imagesResult.imageCount,
-          images: imagesResult.images
+          images: enhancedImages,
+          processedCount: processedLookup.size,
+          processingProgress: imagesResult.imageCount > 0 ? 
+            Math.round((processedLookup.size / imagesResult.imageCount) * 100) : 0
         };
         
         // Save to storage
