@@ -277,8 +277,8 @@
     "lastModified": "2025-07-18T21:18:31.483Z"
   },
   "claudeModelConfig": {
-    "chatModel": "claude-3-5-haiku-20241022",
-    "batchProcessingModel": "claude-3-opus-20240229",
+    "chatModel": "claude-3-5-sonnet-20241022",
+    "batchProcessingModel": "claude-3-haiku-20240307",
     "availableModels": [
       {
         "id": "claude-3-5-sonnet-20241022",
@@ -317,6 +317,14 @@
       }
     ],
     "modifiedBy": "admin",
-    "lastModified": "2025-07-18T21:19:40.350Z"
+    "lastModified": "2025-07-19T22:43:45.951Z"
+  },
+  "apiKeys": {
+    "lastUpdated": "2025-07-20T00:37:35.526Z",
+    "claude": {
+      "encrypted": "UK4VR/JjFm2Aci+8EPmOuDE/YahzochgIuhNdSAkQBOz99bU0F6ADPPvz6LqlgDw3QyhVGBnsB5BgrpwOmk8kXWpIF9SOnC1zzdGP0CfvSxNQv+izpgt0f64MQPBIsICxp/ZU8uMIuny/gPV",
+      "iv": "cVVmMfm4TMbjNyC2BTlH4w==",
+      "tag": "HaB784QtUkP0wOlyoeEpiA=="
+    }
   }
 }

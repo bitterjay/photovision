@@ -307,7 +307,7 @@
     color: var(--text-primary);
     font-size: 0.875rem;
     flex-shrink: 0;
-    min-width: 80px;
+    /* min-width: 80px; */
 }
 
 .metadata-value {

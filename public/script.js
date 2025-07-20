@@ -1799,15 +1799,49 @@ class PhotoVision {
         this.updateServiceStatus('claude', 'checking', 'Testing connection...');
         
         try {
+            // First check API key status
+            const keyStatusResponse = await fetch('/api/admin/api-keys/status');
+            const keyStatusData = await keyStatusResponse.json();
+            
+            let apiKeyInfo = null;
+            if (keyStatusData.success && keyStatusData.data.claude) {
+                const keyStatus = keyStatusData.data.claude;
+                apiKeyInfo = {
+                    configured: keyStatus.configured,
+                    source: keyStatus.source,
+                    maskedKey: keyStatus.maskedKey
+                };
+            }
+            
+            // If no API key is configured, show appropriate status
+            if (!apiKeyInfo || !apiKeyInfo.configured) {
+                this.updateServiceStatus('claude', 'disconnected', 'Not Configured', {
+                    apiKeyInfo: { configured: false }
+                });
+                this.disableChat();
+                return;
+            }
+            
+            // Check Claude health if API key exists
             const response = await fetch('/api/health/claude');
             const data = await response.json();
             
             if (data.success) {
-                this.updateServiceStatus('claude', 'connected', 'Connected');
+                this.updateServiceStatus('claude', 'connected', 'Connected', { apiKeyInfo });
                 // Enable chat interface when Claude AI is connected
                 this.enableChat();
             } else {
-                this.updateServiceStatus('claude', 'disconnected', 'Connection failed');
+                // Handle different error cases
+                let statusMessage = 'Connection failed';
+                if (response.status === 503) {
+                    statusMessage = 'Initializing...';
+                } else if (response.status === 400) {
+                    statusMessage = 'No API key';
+                } else if (data.error && data.error.includes('credit balance')) {
+                    statusMessage = 'Insufficient credits';
+                }
+                
+                this.updateServiceStatus('claude', 'disconnected', statusMessage, { apiKeyInfo });
                 // Disable chat interface when Claude AI is not connected
                 this.disableChat();
             }
@@ -1844,7 +1878,7 @@ class PhotoVision {
         }
     }
 
-    updateServiceStatus(service, status, message) {
+    updateServiceStatus(service, status, message, additionalInfo = {}) {
         const statusElement = document.getElementById(`${service}Status`);
         if (!statusElement) return;
         
@@ -1859,6 +1893,60 @@ class PhotoVision {
             
             text.textContent = message;
         }
+        
+        // Handle Claude-specific API key information
+        if (service === 'claude' && additionalInfo.apiKeyInfo) {
+            this.updateClaudeApiKeyInfo(additionalInfo.apiKeyInfo);
+        }
+    }
+    
+    updateClaudeApiKeyInfo(apiKeyInfo) {
+        const serviceCard = document.getElementById('claudeStatusCard');
+        if (!serviceCard) return;
+        
+        // Remove existing API key info if any
+        const existingInfo = serviceCard.querySelector('.api-key-info-status');
+        if (existingInfo) {
+            existingInfo.remove();
+        }
+        
+        // Create new API key info element
+        const infoDiv = document.createElement('div');
+        infoDiv.className = 'api-key-info-status';
+        
+        if (!apiKeyInfo.configured) {
+            infoDiv.innerHTML = `
+                <div class="api-key-status-line">
+                    <svg class="status-icon warning" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <span class="api-key-status-text">No API key configured</span>
+                </div>
+            `;
+        } else {
+            const sourceText = apiKeyInfo.source === 'database' ? 'Encrypted Storage' : 'Environment Variable';
+            const sourceIcon = apiKeyInfo.source === 'database' ? 
+                '<path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>' : 
+                '<rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9"></path>';
+            
+            infoDiv.innerHTML = `
+                <div class="api-key-status-line">
+                    <svg class="status-icon success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        ${sourceIcon}
+                    </svg>
+                    <span class="api-key-status-text">${sourceText}</span>
+                    ${apiKeyInfo.maskedKey ? `<code class="masked-key">${apiKeyInfo.maskedKey}</code>` : ''}
+                </div>
+            `;
+        }
+        
+        // Insert after service-info div
+        const serviceInfo = serviceCard.querySelector('.service-info');
+        if (serviceInfo) {
+            serviceInfo.appendChild(infoDiv);
+        }
     }
 
     async testClaudeConnection() {
@@ -1868,6 +1956,22 @@ class PhotoVision {
         const statusElement = document.getElementById('claudeStatus');
         const status = statusElement ? statusElement.querySelector('.status-text').textContent : 'Unknown';
         this.addMessage(`Claude AI test result: ${status}`, 'assistant');
+    }
+    
+    navigateToApiConfig() {
+        // Switch to admin tab
+        this.setActiveTab('admin');
+        
+        // Scroll to API configuration card
+        setTimeout(() => {
+            const apiConfigCard = document.getElementById('apiConfigurationCard');
+            if (apiConfigCard) {
+                apiConfigCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                // Add a highlight effect
+                apiConfigCard.classList.add('highlight');
+                setTimeout(() => apiConfigCard.classList.remove('highlight'), 2000);
+            }
+        }, 100);
     }
 
     async testSmugMugConnection() {
@@ -5167,6 +5271,207 @@ Be specific and descriptive to enable natural language searches like "photos of 
     
     // Initialize model configuration
     loadModelConfig();
+});
+
+// === API KEY CONFIGURATION ===
+
+// API Key Configuration functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const apiKeyInput = document.getElementById('claudeApiKey');
+    const saveApiKeyBtn = document.getElementById('saveApiKey');
+    const testApiKeyBtn = document.getElementById('testApiKey');
+    const apiKeyStatus = document.getElementById('apiKeyStatus');
+    const currentApiKeyInfo = document.getElementById('currentApiKeyInfo');
+    const toggleKeyVisibility = document.getElementById('toggleKeyVisibility');
+    const migrationNotice = document.getElementById('migrationNotice');
+    
+    // Load current API key status
+    async function loadApiKeyStatus() {
+        try {
+            const response = await fetch('/api/admin/api-keys/status');
+            const data = await response.json();
+            
+            if (data.success) {
+                const status = data.data.claude; // The server wraps it in 'claude' property
+                
+                // Update current key info
+                if (status.configured) {
+                    currentApiKeyInfo.innerHTML = `
+                        <div class="api-key-info">
+                            <strong>Current API Key:</strong> ${status.maskedKey}
+                            <span class="api-source">(${status.source === 'database' ? 'Encrypted Storage' : 'Environment Variable'})</span>
+                        </div>
+                    `;
+                    
+                    // Show migration notice if using environment variable
+                    if (status.source === 'environment' && migrationNotice) {
+                        migrationNotice.style.display = 'block';
+                    }
+                } else {
+                    currentApiKeyInfo.innerHTML = '<div class="warning">No API key configured</div>';
+                }
+            }
+        } catch (error) {
+            console.error('Error loading API key status:', error);
+            currentApiKeyInfo.innerHTML = '<div class="error">Failed to load API key status</div>';
+        }
+    }
+    
+    // Save API key
+    async function saveApiKey() {
+        const apiKey = apiKeyInput.value.trim();
+        const inputWrapper = apiKeyInput.closest('.api-key-input-wrapper');
+        
+        if (!apiKey) {
+            showStatus('Please enter an API key', 'error');
+            inputWrapper.classList.add('error');
+            setTimeout(() => inputWrapper.classList.remove('error'), 1000);
+            return;
+        }
+        
+        // Basic validation
+        if (!apiKey.startsWith('sk-ant-')) {
+            showStatus('Invalid API key format. Claude API keys should start with "sk-ant-"', 'error');
+            inputWrapper.classList.add('error');
+            setTimeout(() => inputWrapper.classList.remove('error'), 1000);
+            return;
+        }
+        
+        // Disable button and show loading
+        saveApiKeyBtn.disabled = true;
+        saveApiKeyBtn.textContent = 'Saving...';
+        inputWrapper.classList.add('loading');
+        
+        try {
+            const response = await fetch('/api/admin/api-keys/claude', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ apiKey })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                showStatus('API key saved successfully', 'success');
+                apiKeyInput.value = ''; // Clear the input
+                inputWrapper.classList.remove('loading');
+                inputWrapper.classList.add('success');
+                setTimeout(() => inputWrapper.classList.remove('success'), 2000);
+                await loadApiKeyStatus(); // Reload status
+                
+                // Hide migration notice if it was shown
+                if (migrationNotice) {
+                    migrationNotice.style.display = 'none';
+                }
+            } else {
+                showStatus(data.error || 'Failed to save API key', 'error');
+                inputWrapper.classList.remove('loading');
+                inputWrapper.classList.add('error');
+                setTimeout(() => inputWrapper.classList.remove('error'), 1000);
+            }
+        } catch (error) {
+            console.error('Error saving API key:', error);
+            showStatus('Failed to save API key', 'error');
+            inputWrapper.classList.remove('loading');
+            inputWrapper.classList.add('error');
+            setTimeout(() => inputWrapper.classList.remove('error'), 1000);
+        } finally {
+            // Re-enable button
+            saveApiKeyBtn.disabled = false;
+            saveApiKeyBtn.textContent = 'Save API Key';
+            inputWrapper.classList.remove('loading');
+        }
+    }
+    
+    // Test API connection
+    async function testApiConnection() {
+        // Disable button and show loading
+        testApiKeyBtn.disabled = true;
+        testApiKeyBtn.textContent = 'Testing...';
+        
+        try {
+            const response = await fetch('/api/admin/api-keys/test', {
+                method: 'POST'
+            });
+            
+            const data = await response.json();
+            
+            if (data.success && data.data.valid) {
+                showStatus('API connection successful!', 'success');
+            } else {
+                const errorMessage = data.data?.message || data.error || 'API connection failed';
+                showStatus(errorMessage, 'error');
+            }
+        } catch (error) {
+            console.error('Error testing API connection:', error);
+            showStatus('Failed to test API connection', 'error');
+        } finally {
+            // Re-enable button
+            testApiKeyBtn.disabled = false;
+            testApiKeyBtn.textContent = 'Test Connection';
+        }
+    }
+    
+    // Show status message
+    function showStatus(message, type) {
+        if (!apiKeyStatus) return;
+        
+        apiKeyStatus.textContent = message;
+        apiKeyStatus.className = `status-message ${type}`;
+        apiKeyStatus.style.display = 'block';
+        
+        // Auto-hide success messages after 5 seconds
+        if (type === 'success') {
+            setTimeout(() => {
+                apiKeyStatus.style.display = 'none';
+            }, 5000);
+        }
+    }
+    
+    // Toggle password visibility with enhanced icons
+    if (toggleKeyVisibility && apiKeyInput) {
+        toggleKeyVisibility.addEventListener('click', () => {
+            const currentType = apiKeyInput.type;
+            const eyeIcon = toggleKeyVisibility.querySelector('.eye-icon');
+            const eyeOffIcon = toggleKeyVisibility.querySelector('.eye-off-icon');
+            
+            if (currentType === 'password') {
+                apiKeyInput.type = 'text';
+                eyeIcon.style.display = 'none';
+                eyeOffIcon.style.display = 'block';
+                toggleKeyVisibility.title = 'Hide API key';
+            } else {
+                apiKeyInput.type = 'password';
+                eyeIcon.style.display = 'block';
+                eyeOffIcon.style.display = 'none';
+                toggleKeyVisibility.title = 'Show API key';
+            }
+        });
+    }
+    
+    // Event listeners
+    if (saveApiKeyBtn) {
+        saveApiKeyBtn.addEventListener('click', saveApiKey);
+    }
+    
+    if (testApiKeyBtn) {
+        testApiKeyBtn.addEventListener('click', testApiConnection);
+    }
+    
+    // Enter key in API key input
+    if (apiKeyInput) {
+        apiKeyInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                saveApiKey();
+            }
+        });
+    }
+    
+    // Initialize API key status
+    loadApiKeyStatus();
 });
 
 // === IMAGE LOADING ENHANCEMENT FUNCTIONS ===

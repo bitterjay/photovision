@@ -444,3 +444,59 @@
         opacity: 0.3;
     }
 }
+
+/* API Key Status in Service Card */
+.api-key-info-status {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.api-key-status-line {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.api-key-status-line .status-icon {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+}
+
+.api-key-status-line .status-icon.success {
+    color: var(--success);
+}
+
+.api-key-status-line .status-icon.warning {
+    color: var(--warning);
+}
+
+.api-key-status-text {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.masked-key {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    background: var(--bg-primary);
+    padding: 0.125rem 0.5rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+}
+
+/* Service card actions for multiple buttons */
+.service-card .service-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.service-card .service-actions .btn {
+    flex: 1;
+    min-width: 80px;
+}

@@ -10,7 +10,40 @@ const JobQueue = require('./lib/jobQueue');
 
 const PORT = process.env.PORT || 3001;
 const dataManager = new DataManager();
-const claudeClient = new ClaudeClient(process.env.ANTHROPIC_API_KEY);
+
+// Initialize Claude client with API key from storage or environment
+let claudeClient;
+
+// Initialize Claude client before starting server
+async function initializeClaudeClient() {
+  try {
+    const apiKey = await dataManager.getClaudeApiKey();
+    claudeClient = new ClaudeClient(apiKey);
+    
+    if (apiKey) {
+      log('Claude client initialized with API key from ' + 
+          (process.env.ANTHROPIC_API_KEY && !await dataManager.getConfig().then(c => c.apiKeys?.claude) ? 'environment' : 'database'));
+    } else {
+      log('Claude client initialized without API key - please configure in admin panel', 'WARN');
+    }
+    
+    // Migrate from environment variable if needed
+    if (process.env.ANTHROPIC_API_KEY && !apiKey) {
+      const migrationResult = await dataManager.migrateApiKeyFromEnv();
+      if (migrationResult.success) {
+        log('Migrated Claude API key from environment variable to encrypted storage');
+        // Re-initialize with migrated key
+        const newApiKey = await dataManager.getClaudeApiKey();
+        claudeClient = new ClaudeClient(newApiKey);
+      }
+    }
+  } catch (error) {
+    log(`Failed to initialize Claude client: ${error.message}`, 'ERROR');
+    // Initialize with null to prevent undefined errors
+    claudeClient = new ClaudeClient(null);
+  }
+}
+
 const smugmugClient = new SmugMugClient(process.env.SMUGMUG_API_KEY, process.env.SMUGMUG_API_SECRET);
 const jobQueue = new JobQueue();
 
@@ -171,6 +204,18 @@ async function handleAPIRoutes(req, res, parsedUrl) {
       log('Claude health check request received');
       
       try {
+        // Check if Claude client is initialized
+        if (!claudeClient) {
+          log('Claude client not initialized', 'ERROR');
+          return sendError(res, 503, 'Claude client not initialized. Please wait a moment and try again.');
+        }
+        
+        // Check if API key exists
+        if (!claudeClient.apiKey) {
+          log('No Claude API key configured', 'ERROR');
+          return sendError(res, 400, 'No Claude API key configured. Please configure your API key in the admin panel.');
+        }
+        
         // Get model configuration
         const modelConfig = await dataManager.getClaudeModelConfig();
         const batchProcessingModel = modelConfig.batchProcessingModel;
@@ -600,7 +645,8 @@ Be specific and descriptive to enable natural language searches like "photos of 
       log('Image analysis request received');
       
       // Check if Claude API key is configured
-      if (!process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY === 'your_anthropic_api_key_here') {
+      const apiKeyStatus = await dataManager.getClaudeApiKeyStatus();
+      if (!apiKeyStatus.configured) {
         return sendError(res, 500, 'Claude API key not configured');
       }
 
@@ -673,7 +719,8 @@ Be specific and descriptive to enable natural language searches like "photos of 
       log('Image analysis test request received');
       
       // Check if Claude API key is configured
-      if (!process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY === 'your_anthropic_api_key_here') {
+      const apiKeyStatus = await dataManager.getClaudeApiKeyStatus();
+      if (!apiKeyStatus.configured) {
         return sendError(res, 500, 'Claude API key not configured');
       }
       
@@ -2013,6 +2060,108 @@ Be specific and descriptive to enable natural language searches like "photos of 
       }
     }
 
+    // API Key Management endpoints
+    
+    // Get API key status
+    if (pathname === '/api/admin/api-keys/status' && method === 'GET') {
+      log('API key status request');
+      
+      try {
+        const status = await dataManager.getClaudeApiKeyStatus();
+        
+        return sendSuccess(res, {
+          claude: status
+        });
+      } catch (error) {
+        log(`Error getting API key status: ${error.message}`, 'ERROR');
+        return sendError(res, 500, 'Failed to get API key status', error);
+      }
+    }
+    
+    // Update Claude API key
+    if (pathname === '/api/admin/api-keys/claude' && method === 'POST') {
+      log('Claude API key update request');
+      
+      try {
+        const data = await parseJSON(req);
+        
+        if (!data.apiKey) {
+          return sendError(res, 400, 'API key is required');
+        }
+        
+        // Save the new API key
+        const result = await dataManager.saveClaudeApiKey(data.apiKey);
+        
+        // Update the Claude client with the new key
+        const newApiKey = await dataManager.getClaudeApiKey();
+        claudeClient.updateApiKey(newApiKey);
+        
+        return sendSuccess(res, result);
+      } catch (error) {
+        log(`Error updating Claude API key: ${error.message}`, 'ERROR');
+        return sendError(res, 500, error.message);
+      }
+    }
+    
+    // Test Claude API key
+    if (pathname === '/api/admin/api-keys/test' && method === 'POST') {
+      log('Claude API key test request');
+      
+      try {
+        const data = await parseJSON(req);
+        const testKey = data.apiKey || await dataManager.getClaudeApiKey();
+        
+        if (!testKey) {
+          return sendError(res, 400, 'No API key to test');
+        }
+        
+        // Create a temporary Claude client with the test key
+        const ClaudeClient = require('./lib/claudeClient');
+        const testClient = new ClaudeClient(testKey);
+        
+        // Test the API key with a simple request
+        const testResult = await testClient.testConnection();
+        
+        if (testResult.success) {
+          return sendSuccess(res, {
+            valid: true,
+            message: 'API key is valid'
+          });
+        } else {
+          return sendSuccess(res, {
+            valid: false,
+            message: testResult.error || 'API key is invalid'
+          });
+        }
+      } catch (error) {
+        log(`Error testing Claude API key: ${error.message}`, 'ERROR');
+        return sendSuccess(res, {
+          valid: false,
+          message: error.message
+        });
+      }
+    }
+    
+    // Migrate API key from environment variable
+    if (pathname === '/api/admin/api-keys/migrate' && method === 'POST') {
+      log('API key migration request');
+      
+      try {
+        const result = await dataManager.migrateApiKeyFromEnv();
+        
+        if (result.success) {
+          // Update Claude client with migrated key
+          const apiKey = await dataManager.getClaudeApiKey();
+          claudeClient.updateApiKey(apiKey);
+        }
+        
+        return sendSuccess(res, result);
+      } catch (error) {
+        log(`Error migrating API key: ${error.message}`, 'ERROR');
+        return sendError(res, 500, 'Failed to migrate API key', error);
+      }
+    }
+
     // Admin destroy all data endpoint (frontend-compatible)
     if (pathname === '/api/admin/destroy-all-data' && method === 'POST') {
       log('ADMIN DESTROY ALL DATA request received - TESTING ONLY', 'WARN');
@@ -2162,11 +2311,14 @@ const server = http.createServer(async (req, res) => {
   res.end('Not found');
 });
 
-// Start server
-server.listen(PORT, () => {
-  log(`🚀 PhotoVision is ready to help you discover amazing photos!`);
-  log(`💻 Server running on http://localhost:${PORT}`);
-  log(`📸 AI-powered photo search is online and ready for natural conversations!`);
+// Initialize Claude client and start server
+async function startServer() {
+  await initializeClaudeClient();
+  
+  server.listen(PORT, () => {
+    log(`🚀 PhotoVision is ready to help you discover amazing photos!`);
+    log(`💻 Server running on http://localhost:${PORT}`);
+    log(`📸 AI-powered photo search is online and ready for natural conversations!`);
   log('Available API endpoints:');
   log('  GET  /api/status    - Get application status');
   log('  GET  /api/search?q= - Search images');
@@ -2197,7 +2349,17 @@ server.listen(PORT, () => {
   log('  POST /api/admin/duplicates/rollback - Rollback duplicate cleanup');
   log('  GET  /api/admin/duplicates/utility  - Get duplicate utility info');
   log('  GET  /api/admin/duplicates/backups  - Get backup files');
+  log('  GET  /api/admin/api-keys/status     - Get API key status');
+  log('  POST /api/admin/api-keys/claude     - Save Claude API key');
+  log('  POST /api/admin/api-keys/test       - Test API connection');
   log('Press Ctrl+C to stop');
+  });
+}
+
+// Start the server
+startServer().catch(error => {
+  log(`Failed to start server: ${error.message}`, 'FATAL');
+  process.exit(1);
 });
 
 // Graceful shutdown
