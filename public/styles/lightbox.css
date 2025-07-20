@@ -1190,10 +1190,18 @@ input[type=number] {
 }
 
 /* Keyword Editor Styles */
+.metadata-keywords-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    width: 100%;
+}
+
+.metadata-keywords-header .metadata-keywords {
+    flex: 1;
+}
+
 .keyword-edit-btn {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
     background: var(--bg-tertiary);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
@@ -1206,6 +1214,7 @@ input[type=number] {
     display: flex;
     align-items: center;
     gap: 0.375rem;
+    flex-shrink: 0;
 }
 
 .keyword-edit-btn:hover {
@@ -1219,6 +1228,12 @@ input[type=number] {
 .keyword-edit-btn svg {
     width: 0.875rem;
     height: 0.875rem;
+}
+
+.no-keywords {
+    color: var(--text-muted);
+    font-style: italic;
+    font-size: 0.875rem;
 }
 
 /* Editable Keywords */

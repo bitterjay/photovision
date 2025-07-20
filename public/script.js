@@ -1482,7 +1482,7 @@ class PhotoVision {
         // Description section
         if (imageData.claudeDescription || imageData.description) {
             sections.push(`
-                <div class="metadata-section">
+                <div class="metadata-section collapsed">
                     <div class="metadata-section-header" onclick="this.parentElement.classList.toggle('collapsed')">
                         <div class="metadata-section-title">
                             📝 Description
@@ -1500,26 +1500,28 @@ class PhotoVision {
 
         // Keywords section
         sections.push(`
-            <div class="metadata-section" data-image-key="${imageData.smugmugImageKey || imageData.imageKey || imageData.id}">
-                <div class="metadata-section-header" onclick="this.parentElement.classList.toggle('collapsed')">
+            <div class="metadata-section collapsed" data-image-key="${imageData.smugmugImageKey || imageData.imageKey || imageData.id}">
+                <div class="metadata-section-header" onclick="if(!this.parentElement.classList.contains('editing')){this.parentElement.classList.toggle('collapsed')}">
                     <div class="metadata-section-title">
                         🏷️ Keywords
                     </div>
-                    <button class="keyword-edit-btn" onclick="window.photoVision.toggleKeywordEdit('${imageData.smugmugImageKey || imageData.imageKey || imageData.id}')" title="Edit keywords">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                        </svg>
-                    </button>
                     <div class="metadata-section-toggle">▼</div>
                 </div>
                 <div class="metadata-section-body">
                     <div class="keywords-view-mode">
-                        <div class="metadata-keywords">
-                            ${imageData.keywords && imageData.keywords.length > 0 
-                                ? imageData.keywords.map(keyword => `<span class="metadata-keyword">${keyword}</span>`).join('')
-                                : '<span class="no-keywords">No keywords yet</span>'
-                            }
+                        <div class="metadata-keywords-header">
+                            <div class="metadata-keywords">
+                                ${imageData.keywords && imageData.keywords.length > 0 
+                                    ? imageData.keywords.map(keyword => `<span class="metadata-keyword">${keyword}</span>`).join('')
+                                    : '<span class="no-keywords">No keywords yet</span>'
+                                }
+                            </div>
+                            <button class="keyword-edit-btn" onclick="window.photoVision.toggleKeywordEdit('${imageData.smugmugImageKey || imageData.imageKey || imageData.id}')" title="Edit keywords">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                            </button>
                         </div>
                     </div>
                     <div class="keywords-edit-mode" style="display: none;">
@@ -1555,7 +1557,7 @@ class PhotoVision {
         // Album Information
         if (imageData.albumName || imageData.albumPath || imageData.albumHierarchy) {
             sections.push(`
-                <div class="metadata-section">
+                <div class="metadata-section collapsed">
                     <div class="metadata-section-header" onclick="this.parentElement.classList.toggle('collapsed')">
                         <div class="metadata-section-title">
                             📁 Album Information
@@ -1618,7 +1620,7 @@ class PhotoVision {
 
         if (technicalInfo.length > 0) {
             sections.push(`
-                <div class="metadata-section">
+                <div class="metadata-section collapsed">
                     <div class="metadata-section-header" onclick="this.parentElement.classList.toggle('collapsed')">
                         <div class="metadata-section-title">
                             ⚙️ Technical Details
@@ -4193,6 +4195,7 @@ class PhotoVision {
         
         if (editMode.style.display === 'none') {
             // Enter edit mode
+            section.classList.add('editing');
             viewMode.style.display = 'none';
             editMode.style.display = 'block';
             editBtn.style.display = 'none';
@@ -4206,6 +4209,7 @@ class PhotoVision {
             if (input) input.focus();
         } else {
             // Exit edit mode
+            section.classList.remove('editing');
             viewMode.style.display = 'block';
             editMode.style.display = 'none';
             editBtn.style.display = 'block';
