@@ -727,6 +727,54 @@ Be specific and descriptive to enable natural language searches like "photos of 
       }
     }
 
+    // Update image keywords endpoint
+    if (pathname.match(/^\/api\/images\/(.+)\/keywords$/) && method === 'PUT') {
+      const matches = pathname.match(/^\/api\/images\/(.+)\/keywords$/);
+      const imageKey = decodeURIComponent(matches[1]);
+      
+      log(`Update keywords request for image: ${imageKey}`);
+      
+      try {
+        const requestData = await parseJSON(req);
+        
+        // Validate keywords
+        if (!requestData.keywords || !Array.isArray(requestData.keywords)) {
+          return sendError(res, 400, 'Keywords must be an array');
+        }
+        
+        // Clean and validate keywords
+        const cleanedKeywords = requestData.keywords
+          .map(k => k.trim())
+          .filter(k => k.length > 0)
+          .filter((k, i, arr) => arr.indexOf(k) === i); // Remove duplicates
+        
+        // Update the image
+        const updatedImage = await dataManager.updateImage(imageKey, {
+          keywords: cleanedKeywords
+        });
+        
+        if (!updatedImage) {
+          return sendError(res, 404, `Image ${imageKey} not found`);
+        }
+        
+        return sendSuccess(res, {
+          imageKey: imageKey,
+          keywords: updatedImage.keywords,
+          lastUpdated: updatedImage.lastUpdated
+        }, 'Keywords updated successfully');
+        
+      } catch (error) {
+        log(`Failed to update keywords: ${error.message}`, 'ERROR');
+        
+        // Check if it's a not found error
+        if (error.message.includes('not found')) {
+          return sendError(res, 404, error.message);
+        }
+        
+        return sendError(res, 500, 'Failed to update keywords', error);
+      }
+    }
+    
     // Image analysis testing endpoint (multiple files, no database storage)
     if (pathname === '/api/analyze/test' && method === 'POST') {
       log('Image analysis test request received');
@@ -2556,6 +2604,10 @@ const server = http.createServer(async (req, res) => {
 
 // Initialize Claude client and start server
 async function startServer() {
+  // Initialize data manager first
+  await dataManager.initialize();
+  log('Data manager initialized');
+  
   await initializeClaudeClient();
   await initializeBatchManager();
   

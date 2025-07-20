@@ -1041,7 +1041,9 @@ class PhotoVision {
                 el: '.swiper-pagination',
                 clickable: true,
                 dynamicBullets: true,
-            }
+            },
+            // Store custom data for keyword editing
+            customData: results
         });
     }
 
@@ -1205,8 +1207,8 @@ class PhotoVision {
                 throw new Error('Invalid preview data received');
             }
             
-            // Transform images for lightbox format
-            const lightboxImages = result.data.images.map(img => {
+            // Transform images for lightbox format and filter out processed images for selection mode
+            const allImages = result.data.images.map(img => {
                 // Debug: Log the raw image data
                 console.log('Raw image data:', img);
                 
@@ -1225,8 +1227,16 @@ class PhotoVision {
                 };
             });
             
-            // Open the lightbox in selection mode
-            this.openAlbumPreviewLightbox(lightboxImages, albumName, albumKey, true);
+            // Filter out processed images for selection mode
+            const unprocessedImages = allImages.filter(img => !img.isProcessed);
+            
+            if (unprocessedImages.length === 0) {
+                alert('All images in this album have already been processed. There are no images to select.');
+                return;
+            }
+            
+            // Open the lightbox in selection mode with only unprocessed images
+            this.openAlbumPreviewLightbox(unprocessedImages, albumName, albumKey, true);
             
         } catch (error) {
             console.error('Error loading images for selection:', error);
@@ -1257,7 +1267,7 @@ class PhotoVision {
             const excludedCount = this.getAlbumExcludedCount(albumKey);
             headerHTML = `
                 <div class="preview-header">
-                    <h2 class="preview-title">${albumName}</h2>
+                    <h2 class="preview-title">${albumName} - Select Images to Exclude</h2>
                     <div class="preview-info">
                         <div class="selection-controls">
                             <button class="select-all-btn" title="Select all images">
@@ -1268,7 +1278,7 @@ class PhotoVision {
                             </button>
                             <span class="selection-count">${excludedCount} excluded</span>
                         </div>
-                        <span class="image-count">${images.length} images</span>
+                        <span class="image-count">${images.length} unprocessed images</span>
                         <button class="refresh-preview-btn" data-album-key="${albumKey}" title="Refresh from SmugMug">
                             <span class="refresh-icon">🔄</span> Refresh
                         </button>
@@ -1489,23 +1499,58 @@ class PhotoVision {
         }
 
         // Keywords section
-        if (imageData.keywords && imageData.keywords.length > 0) {
-            sections.push(`
-                <div class="metadata-section">
-                    <div class="metadata-section-header" onclick="this.parentElement.classList.toggle('collapsed')">
-                        <div class="metadata-section-title">
-                            🏷️ Keywords
-                        </div>
-                        <div class="metadata-section-toggle">▼</div>
+        sections.push(`
+            <div class="metadata-section" data-image-key="${imageData.smugmugImageKey || imageData.imageKey || imageData.id}">
+                <div class="metadata-section-header" onclick="this.parentElement.classList.toggle('collapsed')">
+                    <div class="metadata-section-title">
+                        🏷️ Keywords
                     </div>
-                    <div class="metadata-section-body">
+                    <button class="keyword-edit-btn" onclick="window.photoVision.toggleKeywordEdit('${imageData.smugmugImageKey || imageData.imageKey || imageData.id}')" title="Edit keywords">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                    </button>
+                    <div class="metadata-section-toggle">▼</div>
+                </div>
+                <div class="metadata-section-body">
+                    <div class="keywords-view-mode">
                         <div class="metadata-keywords">
-                            ${imageData.keywords.map(keyword => `<span class="metadata-keyword">${keyword}</span>`).join('')}
+                            ${imageData.keywords && imageData.keywords.length > 0 
+                                ? imageData.keywords.map(keyword => `<span class="metadata-keyword">${keyword}</span>`).join('')
+                                : '<span class="no-keywords">No keywords yet</span>'
+                            }
+                        </div>
+                    </div>
+                    <div class="keywords-edit-mode" style="display: none;">
+                        <div class="keywords-editor">
+                            <div class="editable-keywords">
+                                ${imageData.keywords && imageData.keywords.length > 0 
+                                    ? imageData.keywords.map((keyword, index) => `
+                                        <span class="editable-keyword">
+                                            ${keyword}
+                                            <button class="remove-keyword" onclick="window.photoVision.removeKeyword('${imageData.smugmugImageKey || imageData.imageKey || imageData.id}', ${index})">×</button>
+                                        </span>
+                                    `).join('')
+                                    : ''
+                                }
+                            </div>
+                            <div class="keyword-input-group">
+                                <input type="text" 
+                                       class="keyword-input" 
+                                       placeholder="Add keyword..." 
+                                       onkeypress="if(event.key==='Enter'){window.photoVision.addKeyword('${imageData.smugmugImageKey || imageData.imageKey || imageData.id}', this.value); this.value='';}">
+                                <button class="add-keyword-btn" onclick="const input = this.previousElementSibling; window.photoVision.addKeyword('${imageData.smugmugImageKey || imageData.imageKey || imageData.id}', input.value); input.value='';">Add</button>
+                            </div>
+                            <div class="keyword-edit-actions">
+                                <button class="btn-save-keywords" onclick="window.photoVision.saveKeywords('${imageData.smugmugImageKey || imageData.imageKey || imageData.id}')">Save</button>
+                                <button class="btn-cancel-keywords" onclick="window.photoVision.cancelKeywordEdit('${imageData.smugmugImageKey || imageData.imageKey || imageData.id}')">Cancel</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            `);
-        }
+            </div>
+        `);
 
         // Album Information
         if (imageData.albumName || imageData.albumPath || imageData.albumHierarchy) {
@@ -4134,6 +4179,196 @@ class PhotoVision {
         
         // Join without separators
         return formattedParts.join('');
+    }
+    
+    // Keyword Editor Methods
+    
+    toggleKeywordEdit(imageKey) {
+        const section = document.querySelector(`.metadata-section[data-image-key="${imageKey}"]`);
+        if (!section) return;
+        
+        const viewMode = section.querySelector('.keywords-view-mode');
+        const editMode = section.querySelector('.keywords-edit-mode');
+        const editBtn = section.querySelector('.keyword-edit-btn');
+        
+        if (editMode.style.display === 'none') {
+            // Enter edit mode
+            viewMode.style.display = 'none';
+            editMode.style.display = 'block';
+            editBtn.style.display = 'none';
+            
+            // Store original keywords for cancel functionality
+            const currentKeywords = this.getCurrentImageKeywords(imageKey);
+            section.dataset.originalKeywords = JSON.stringify(currentKeywords);
+            
+            // Focus the input
+            const input = editMode.querySelector('.keyword-input');
+            if (input) input.focus();
+        } else {
+            // Exit edit mode
+            viewMode.style.display = 'block';
+            editMode.style.display = 'none';
+            editBtn.style.display = 'block';
+        }
+    }
+    
+    getCurrentImageKeywords(imageKey) {
+        // Get keywords from the current swiper slide or search results
+        if (this.lightboxSwiper && this.lightboxSwiper.slides) {
+            const activeSlide = this.lightboxSwiper.slides[this.lightboxSwiper.activeIndex];
+            if (activeSlide) {
+                const currentData = this.lightboxSwiper.params.customData[this.lightboxSwiper.activeIndex];
+                if (currentData && (currentData.smugmugImageKey === imageKey || currentData.imageKey === imageKey || currentData.id === imageKey)) {
+                    return currentData.keywords || [];
+                }
+            }
+        }
+        return [];
+    }
+    
+    addKeyword(imageKey, keyword) {
+        keyword = keyword.trim();
+        if (!keyword) return;
+        
+        const section = document.querySelector(`.metadata-section[data-image-key="${imageKey}"]`);
+        if (!section) return;
+        
+        const keywordsContainer = section.querySelector('.editable-keywords');
+        const currentKeywords = Array.from(keywordsContainer.querySelectorAll('.editable-keyword'))
+            .map(el => el.textContent.trim().replace('×', '').trim());
+        
+        // Check for duplicates
+        if (currentKeywords.some(k => k.toLowerCase() === keyword.toLowerCase())) {
+            alert('This keyword already exists');
+            return;
+        }
+        
+        // Add the keyword to the UI
+        const keywordHtml = `
+            <span class="editable-keyword">
+                ${keyword}
+                <button class="remove-keyword" onclick="window.photoVision.removeKeyword('${imageKey}', ${currentKeywords.length})">×</button>
+            </span>
+        `;
+        keywordsContainer.insertAdjacentHTML('beforeend', keywordHtml);
+    }
+    
+    removeKeyword(imageKey, index) {
+        const section = document.querySelector(`.metadata-section[data-image-key="${imageKey}"]`);
+        if (!section) return;
+        
+        const keywordElements = section.querySelectorAll('.editable-keyword');
+        if (keywordElements[index]) {
+            keywordElements[index].remove();
+        }
+    }
+    
+    async saveKeywords(imageKey) {
+        const section = document.querySelector(`.metadata-section[data-image-key="${imageKey}"]`);
+        if (!section) return;
+        
+        // Get current keywords from UI
+        const keywordsContainer = section.querySelector('.editable-keywords');
+        const keywords = Array.from(keywordsContainer.querySelectorAll('.editable-keyword'))
+            .map(el => el.textContent.trim().replace('×', '').trim())
+            .filter(k => k.length > 0);
+        
+        // Show loading state
+        const saveBtn = section.querySelector('.btn-save-keywords');
+        const originalText = saveBtn.textContent;
+        saveBtn.textContent = 'Saving...';
+        saveBtn.disabled = true;
+        
+        try {
+            // Send update to server
+            const response = await fetch(`/api/images/${encodeURIComponent(imageKey)}/keywords`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ keywords })
+            });
+            
+            if (!response.ok) {
+                throw new Error('Failed to save keywords');
+            }
+            
+            const result = await response.json();
+            
+            // Update the view mode with new keywords
+            const viewKeywords = section.querySelector('.metadata-keywords');
+            viewKeywords.innerHTML = keywords.length > 0 
+                ? keywords.map(k => `<span class="metadata-keyword">${k}</span>`).join('')
+                : '<span class="no-keywords">No keywords yet</span>';
+            
+            // Update the data in swiper if in lightbox
+            if (this.lightboxSwiper && this.lightboxSwiper.params.customData) {
+                const currentData = this.lightboxSwiper.params.customData[this.lightboxSwiper.activeIndex];
+                if (currentData && (currentData.smugmugImageKey === imageKey || currentData.imageKey === imageKey || currentData.id === imageKey)) {
+                    currentData.keywords = keywords;
+                }
+            }
+            
+            // Exit edit mode
+            this.toggleKeywordEdit(imageKey);
+            
+            // Show success message
+            this.showToast('Keywords saved successfully', 'success');
+            
+        } catch (error) {
+            console.error('Error saving keywords:', error);
+            alert('Failed to save keywords. Please try again.');
+        } finally {
+            saveBtn.textContent = originalText;
+            saveBtn.disabled = false;
+        }
+    }
+    
+    cancelKeywordEdit(imageKey) {
+        const section = document.querySelector(`.metadata-section[data-image-key="${imageKey}"]`);
+        if (!section) return;
+        
+        // Restore original keywords
+        const originalKeywords = JSON.parse(section.dataset.originalKeywords || '[]');
+        const keywordsContainer = section.querySelector('.editable-keywords');
+        
+        keywordsContainer.innerHTML = originalKeywords.length > 0 
+            ? originalKeywords.map((keyword, index) => `
+                <span class="editable-keyword">
+                    ${keyword}
+                    <button class="remove-keyword" onclick="window.photoVision.removeKeyword('${imageKey}', ${index})">×</button>
+                </span>
+            `).join('')
+            : '';
+        
+        // Exit edit mode
+        this.toggleKeywordEdit(imageKey);
+    }
+    
+    showToast(message, type = 'info') {
+        // Simple toast notification
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.textContent = message;
+        toast.style.cssText = `
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            background: ${type === 'success' ? '#10b981' : '#3b82f6'};
+            color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 10000;
+            animation: slideIn 0.3s ease-out;
+        `;
+        
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.style.animation = 'slideOut 0.3s ease-out';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
     }
 }
 
