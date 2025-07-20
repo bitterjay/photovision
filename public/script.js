@@ -1743,6 +1743,7 @@ class PhotoVision {
         this.setupStatusEventListeners();
         this.setupBatchProcessingEventListeners();
         await this.checkAllConnections();
+        await this.checkActiveBatches();
     }
 
     setupStatusEventListeners() {
@@ -2822,10 +2823,16 @@ class PhotoVision {
 
         const maxImages = parseInt(document.getElementById('maxImages').value) || 50;
         const batchName = document.getElementById('batchName').value || `Album ${this.selectedAlbumKey}`;
+        
+        // Get album details for display
+        const selectedAlbum = this.albumsData.find(a => a.AlbumKey === this.selectedAlbumKey);
+        const albumHierarchy = selectedAlbum?.PathHierarchy || [];
+        const albumName = selectedAlbum?.Name || this.selectedAlbumKey;
 
         // Debug logging
         console.log('=== BATCH START DEBUG ===');
         console.log('Selected Album Key:', this.selectedAlbumKey);
+        console.log('Album Hierarchy:', albumHierarchy);
         console.log('Max Images:', maxImages);
         console.log('Batch Name:', batchName);
 
@@ -2868,7 +2875,14 @@ class PhotoVision {
                 this.addMessage(message, 'assistant');
                 
                 this.showBatchProgress();
-                this.showBottomProgressBar();
+                // Create batch card for this batch
+                this.createBatchCard(data.data.batchId, {
+                    name: batchName,
+                    albumKey: this.selectedAlbumKey,
+                    albumName: albumName,
+                    albumHierarchy: albumHierarchy,
+                    total: data.data.jobCount
+                });
                 this.updateBatchControls('processing');
                 this.startProgressMonitoring();
                 
@@ -2885,9 +2899,13 @@ class PhotoVision {
         }
     }
 
-    async pauseBatchProcessing() {
+    async pauseBatchProcessing(batchId = null) {
         try {
-            const response = await fetch('/api/batch/pause', { method: 'POST' });
+            const response = await fetch('/api/batch/pause', { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ batchId })
+            });
             const data = await response.json();
 
             if (data.success && data.data.paused) {
@@ -2902,14 +2920,19 @@ class PhotoVision {
         }
     }
 
-    async resumeBatchProcessing() {
+    async resumeBatchProcessing(batchId = null) {
         try {
-            const response = await fetch('/api/batch/resume', { method: 'POST' });
+            const response = await fetch('/api/batch/resume', { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ batchId })
+            });
             const data = await response.json();
 
             if (data.success && data.data.resumed) {
                 this.addMessage('Batch processing resumed.', 'assistant');
                 this.updateBatchControls('processing');
+                this.startProgressMonitoring();
             } else {
                 this.addMessage('No batch to resume.', 'assistant');
             }
@@ -2919,17 +2942,30 @@ class PhotoVision {
         }
     }
 
-    async cancelBatchProcessing() {
+    async cancelBatchProcessing(batchId = null) {
         try {
-            const response = await fetch('/api/batch/cancel', { method: 'POST' });
+            const response = await fetch('/api/batch/cancel', { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ batchId })
+            });
             const data = await response.json();
 
             if (data.success) {
-                this.addMessage('Batch processing cancelled.', 'assistant');
-                this.updateBatchControls('idle');
-                this.stopProgressMonitoring();
-                this.hideBatchProgress();
-                this.hideBottomProgressBar();
+                const message = batchId ? 'Batch processing cancelled.' : 'All batch processing cancelled.';
+                this.addMessage(message, 'assistant');
+                
+                // Check if there are still active batches
+                const statusResponse = await fetch('/api/batch/status');
+                const statusData = await statusResponse.json();
+                
+                if (statusData.success && statusData.data.batches && statusData.data.batches.length === 0) {
+                    // No more active batches
+                    this.updateBatchControls('idle');
+                    this.stopProgressMonitoring();
+                    this.hideBatchProgress();
+                    // Cards are removed individually
+                }
             } else {
                 this.addMessage('Error cancelling batch processing.', 'assistant');
             }
@@ -2939,9 +2975,18 @@ class PhotoVision {
         }
     }
 
-    async retryFailedJobs() {
+    async retryFailedJobs(batchId = null) {
         try {
-            const response = await fetch('/api/batch/retry', { method: 'POST' });
+            if (!batchId) {
+                this.addMessage('Please specify a batch ID to retry failed jobs.', 'assistant');
+                return;
+            }
+            
+            const response = await fetch('/api/batch/retry', { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ batchId })
+            });
             const data = await response.json();
 
             if (data.success) {
@@ -2972,24 +3017,264 @@ class PhotoVision {
         }
     }
 
-    showBottomProgressBar() {
-        const bottomProgressBar = document.getElementById('bottomProgressBar');
-        if (bottomProgressBar) {
-            bottomProgressBar.style.display = 'block';
-            // Trigger reflow to ensure display change is applied
-            bottomProgressBar.offsetHeight;
-            bottomProgressBar.classList.add('show');
+    // Batch card management
+    createBatchCard(batchId, batchInfo) {
+        const container = document.getElementById('batchCardsContainer');
+        if (!container) return;
+        
+        // Check if card already exists
+        if (document.querySelector(`[data-batch-id="${batchId}"]`)) {
+            return;
+        }
+        
+        const card = document.createElement('div');
+        card.className = 'batch-card';
+        card.setAttribute('data-batch-id', batchId);
+        
+        // Store album info on the card element for later use
+        if (batchInfo.albumHierarchy) {
+            card.dataset.albumHierarchy = JSON.stringify(batchInfo.albumHierarchy);
+        }
+        if (batchInfo.albumName) {
+            card.dataset.albumName = batchInfo.albumName;
+        }
+        
+        // Display album hierarchy or fallback to album name
+        const albumDisplay = batchInfo.albumHierarchy && batchInfo.albumHierarchy.length > 0
+            ? batchInfo.albumHierarchy.join(' > ')
+            : batchInfo.albumName || 'Unknown Album';
+        
+        card.innerHTML = `
+            <div class="batch-card-header">
+                <div class="batch-card-titles">
+                    <div class="album-hierarchy">${albumDisplay}</div>
+                    <div class="batch-name-secondary">${batchInfo.name || 'Batch Processing'}</div>
+                </div>
+                <div class="batch-card-controls">
+                    <button class="minimize-btn" onclick="photoVision.toggleMinimizeBatchCard('${batchId}')">−</button>
+                    <button class="close-btn" onclick="photoVision.closeBatchCard('${batchId}')">×</button>
+                </div>
+            </div>
+            <div class="batch-card-body">
+                <div class="progress-bar-compact">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <div class="batch-stats">
+                    <span class="progress-text">0/0 (0%)</span>
+                    <span class="batch-status processing">PROCESSING</span>
+                </div>
+                <div class="current-file-info"></div>
+                <div class="batch-actions">
+                    <button class="pause-btn" onclick="photoVision.pauseBatchProcessing('${batchId}')">Pause</button>
+                    <button class="resume-btn" onclick="photoVision.resumeBatchProcessing('${batchId}')" style="display: none;">Resume</button>
+                    <button class="cancel-btn" onclick="photoVision.cancelBatchProcessing('${batchId}')">Cancel</button>
+                </div>
+            </div>
+        `;
+        
+        container.appendChild(card);
+    }
+    
+    updateBatchCard(batchId, status) {
+        const card = document.querySelector(`[data-batch-id="${batchId}"]`);
+        if (!card) return;
+        
+        const percentage = status.total > 0 ? Math.round((status.processed / status.total) * 100) : 0;
+        
+        // Update album hierarchy if provided
+        if (status.albumHierarchy) {
+            const albumHierarchyElement = card.querySelector('.album-hierarchy');
+            if (albumHierarchyElement) {
+                albumHierarchyElement.textContent = status.albumHierarchy;
+            }
+        }
+        
+        // Update progress bar
+        const progressFill = card.querySelector('.progress-fill');
+        if (progressFill) {
+            progressFill.style.width = `${percentage}%`;
+        }
+        
+        // Update stats
+        const progressText = card.querySelector('.progress-text');
+        if (progressText) {
+            progressText.textContent = `${status.processed}/${status.total} (${percentage}%)`;
+            if (status.failed > 0) {
+                progressText.innerHTML += `<span class="failed-count">${status.failed} failed</span>`;
+                card.classList.add('has-failures');
+            }
+        }
+        
+        // Update status
+        const statusElement = card.querySelector('.batch-status');
+        if (statusElement) {
+            statusElement.className = 'batch-status';
+            if (status.isComplete) {
+                statusElement.textContent = 'COMPLETED';
+                statusElement.classList.add('completed');
+                this.scheduleBatchCardRemoval(batchId);
+            } else if (status.isPaused) {
+                statusElement.textContent = 'PAUSED';
+                statusElement.classList.add('paused');
+            } else if (status.isProcessing) {
+                statusElement.textContent = 'PROCESSING';
+                statusElement.classList.add('processing');
+            } else if (status.failed === status.total && status.total > 0) {
+                statusElement.textContent = 'FAILED';
+                statusElement.classList.add('failed');
+            }
+        }
+        
+        // Update current file
+        const currentFileInfo = card.querySelector('.current-file-info');
+        if (currentFileInfo && status.currentJob) {
+            let fileText = '';
+            if (status.currentJob.imageName) {
+                fileText = `Processing: ${status.currentJob.imageName}`;
+            } else if (status.currentJob.albumHierarchy) {
+                fileText = `Album: ${status.currentJob.albumHierarchy.join(' > ')}`;
+            }
+            currentFileInfo.textContent = fileText;
+            currentFileInfo.title = fileText;
+        }
+        
+        // Update action buttons
+        this.updateBatchCardButtons(card, status);
+    }
+    
+    updateBatchCardButtons(card, status) {
+        const pauseBtn = card.querySelector('.pause-btn');
+        const resumeBtn = card.querySelector('.resume-btn');
+        const cancelBtn = card.querySelector('.cancel-btn');
+        
+        if (status.isProcessing) {
+            if (pauseBtn) pauseBtn.style.display = 'block';
+            if (resumeBtn) resumeBtn.style.display = 'none';
+            if (cancelBtn) cancelBtn.disabled = false;
+        } else if (status.isPaused) {
+            if (pauseBtn) pauseBtn.style.display = 'none';
+            if (resumeBtn) resumeBtn.style.display = 'block';
+            if (cancelBtn) cancelBtn.disabled = false;
+        } else if (status.isComplete) {
+            if (pauseBtn) pauseBtn.style.display = 'none';
+            if (resumeBtn) resumeBtn.style.display = 'none';
+            if (cancelBtn) cancelBtn.disabled = true;
         }
     }
-
-    hideBottomProgressBar() {
-        const bottomProgressBar = document.getElementById('bottomProgressBar');
-        if (bottomProgressBar) {
-            bottomProgressBar.classList.remove('show');
-            // Wait for animation to complete before hiding
+    
+    removeBatchCard(batchId) {
+        const card = document.querySelector(`[data-batch-id="${batchId}"]`);
+        if (card) {
+            card.classList.add('removing');
             setTimeout(() => {
-                bottomProgressBar.style.display = 'none';
+                card.remove();
             }, 300);
+        }
+    }
+    
+    scheduleBatchCardRemoval(batchId) {
+        // Remove card 5 seconds after completion
+        setTimeout(() => {
+            this.removeBatchCard(batchId);
+        }, 5000);
+    }
+    
+    toggleMinimizeBatchCard(batchId) {
+        const card = document.querySelector(`[data-batch-id="${batchId}"]`);
+        if (card) {
+            card.classList.toggle('minimized');
+            const btn = card.querySelector('.minimize-btn');
+            if (btn) {
+                btn.textContent = card.classList.contains('minimized') ? '+' : '−';
+            }
+        }
+    }
+    
+    closeBatchCard(batchId) {
+        this.removeBatchCard(batchId);
+    }
+    
+    async checkActiveBatches() {
+        try {
+            const response = await fetch('/api/batch/status');
+            const data = await response.json();
+            
+            if (data.success) {
+                let hasActiveBatches = false;
+                
+                // Handle multiple batches format
+                if (data.data.batches && data.data.batches.length > 0) {
+                    data.data.batches.forEach(batch => {
+                        if (!batch.isComplete) {
+                            hasActiveBatches = true;
+                            
+                            // Check if card already exists
+                            if (!document.querySelector(`[data-batch-id="${batch.batchId}"]`)) {
+                                // Create batch info object with album hierarchy
+                                const batchInfo = {
+                                    name: batch.name || 'Batch Processing',
+                                    albumKey: batch.albumKey,
+                                    total: batch.total,
+                                    albumHierarchy: batch.albumHierarchy
+                                };
+                                
+                                // If albumHierarchy not present but albumKey is, fetch it
+                                if (!batch.albumHierarchy && batch.albumKey) {
+                                    // Find album in loaded albums
+                                    const album = this.albums?.find(a => a.NodeID === batch.albumKey);
+                                    if (album) {
+                                        batchInfo.albumHierarchy = album.PathHierarchy;
+                                    }
+                                }
+                                
+                                this.createBatchCard(batch.batchId, batchInfo);
+                            }
+                            
+                            // Update the card with current status
+                            this.updateBatchCard(batch.batchId, batch);
+                        }
+                    });
+                } 
+                // Handle single batch format (backward compatibility)
+                else if (data.data.batchId && !data.data.isComplete) {
+                    hasActiveBatches = true;
+                    const batch = data.data;
+                    
+                    if (!document.querySelector(`[data-batch-id="${batch.batchId}"]`)) {
+                        // Create batch info object
+                        const batchInfo = {
+                            name: batch.name || 'Batch Processing',
+                            albumKey: batch.albumKey,
+                            total: batch.total,
+                            albumHierarchy: batch.albumHierarchy
+                        };
+                        
+                        // If albumHierarchy not present but albumKey is, fetch it
+                        if (!batch.albumHierarchy && batch.albumKey) {
+                            // Find album in loaded albums
+                            const album = this.albums?.find(a => a.NodeID === batch.albumKey);
+                            if (album) {
+                                batchInfo.albumHierarchy = album.PathHierarchy;
+                            }
+                        }
+                        
+                        this.createBatchCard(batch.batchId, batchInfo);
+                    }
+                    
+                    this.updateBatchCard(batch.batchId, batch);
+                }
+                
+                // Start monitoring if there are active batches and not already monitoring
+                if (hasActiveBatches && !this.batchProgressInterval) {
+                    this.startProgressMonitoring();
+                    console.log('Restored active batch monitoring after page refresh');
+                    
+                    // Also refresh album statuses to show animations
+                    await this.refreshActiveProcessingAlbumStatuses();
+                }
+            }
+        } catch (error) {
+            console.error('Error checking active batches:', error);
         }
     }
 
@@ -3047,33 +3332,58 @@ class PhotoVision {
             const data = await response.json();
 
             if (data.success) {
-                const status = data.data;
-                this.displayBatchStatus(status);
-
-                // Check if batch is complete
-                if (status.isComplete) {
-                    this.stopProgressMonitoring();
-                    this.updateBatchControls('completed');
-                    this.showBatchResults(status);
-                    this.addMessage(`Batch processing completed! Processed: ${status.processed}, Failed: ${status.failed}`, 'assistant');
+                // Check if we have multiple batches format
+                if (data.data.batches) {
+                    // Multiple batches
+                    this.displayMultipleBatchStatus(data.data.batches, data.data.statistics);
                     
-                    // Hide bottom progress bar after a brief delay to show completion
-                    setTimeout(() => {
-                        this.hideBottomProgressBar();
-                    }, 3000);
+                    // Check if any batch is complete
+                    const completedBatches = data.data.batches.filter(b => b.isComplete);
+                    const activeBatches = data.data.batches.filter(b => !b.isComplete);
                     
-                    // Refresh album processing status for the processed album
-                    if (this.selectedAlbumKey) {
-                        await this.loadAlbumProcessingStatus(this.selectedAlbumKey);
+                    if (completedBatches.length > 0) {
+                        completedBatches.forEach(batch => {
+                            this.addMessage(`Batch "${batch.name}" completed! Processed: ${batch.processed}, Failed: ${batch.failed}`, 'assistant');
+                        });
+                        
+                        // Refresh album statuses
+                        await this.refreshVisibleAlbumStatuses();
                     }
                     
-                    // Refresh all visible album statuses after completion
-                    await this.refreshVisibleAlbumStatuses();
-                } else if (status.isPaused) {
-                    this.updateBatchControls('paused');
+                    if (activeBatches.length === 0) {
+                        // All batches complete
+                        this.stopProgressMonitoring();
+                        this.updateBatchControls('completed');
+                        
+                        // All batches complete - cards auto-remove after delay
+                    }
                 } else {
-                    // During active processing, refresh album statuses periodically
-                    await this.refreshActiveProcessingAlbumStatuses();
+                    // Single batch (backward compatibility)
+                    const status = data.data;
+                    this.displayBatchStatus(status);
+
+                    // Check if batch is complete
+                    if (status.isComplete) {
+                        this.stopProgressMonitoring();
+                        this.updateBatchControls('completed');
+                        this.showBatchResults(status);
+                        this.addMessage(`Batch processing completed! Processed: ${status.processed}, Failed: ${status.failed}`, 'assistant');
+                        
+                        // Single batch complete - card auto-removes after delay
+                        
+                        // Refresh album processing status for the processed album
+                        if (this.selectedAlbumKey) {
+                            await this.loadAlbumProcessingStatus(this.selectedAlbumKey);
+                        }
+                        
+                        // Refresh all visible album statuses after completion
+                        await this.refreshVisibleAlbumStatuses();
+                    } else if (status.isPaused) {
+                        this.updateBatchControls('paused');
+                    } else {
+                        // During active processing, refresh album statuses periodically
+                        await this.refreshActiveProcessingAlbumStatuses();
+                    }
                 }
             }
         } catch (error) {
@@ -3081,7 +3391,83 @@ class PhotoVision {
         }
     }
 
+    displayMultipleBatchStatus(batches, statistics) {
+        // Update individual batch cards
+        batches.forEach(batch => {
+            // Create card if it doesn't exist
+            if (!document.querySelector(`[data-batch-id="${batch.batchId}"]`)) {
+                this.createBatchCard(batch.batchId, {
+                    name: batch.name || 'Batch Processing',
+                    albumKey: batch.albumKey,
+                    total: batch.total
+                });
+            }
+            
+            // Update the card
+            this.updateBatchCard(batch.batchId, batch);
+        });
+        
+        // If there's only one batch, also update the main progress display
+        if (batches.length === 1) {
+            this.displayBatchStatus(batches[0]);
+        } else {
+            // Multiple batches - update main progress with aggregate stats
+            const activeBatches = batches.filter(b => !b.isComplete);
+            const totalProcessed = batches.reduce((sum, b) => sum + b.processed, 0);
+            const totalJobs = batches.reduce((sum, b) => sum + b.total, 0);
+            const totalFailed = batches.reduce((sum, b) => sum + b.failed, 0);
+            const percentage = totalJobs > 0 ? Math.round((totalProcessed / totalJobs) * 100) : 0;
+            
+            // Update main progress bar with aggregate stats
+            const progressFill = document.getElementById('batchProgressFill');
+            const progressPercentage = document.getElementById('progressPercentage');
+            if (progressFill && progressPercentage) {
+                progressFill.style.width = `${percentage}%`;
+                progressPercentage.textContent = `${percentage}%`;
+            }
+            
+            // Update counters with totals
+            const processedCount = document.getElementById('processedCount');
+            const totalCount = document.getElementById('totalCount');
+            const failedCount = document.getElementById('failedCount');
+            const remainingCount = document.getElementById('remainingCount');
+
+            if (processedCount) processedCount.textContent = totalProcessed;
+            if (totalCount) totalCount.textContent = totalJobs;
+            if (failedCount) failedCount.textContent = totalFailed;
+            if (remainingCount) remainingCount.textContent = totalJobs - totalProcessed;
+            
+            // Show active batches info
+            const batchStatus = document.getElementById('batchStatus');
+            if (batchStatus) {
+                if (activeBatches.length === 0) {
+                    batchStatus.textContent = 'All Completed';
+                    batchStatus.className = 'batch-status completed';
+                } else {
+                    batchStatus.textContent = `${activeBatches.length} Active Batches`;
+                    batchStatus.className = 'batch-status processing';
+                }
+            }
+            
+            // Show batch list in current job area
+            const currentJobName = document.getElementById('currentJobName');
+            if (currentJobName && activeBatches.length > 0) {
+                const batchList = activeBatches.map(b => {
+                    const batchPercent = b.total > 0 ? Math.round((b.processed / b.total) * 100) : 0;
+                    return `${b.name} (${batchPercent}%)`;
+                }).join(', ');
+                currentJobName.textContent = batchList;
+                currentJobName.title = batchList;
+            }
+        }
+    }
+
     displayBatchStatus(status) {
+        // Update batch card if it exists
+        if (status.batchId) {
+            this.updateBatchCard(status.batchId, status);
+        }
+        
         const percentage = status.total > 0 ? Math.round((status.processed / status.total) * 100) : 0;
         
         // Update main progress bar (existing functionality)
@@ -3090,14 +3476,6 @@ class PhotoVision {
         if (progressFill && progressPercentage) {
             progressFill.style.width = `${percentage}%`;
             progressPercentage.textContent = `${percentage}%`;
-        }
-
-        // Update bottom progress bar
-        const bottomProgressFill = document.getElementById('bottomProgressFill');
-        const bottomProgressPercentage = document.getElementById('bottomProgressPercentage');
-        if (bottomProgressFill && bottomProgressPercentage) {
-            bottomProgressFill.style.width = `${percentage}%`;
-            bottomProgressPercentage.textContent = `${percentage}%`;
         }
 
         // Update counters (main progress)
@@ -3110,22 +3488,6 @@ class PhotoVision {
         if (totalCount) totalCount.textContent = status.total || 0;
         if (failedCount) failedCount.textContent = status.failed || 0;
         if (remainingCount) remainingCount.textContent = (status.total - status.processed) || 0;
-
-        // Update bottom progress counters
-        const bottomProcessedCount = document.getElementById('bottomProcessedCount');
-        const bottomTotalCount = document.getElementById('bottomTotalCount');
-        if (bottomProcessedCount) bottomProcessedCount.textContent = status.processed || 0;
-        if (bottomTotalCount) bottomTotalCount.textContent = status.total || 0;
-
-        // Update bottom progress stats
-        const bottomProcessedCountStat = document.getElementById('bottomProcessedCountStat');
-        const bottomTotalCountStat = document.getElementById('bottomTotalCountStat');
-        const bottomFailedCountStat = document.getElementById('bottomFailedCountStat');
-        const bottomRemainingCountStat = document.getElementById('bottomRemainingCountStat');
-        if (bottomProcessedCountStat) bottomProcessedCountStat.textContent = status.processed || 0;
-        if (bottomTotalCountStat) bottomTotalCountStat.textContent = status.total || 0;
-        if (bottomFailedCountStat) bottomFailedCountStat.textContent = status.failed || 0;
-        if (bottomRemainingCountStat) bottomRemainingCountStat.textContent = (status.total - status.processed) || 0;
 
         // Update status (main progress)
         const batchStatus = document.getElementById('batchStatus');
@@ -3145,25 +3507,7 @@ class PhotoVision {
             }
         }
 
-        // Update bottom progress status
-        const bottomBatchStatus = document.getElementById('bottomBatchStatus');
-        if (bottomBatchStatus) {
-            if (status.isComplete) {
-                bottomBatchStatus.textContent = 'Completed';
-                bottomBatchStatus.className = 'status-indicator completed';
-            } else if (status.isPaused) {
-                bottomBatchStatus.textContent = 'Paused';
-                bottomBatchStatus.className = 'status-indicator paused';
-            } else if (status.isProcessing) {
-                bottomBatchStatus.textContent = 'Processing';
-                bottomBatchStatus.className = 'status-indicator processing';
-            } else {
-                bottomBatchStatus.textContent = 'Idle';
-                bottomBatchStatus.className = 'status-indicator idle';
-            }
-        }
-
-        // Update current job (both main and bottom)
+        // Update current job
         const currentJobName = document.getElementById('currentJobName');
         let currentJobText = 'Waiting...';
         

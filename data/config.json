@@ -269,6 +269,12 @@
     "completed": 0,
     "failed": 0
   },
+  "batchProcessing": {
+    "maxConcurrentBatches": 3,
+    "globalApiRateLimit": 60,
+    "perBatchConcurrency": 1,
+    "maxJobsPerBatch": 1000
+  },
   "imageAnalysisConfig": {
     "enabled": false,
     "preContext": "You are analyzing photos from a sports competition. Focus on athletic performance, technique, equipment, and competitive atmosphere. Emphasize participant achievements, skill demonstration, and event organization. Pay attention to sports-specific terminology and competitive elements. If there are images of people, be extremely descriptive of what those people look like. Their skin color, age, if they have a disability and if they do, describe that disability.",

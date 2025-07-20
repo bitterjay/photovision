@@ -6,7 +6,7 @@ const url = require('url');
 const DataManager = require('./lib/dataManager');
 const ClaudeClient = require('./lib/claudeClient');
 const SmugMugClient = require('./lib/smugmugClient');
-const JobQueue = require('./lib/jobQueue');
+const BatchManager = require('./lib/batchManager');
 
 const PORT = process.env.PORT || 3001;
 const dataManager = new DataManager();
@@ -45,7 +45,28 @@ async function initializeClaudeClient() {
 }
 
 const smugmugClient = new SmugMugClient(process.env.SMUGMUG_API_KEY, process.env.SMUGMUG_API_SECRET);
-const jobQueue = new JobQueue();
+
+// Initialize BatchManager for concurrent batch processing
+let batchManager;
+
+async function initializeBatchManager() {
+  try {
+    const config = await dataManager.getConfig();
+    const batchConfig = config.batchProcessing || {};
+    
+    batchManager = new BatchManager({
+      maxConcurrentBatches: batchConfig.maxConcurrentBatches || 3,
+      globalApiRateLimit: batchConfig.globalApiRateLimit || 60, // 60 API calls per minute
+      perBatchConcurrency: batchConfig.perBatchConcurrency || 1
+    });
+    
+    log('BatchManager initialized for concurrent batch processing');
+  } catch (error) {
+    log(`Failed to initialize BatchManager: ${error.message}`, 'ERROR');
+    // Initialize with defaults
+    batchManager = new BatchManager();
+  }
+}
 
 // Simple MIME type mapping
 const mimeTypes = {
@@ -1499,8 +1520,12 @@ Be specific and descriptive to enable natural language searches like "photos of 
           return sendError(res, 400, 'No processable images found in album');
         }
 
-        // Add jobs to queue
-        const batchInfo = jobQueue.addBatch(jobs, batchName || `Album ${albumKey}`, statistics);
+        // Add jobs to BatchManager
+        const batchInfo = batchManager.createBatch(jobs, batchName || `Album ${albumKey}`, {
+          albumKey: albumKey,
+          albumHierarchy: albumDetails.PathHierarchy,
+          duplicateStatistics: statistics
+        });
 
         // Define progress callback for real-time updates
         const onProgress = (progress) => {
@@ -1623,7 +1648,7 @@ Be specific and descriptive to enable natural language searches like "photos of 
         };
 
         // Start processing in background
-        jobQueue.startProcessing(processors, onProgress, onComplete, onError)
+        batchManager.startBatch(batchInfo.batchId, processors, onProgress, onComplete, onError)
           .catch(error => {
             log(`Batch processing failed: ${error.message}`, 'ERROR');
           });
@@ -1641,15 +1666,49 @@ Be specific and descriptive to enable natural language searches like "photos of 
       }
     }
 
-    // Batch status endpoint
+    // Batch status endpoint - returns all active batches
     if (pathname === '/api/batch/status' && method === 'GET') {
       log('Batch status request');
       
       try {
-        const rawStatus = jobQueue.getStatus();
+        const allStatuses = batchManager.getAllStatuses();
         
-        // Transform JobQueue status to frontend-expected format
-        const transformedStatus = {
+        // Transform to frontend-expected format for backward compatibility
+        // If there's only one batch, return it in the old format
+        if (allStatuses.length === 1) {
+          const rawStatus = allStatuses[0];
+          const transformedStatus = {
+            // Map to frontend-expected property names
+            total: rawStatus.totalJobs,
+            processed: rawStatus.processedCount,
+            failed: rawStatus.failedCount,
+            
+            // Add missing status flags that frontend expects
+            isComplete: !rawStatus.processing && rawStatus.totalJobs > 0 && 
+                        (rawStatus.completedJobs + rawStatus.failedJobs) >= rawStatus.totalJobs,
+            isPaused: !rawStatus.processing && rawStatus.totalJobs > 0 && 
+                      (rawStatus.completedJobs + rawStatus.failedJobs) < rawStatus.totalJobs,
+            isProcessing: rawStatus.processing,
+            
+            // Keep other useful properties
+            batchId: rawStatus.batchId,
+            currentJob: rawStatus.currentJob,
+            progress: rawStatus.progress,
+            failedJobs: rawStatus.failedJobDetails || [],
+            
+            // Additional properties for frontend
+            startTime: rawStatus.startTime,
+            estimatedCompletion: rawStatus.estimatedCompletion,
+            
+            // Include duplicate detection statistics
+            duplicateStatistics: rawStatus.duplicateStatistics || null
+          };
+          
+          return sendSuccess(res, transformedStatus, 'Batch status retrieved');
+        }
+        
+        // For multiple batches, return array format
+        const transformedStatuses = allStatuses.map(rawStatus => ({
           // Map to frontend-expected property names
           total: rawStatus.totalJobs,
           processed: rawStatus.processedCount,
@@ -1664,6 +1723,8 @@ Be specific and descriptive to enable natural language searches like "photos of 
           
           // Keep other useful properties
           batchId: rawStatus.batchId,
+          name: rawStatus.name,
+          albumKey: rawStatus.albumKey,
           currentJob: rawStatus.currentJob,
           progress: rawStatus.progress,
           failedJobs: rawStatus.failedJobDetails || [],
@@ -1671,9 +1732,51 @@ Be specific and descriptive to enable natural language searches like "photos of 
           // Additional properties for frontend
           startTime: rawStatus.startTime,
           estimatedCompletion: rawStatus.estimatedCompletion,
+          createdAt: rawStatus.createdAt,
           
           // Include duplicate detection statistics
           duplicateStatistics: rawStatus.duplicateStatistics || null
+        }));
+        
+        return sendSuccess(res, {
+          batches: transformedStatuses,
+          statistics: batchManager.getStatistics()
+        }, 'Batch statuses retrieved');
+      } catch (error) {
+        return sendError(res, 500, 'Failed to get batch status', error);
+      }
+    }
+
+    // Batch status endpoint for specific batch
+    if (pathname.match(/^\/api\/batch\/status\/[^/]+$/) && method === 'GET') {
+      const batchId = pathname.split('/').pop();
+      log(`Batch status request for batch: ${batchId}`);
+      
+      try {
+        const status = batchManager.getBatchStatus(batchId);
+        
+        if (!status) {
+          return sendError(res, 404, `Batch ${batchId} not found`);
+        }
+        
+        // Transform to frontend-expected format
+        const transformedStatus = {
+          total: status.totalJobs,
+          processed: status.processedCount,
+          failed: status.failedCount,
+          isComplete: !status.processing && status.totalJobs > 0 && 
+                      (status.completedJobs + status.failedJobs) >= status.totalJobs,
+          isPaused: !status.processing && status.totalJobs > 0 && 
+                    (status.completedJobs + status.failedJobs) < status.totalJobs,
+          isProcessing: status.processing,
+          batchId: status.batchId,
+          name: status.name,
+          currentJob: status.currentJob,
+          progress: status.progress,
+          failedJobs: status.failedJobDetails || [],
+          startTime: status.startTime,
+          estimatedCompletion: status.estimatedCompletion,
+          duplicateStatistics: status.duplicateStatistics || null
         };
         
         return sendSuccess(res, transformedStatus, 'Batch status retrieved');
@@ -1687,8 +1790,22 @@ Be specific and descriptive to enable natural language searches like "photos of 
       log('Batch pause request');
       
       try {
-        const paused = jobQueue.pause();
-        return sendSuccess(res, { paused }, paused ? 'Batch processing paused' : 'Batch not currently processing');
+        const requestData = await parseJSON(req);
+        const { batchId } = requestData;
+        
+        if (!batchId) {
+          // Legacy support: pause the first active batch
+          const allStatuses = batchManager.getAllStatuses();
+          if (allStatuses.length === 0) {
+            return sendSuccess(res, { paused: false }, 'No batch currently processing');
+          }
+          const firstBatch = allStatuses[0];
+          const paused = batchManager.pauseBatch(firstBatch.batchId);
+          return sendSuccess(res, { paused, batchId: firstBatch.batchId }, paused ? 'Batch processing paused' : 'Batch not currently processing');
+        }
+        
+        const paused = batchManager.pauseBatch(batchId);
+        return sendSuccess(res, { paused, batchId }, paused ? 'Batch processing paused' : 'Batch not currently processing');
       } catch (error) {
         return sendError(res, 500, 'Failed to pause batch processing', error);
       }
@@ -1699,6 +1816,9 @@ Be specific and descriptive to enable natural language searches like "photos of 
       log('Batch resume request');
       
       try {
+        const requestData = await parseJSON(req);
+        const { batchId } = requestData;
+        
         // Create processors again for resume with duplicate handling
         const processors = {
           image_analysis: async (imageData, job) => {
@@ -1794,8 +1914,19 @@ Be specific and descriptive to enable natural language searches like "photos of 
           }
         };
 
-        const resumed = await jobQueue.resume(processors);
-        return sendSuccess(res, { resumed }, resumed ? 'Batch processing resumed' : 'No batch to resume');
+        if (!batchId) {
+          // Legacy support: resume the first paused batch
+          const allStatuses = batchManager.getAllStatuses();
+          const pausedBatch = allStatuses.find(s => s.status === 'paused');
+          if (!pausedBatch) {
+            return sendSuccess(res, { resumed: false }, 'No paused batch to resume');
+          }
+          const resumed = await batchManager.resumeBatch(pausedBatch.batchId, processors);
+          return sendSuccess(res, { resumed, batchId: pausedBatch.batchId }, resumed ? 'Batch processing resumed' : 'No batch to resume');
+        }
+        
+        const resumed = await batchManager.resumeBatch(batchId, processors);
+        return sendSuccess(res, { resumed, batchId }, resumed ? 'Batch processing resumed' : 'No batch to resume');
       } catch (error) {
         return sendError(res, 500, 'Failed to resume batch processing', error);
       }
@@ -1806,8 +1937,17 @@ Be specific and descriptive to enable natural language searches like "photos of 
       log('Batch cancel request');
       
       try {
-        jobQueue.cancel();
-        return sendSuccess(res, {}, 'Batch processing cancelled');
+        const requestData = await parseJSON(req);
+        const { batchId } = requestData;
+        
+        if (!batchId) {
+          // Legacy support: cancel all batches
+          batchManager.cancelAllBatches();
+          return sendSuccess(res, {}, 'All batch processing cancelled');
+        }
+        
+        batchManager.cancelBatch(batchId);
+        return sendSuccess(res, { batchId }, 'Batch processing cancelled');
       } catch (error) {
         return sendError(res, 500, 'Failed to cancel batch processing', error);
       }
@@ -1818,19 +1958,32 @@ Be specific and descriptive to enable natural language searches like "photos of 
       log('Batch retry failed jobs request');
       
       try {
-        const result = jobQueue.retryFailedJobs();
-        return sendSuccess(res, result, result.message);
+        const requestData = await parseJSON(req);
+        const { batchId } = requestData;
+        
+        if (!batchId) {
+          return sendError(res, 400, 'Batch ID is required');
+        }
+        
+        const result = batchManager.retryFailedJobs(batchId);
+        return sendSuccess(res, { ...result, batchId }, result.message);
       } catch (error) {
         return sendError(res, 500, 'Failed to retry failed jobs', error);
       }
     }
 
     // Batch details endpoint
-    if (pathname === '/api/batch/details' && method === 'GET') {
-      log('Batch details request');
+    if (pathname.match(/^\/api\/batch\/details\/[^/]+$/) && method === 'GET') {
+      const batchId = pathname.split('/').pop();
+      log(`Batch details request for batch: ${batchId}`);
       
       try {
-        const details = jobQueue.getQueueDetails();
+        const details = batchManager.getBatchDetails(batchId);
+        
+        if (!details) {
+          return sendError(res, 404, `Batch ${batchId} not found`);
+        }
+        
         return sendSuccess(res, details, 'Batch details retrieved');
       } catch (error) {
         return sendError(res, 500, 'Failed to get batch details', error);
@@ -2314,6 +2467,7 @@ const server = http.createServer(async (req, res) => {
 // Initialize Claude client and start server
 async function startServer() {
   await initializeClaudeClient();
+  await initializeBatchManager();
   
   server.listen(PORT, () => {
     log(`🚀 PhotoVision is ready to help you discover amazing photos!`);
@@ -2335,12 +2489,13 @@ async function startServer() {
   log('  GET  /api/smugmug/albums         - Get SmugMug albums');
   log('  GET  /api/smugmug/album/:id/images - Get album images');
   log('  POST /api/batch/start            - Start batch processing');
-  log('  GET  /api/batch/status           - Get batch status');
+  log('  GET  /api/batch/status           - Get all batch statuses');
+  log('  GET  /api/batch/status/:id       - Get specific batch status');
   log('  POST /api/batch/pause            - Pause batch processing');
   log('  POST /api/batch/resume           - Resume batch processing');
   log('  POST /api/batch/cancel           - Cancel batch processing');
   log('  POST /api/batch/retry            - Retry failed jobs');
-  log('  GET  /api/batch/details          - Get batch details');
+  log('  GET  /api/batch/details/:id      - Get batch details');
   log('  GET  /api/data/count             - Get image data count');
   log('  POST /api/admin/destroy-all-data - Destroy all data (testing)');
   log('  POST /api/admin/duplicates/detect   - Detect duplicate images');
