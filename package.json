@@ -5,7 +5,11 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "migrate:albums": "node utilities/migrateToAlbumStorage.js migrate",
+    "migrate:test": "node utilities/migrateToAlbumStorage.js dry-run",
+    "migrate:status": "node utilities/migrateToAlbumStorage.js status",
+    "migrate:rollback": "node utilities/migrateToAlbumStorage.js rollback"
   },
   "keywords": [
     "photo",

@@ -326,11 +326,10 @@
     "lastModified": "2025-07-19T22:43:45.951Z"
   },
   "storageConfig": {
-    "mode": "album",
+    "mode": "single",
     "albumStorageEnabled": false,
-    "migrationStatus": "completed",
-    "lastModified": "2025-07-20T03:58:58.880Z",
-    "migrationDate": "2025-07-20T03:58:58.885Z"
+    "migrationStatus": "not_started",
+    "lastModified": "2025-07-20T03:54:03.239Z"
   },
   "apiKeys": {
     "lastUpdated": "2025-07-20T00:37:35.526Z",

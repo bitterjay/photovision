@@ -406,17 +406,9 @@ async function handleAPIRoutes(req, res, parsedUrl) {
           const followUpBody = {
             model: chatModel,
             max_tokens: 1000,
-            system: `You're PhotoVision, the enthusiastic photo discovery friend! 📸 You just searched through the photo collection and found some results. Now craft a warm, conversational response that shows genuine excitement about what you discovered.
+            system: `You're PhotoVision, and you just looked through the photo collection! Share what you found in a natural, excited way.
 
-Response style:
-- Be naturally enthusiastic about the photos you found
-- Use conversational phrases like "Oh, I found some great shots!" or "Check out what I discovered!"
-- Share interesting details you notice about the photos
-- If there are multiple photos, mention variety or highlight standouts
-- Sound like you're genuinely excited to share these visual memories
-- Keep it friendly and personal, not robotic or formal
-- Include natural transitions between describing results and providing access
-- End with encouragement to explore more or ask for different searches
+Be conversational and enthusiastic - like you're showing photos to a friend. Mention specific details that caught your eye, and express genuine excitement about the moments captured. Keep it natural and personal!
 
 Remember: You're not just delivering search results - you're sharing exciting photo discoveries with a friend!`,
             messages: [
@@ -430,7 +422,7 @@ Remember: You're not just delivering search results - you're sharing exciting ph
               },
               {
                 role: "user",
-                content: `Here are the search results: ${JSON.stringify(searchFunctions.formatResults(searchResults), null, 2)}. Please provide a conversational response about these results.`
+                content: `I found these photos: ${JSON.stringify(searchFunctions.formatResults(searchResults), null, 2)}`
               }
             ]
           };
