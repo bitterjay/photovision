@@ -339,5 +339,12 @@
       "iv": "cVVmMfm4TMbjNyC2BTlH4w==",
       "tag": "HaB784QtUkP0wOlyoeEpiA=="
     }
+  },
+  "visionVerification": {
+    "enabled": true,
+    "batchSize": 5,
+    "maxImages": 30,
+    "model": "claude-3-haiku-20240307",
+    "lastModified": "2025-07-20T21:38:52.577Z"
   }
 }
