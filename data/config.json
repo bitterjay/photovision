@@ -281,7 +281,7 @@
     "template": "",
     "modifiedBy": "admin",
     "lastModified": "2025-07-21T17:02:39.962Z",
-    "lastToggled": "2025-07-21T17:40:20.284Z"
+    "lastToggled": "2025-07-21T17:40:46.869Z"
   },
   "claudeModelConfig": {
     "chatModel": "claude-3-5-sonnet-20241022",
@@ -349,7 +349,6 @@
     "lastModified": "2025-07-20T21:38:52.577Z"
   },
   "starredImages": [
-    "md6jkz3uql6z5gt2z78",
     "mdcdaeyczxek3jal5nh",
     "mdb04x3scxa58m9lqj7"
   ]

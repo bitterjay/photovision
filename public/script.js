@@ -6831,14 +6831,16 @@ function createImageContainer(photo, photoId) {
     
     const aspectClass = getImageAspectRatio(photo.filename, photo.description);
     const imageKey = photo.smugmugImageKey || photo.imageKey || photo.id || photoId;
-    const isStarred = window.photoVision?.isImageStarred(imageKey) || false;
+    // If this image has a starredId, use that to check starred status
+    const checkKey = photo.starredId || imageKey;
+    const isStarred = window.photoVision?.isImageStarred(checkKey) || photo.isStarred || false;
     
     return `
         <div class="image-container ${aspectClass}">
             <button class="star-btn ${isStarred ? 'starred' : ''}" 
-                    onclick="window.photoVision.toggleStar('${imageKey}', this)" 
+                    onclick="window.photoVision.toggleStar('${photo.starredId || imageKey}', this)" 
                     title="${isStarred ? 'Remove from favorites' : 'Add to favorites'}"
-                    data-image-key="${imageKey}">
+                    data-image-key="${photo.starredId || imageKey}">
                 <svg class="star-icon" viewBox="0 0 24 24">
                     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
                 </svg>
