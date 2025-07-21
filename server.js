@@ -350,7 +350,7 @@ async function handleAPIRoutes(req, res, parsedUrl) {
         
         // Import SearchFunctions
         const SearchFunctions = require('./lib/searchFunctions');
-        const searchFunctions = new SearchFunctions();
+        const searchFunctions = new SearchFunctions(requestData.searchOptions || {});
         
         console.log(`[Chat] Processing query: "${requestData.message}" with model: ${chatModel}`);
         
@@ -465,7 +465,8 @@ Remember: You're not just delivering search results - you're sharing exciting ph
           results: searchFunctions.formatResults(paginatedData.results),
           pagination: paginatedData.pagination,
           resultCount: searchResults.length,
-          originalQuery: requestData.message
+          originalQuery: requestData.message,
+          searchOptions: requestData.searchOptions || {}
         }, 'Chat message processed');
         
       } catch (error) {

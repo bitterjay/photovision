@@ -87,6 +87,57 @@
                     </div>
                     
                     <div class="input-container">
+                        <div class="search-controls" id="searchControls">
+                            <div class="search-mode-selector">
+                                <button class="search-mode-btn" data-mode="exact" title="Only exact word matches">
+                                    <span class="mode-icon">🎯</span>
+                                    <span class="mode-label">Exact</span>
+                                </button>
+                                <button class="search-mode-btn active" data-mode="smart" title="Smart matching with related terms">
+                                    <span class="mode-icon">🧠</span>
+                                    <span class="mode-label">Smart</span>
+                                </button>
+                                <button class="search-mode-btn" data-mode="fuzzy" title="Loose matching with partial words">
+                                    <span class="mode-icon">🌊</span>
+                                    <span class="mode-label">Fuzzy</span>
+                                </button>
+                                <button class="search-mode-btn" data-mode="custom" title="Custom search settings">
+                                    <span class="mode-icon">⚙️</span>
+                                    <span class="mode-label">Custom</span>
+                                </button>
+                            </div>
+                            <div class="search-quick-options">
+                                <label class="search-option">
+                                    <input type="checkbox" id="includeSimilar" checked>
+                                    <span>Similar words</span>
+                                </label>
+                                <label class="search-option">
+                                    <input type="checkbox" id="requireAll">
+                                    <span>All words</span>
+                                </label>
+                                <label class="search-option">
+                                    <input type="checkbox" id="descriptionsOnly">
+                                    <span>Descriptions only</span>
+                                </label>
+                            </div>
+                            <div class="search-custom-panel" id="customSearchPanel" style="display: none;">
+                                <div class="custom-option">
+                                    <label>Minimum relevance score:</label>
+                                    <input type="range" id="minScore" min="0" max="20" value="0" step="1">
+                                    <span id="minScoreValue">0</span>
+                                </div>
+                                <div class="custom-option">
+                                    <label>Search in:</label>
+                                    <div class="field-checkboxes">
+                                        <label><input type="checkbox" name="searchField" value="keywords" checked> Keywords</label>
+                                        <label><input type="checkbox" name="searchField" value="description" checked> Description</label>
+                                        <label><input type="checkbox" name="searchField" value="title" checked> Title</label>
+                                        <label><input type="checkbox" name="searchField" value="caption" checked> Caption</label>
+                                        <label><input type="checkbox" name="searchField" value="album" checked> Album</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="input-wrapper">
                             <input type="text" id="messageInput" placeholder="Ask me to find photos: 'show me archery photos' or 'find 3 smiling people'..." disabled>
                             <button id="sendButton" disabled>

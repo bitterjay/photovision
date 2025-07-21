@@ -24,6 +24,17 @@ class PhotoVision {
         this.starredImages = new Set();
         this.starredImagesLoaded = false;
         
+        // Search mode state
+        this.searchMode = 'smart'; // Default mode
+        this.searchOptions = {
+            mode: 'smart',
+            semanticExpansion: true,
+            partialMatches: false,
+            requireAllTerms: false,
+            searchFields: ['keywords', 'description', 'title', 'caption', 'album'],
+            minScore: 0
+        };
+        
         // Connection dashboard elements
         this.claudeStatusCard = document.getElementById('claudeStatusCard');
         this.smugmugStatusCard = document.getElementById('smugmugStatusCard');
@@ -60,6 +71,7 @@ class PhotoVision {
         this.initializeThemeSystem();
         this.initializeTabSystem();
         this.initializeImageLoading();
+        this.initializeSearchControls();
         this.loadStarredImages();
         console.log('PhotoVision initialized');
     }
@@ -300,7 +312,10 @@ class PhotoVision {
                 headers: { 
                     'Content-Type': 'application/json' 
                 },
-                body: JSON.stringify({ message })
+                body: JSON.stringify({ 
+                    message,
+                    searchOptions: this.getSearchOptions()
+                })
             });
             
             const data = await response.json();
@@ -585,6 +600,26 @@ class PhotoVision {
                 `;
             }
             
+            // Add search action buttons
+            const searchContext = {
+                query: data.originalQuery || '',
+                options: data.searchOptions || this.getSearchOptions()
+            };
+            
+            messageHTML += `
+                <div class="search-actions-section">
+                    <button class="search-action-btn repeat-btn" onclick="window.photoVision.refineSearch('${encodeURIComponent(JSON.stringify(searchContext))}', 'repeat')">
+                        🔄 Search Again
+                    </button>
+                    <button class="search-action-btn broaden-btn" onclick="window.photoVision.refineSearch('${encodeURIComponent(JSON.stringify(searchContext))}', 'broaden')">
+                        🔍+ Broaden Search
+                    </button>
+                    <button class="search-action-btn narrow-btn" onclick="window.photoVision.refineSearch('${encodeURIComponent(JSON.stringify(searchContext))}', 'narrow')">
+                        🎯 Narrow Search
+                    </button>
+                </div>
+            `;
+            
             messageHTML += `
                 </div>
             `;
@@ -594,6 +629,20 @@ class PhotoVision {
                     <div class="no-results-message">
                         <strong>🔍 No photos found</strong> matching your search criteria.
                     </div>
+                </div>
+            `;
+            
+            // Add search action buttons for no results
+            const searchContext = {
+                query: data.originalQuery || '',
+                options: data.searchOptions || this.getSearchOptions()
+            };
+            
+            messageHTML += `
+                <div class="search-actions-section">
+                    <button class="search-action-btn broaden-btn" onclick="window.photoVision.refineSearch('${encodeURIComponent(JSON.stringify(searchContext))}', 'broaden')">
+                        🔍+ Try Broader Search
+                    </button>
                 </div>
             `;
         }
@@ -4602,6 +4651,296 @@ class PhotoVision {
     getCurrentTab() {
         const activeTab = document.querySelector('.tab-btn.active');
         return activeTab ? activeTab.dataset.tab : null;
+    }
+
+    // Search Controls Methods
+    
+    initializeSearchControls() {
+        // Load saved search mode
+        const savedMode = localStorage.getItem('photovision-search-mode') || 'smart';
+        const savedOptions = localStorage.getItem('photovision-search-options');
+        
+        if (savedOptions) {
+            try {
+                this.searchOptions = JSON.parse(savedOptions);
+                this.searchMode = this.searchOptions.mode;
+            } catch (e) {
+                console.error('Error loading saved search options:', e);
+            }
+        }
+        
+        // Set initial UI state
+        this.updateSearchModeUI(this.searchMode);
+        this.updateSearchOptionsUI();
+        
+        // Mode selector buttons
+        const modeButtons = document.querySelectorAll('.search-mode-btn');
+        modeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const mode = btn.dataset.mode;
+                this.setSearchMode(mode);
+            });
+        });
+        
+        // Quick option checkboxes
+        const includeSimilar = document.getElementById('includeSimilar');
+        const requireAll = document.getElementById('requireAll');
+        const descriptionsOnly = document.getElementById('descriptionsOnly');
+        
+        includeSimilar.addEventListener('change', () => {
+            this.searchOptions.semanticExpansion = includeSimilar.checked;
+            this.saveSearchOptions();
+        });
+        
+        requireAll.addEventListener('change', () => {
+            this.searchOptions.requireAllTerms = requireAll.checked;
+            this.saveSearchOptions();
+        });
+        
+        descriptionsOnly.addEventListener('change', () => {
+            if (descriptionsOnly.checked) {
+                this.searchOptions.searchFields = ['description'];
+            } else {
+                this.searchOptions.searchFields = ['keywords', 'description', 'title', 'caption', 'album'];
+            }
+            this.updateFieldCheckboxes();
+            this.saveSearchOptions();
+        });
+        
+        // Custom panel controls
+        const minScoreSlider = document.getElementById('minScore');
+        const minScoreValue = document.getElementById('minScoreValue');
+        
+        minScoreSlider.addEventListener('input', () => {
+            minScoreValue.textContent = minScoreSlider.value;
+            this.searchOptions.minScore = parseInt(minScoreSlider.value);
+            this.saveSearchOptions();
+        });
+        
+        // Field checkboxes
+        const fieldCheckboxes = document.querySelectorAll('input[name="searchField"]');
+        fieldCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                this.updateSearchFieldsFromCheckboxes();
+                this.saveSearchOptions();
+            });
+        });
+    }
+    
+    setSearchMode(mode) {
+        this.searchMode = mode;
+        this.searchOptions.mode = mode;
+        
+        // Update options based on mode
+        switch (mode) {
+            case 'exact':
+                this.searchOptions.semanticExpansion = false;
+                this.searchOptions.partialMatches = false;
+                break;
+            case 'smart':
+                this.searchOptions.semanticExpansion = true;
+                this.searchOptions.partialMatches = false;
+                break;
+            case 'fuzzy':
+                this.searchOptions.semanticExpansion = true;
+                this.searchOptions.partialMatches = true;
+                break;
+            case 'custom':
+                // Keep current settings
+                break;
+        }
+        
+        this.updateSearchModeUI(mode);
+        this.updateSearchOptionsUI();
+        this.saveSearchOptions();
+        
+        // Show/hide custom panel
+        const customPanel = document.getElementById('customSearchPanel');
+        customPanel.style.display = mode === 'custom' ? 'block' : 'none';
+    }
+    
+    updateSearchModeUI(mode) {
+        const modeButtons = document.querySelectorAll('.search-mode-btn');
+        modeButtons.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.mode === mode);
+        });
+    }
+    
+    updateSearchOptionsUI() {
+        document.getElementById('includeSimilar').checked = this.searchOptions.semanticExpansion;
+        document.getElementById('requireAll').checked = this.searchOptions.requireAllTerms;
+        document.getElementById('descriptionsOnly').checked = 
+            this.searchOptions.searchFields.length === 1 && this.searchOptions.searchFields[0] === 'description';
+        document.getElementById('minScore').value = this.searchOptions.minScore;
+        document.getElementById('minScoreValue').textContent = this.searchOptions.minScore;
+        
+        this.updateFieldCheckboxes();
+    }
+    
+    updateFieldCheckboxes() {
+        const fieldCheckboxes = document.querySelectorAll('input[name="searchField"]');
+        fieldCheckboxes.forEach(checkbox => {
+            checkbox.checked = this.searchOptions.searchFields.includes(checkbox.value);
+        });
+    }
+    
+    updateSearchFieldsFromCheckboxes() {
+        const fieldCheckboxes = document.querySelectorAll('input[name="searchField"]:checked');
+        this.searchOptions.searchFields = Array.from(fieldCheckboxes).map(cb => cb.value);
+        
+        // Update descriptions only checkbox
+        document.getElementById('descriptionsOnly').checked = 
+            this.searchOptions.searchFields.length === 1 && this.searchOptions.searchFields[0] === 'description';
+    }
+    
+    updateSearchControlsUI() {
+        // Update search mode in UI
+        this.searchMode = this.searchOptions.mode || 'smart';
+        this.updateSearchModeUI(this.searchMode);
+        
+        // Update search options in UI
+        this.updateSearchOptionsUI();
+        
+        // Show/hide custom panel based on mode
+        const customPanel = document.getElementById('customSearchPanel');
+        if (customPanel) {
+            customPanel.style.display = this.searchMode === 'custom' ? 'block' : 'none';
+        }
+    }
+    
+    async performRefinedSearch(query) {
+        // Add a message indicating the refined search
+        const modeText = this.searchOptions.mode.charAt(0).toUpperCase() + this.searchOptions.mode.slice(1);
+        this.addMessage(`Searching again with ${modeText} mode: "${query}"`, 'user');
+        
+        // Show typing indicator
+        this.showTypingIndicator();
+        
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json' 
+                },
+                body: JSON.stringify({ 
+                    message: query,
+                    searchOptions: this.getSearchOptions()
+                })
+            });
+            
+            const data = await response.json();
+            
+            // Hide typing indicator
+            this.hideTypingIndicator();
+            
+            if (data.success && data.data) {
+                // Handle conversational search response
+                this.addConversationalSearchMessage(data.data);
+            } else {
+                // Handle error message
+                const errorMessage = data.error || 'Sorry, I encountered an error processing your request.';
+                this.addMessage(errorMessage, 'assistant');
+            }
+        } catch (error) {
+            console.error('Search error:', error);
+            this.hideTypingIndicator();
+            this.addMessage('Sorry, I encountered an error while searching. Please try again.', 'assistant');
+        }
+    }
+    
+    saveSearchOptions() {
+        localStorage.setItem('photovision-search-mode', this.searchMode);
+        localStorage.setItem('photovision-search-options', JSON.stringify(this.searchOptions));
+    }
+    
+    getSearchOptions() {
+        return { ...this.searchOptions };
+    }
+    
+    refineSearch(encodedContext, refinementType) {
+        try {
+            const searchContext = JSON.parse(decodeURIComponent(encodedContext));
+            const { query, options } = searchContext;
+            
+            let newOptions;
+            switch (refinementType) {
+                case 'repeat':
+                    // Use same options
+                    newOptions = options;
+                    break;
+                case 'broaden':
+                    newOptions = this.getLooserSearchOptions(options);
+                    break;
+                case 'narrow':
+                    newOptions = this.getStricterSearchOptions(options);
+                    break;
+                default:
+                    newOptions = options;
+            }
+            
+            // Update search options in UI
+            this.searchOptions = newOptions;
+            this.updateSearchControlsUI();
+            this.saveSearchOptions();
+            
+            // Perform the search directly without updating the input
+            this.performRefinedSearch(query);
+        } catch (error) {
+            console.error('Error refining search:', error);
+            this.addMessage('Sorry, I encountered an error refining the search.', 'assistant');
+        }
+    }
+    
+    getLooserSearchOptions(currentOptions) {
+        const looserOptions = { ...currentOptions };
+        
+        // Progress mode: exact -> smart -> fuzzy
+        if (currentOptions.mode === 'exact') {
+            looserOptions.mode = 'smart';
+            looserOptions.semanticExpansion = true;
+        } else if (currentOptions.mode === 'smart') {
+            looserOptions.mode = 'fuzzy';
+            looserOptions.semanticExpansion = true;
+            looserOptions.partialMatches = true;
+        } else if (currentOptions.mode === 'custom' || currentOptions.mode === 'fuzzy') {
+            // For custom/fuzzy mode, relax all settings
+            looserOptions.semanticExpansion = true;
+            looserOptions.partialMatches = true;
+            looserOptions.requireAllTerms = false;
+            looserOptions.minScore = Math.max(0, (currentOptions.minScore || 0) - 2);
+            // Add more search fields if not all are selected
+            if (!looserOptions.searchFields || looserOptions.searchFields.length < 5) {
+                looserOptions.searchFields = ['keywords', 'description', 'title', 'caption', 'album'];
+            }
+        }
+        
+        return looserOptions;
+    }
+    
+    getStricterSearchOptions(currentOptions) {
+        const stricterOptions = { ...currentOptions };
+        
+        // Progress mode: fuzzy -> smart -> exact
+        if (currentOptions.mode === 'fuzzy') {
+            stricterOptions.mode = 'smart';
+            stricterOptions.partialMatches = false;
+        } else if (currentOptions.mode === 'smart') {
+            stricterOptions.mode = 'exact';
+            stricterOptions.semanticExpansion = false;
+            stricterOptions.partialMatches = false;
+        } else if (currentOptions.mode === 'custom' || currentOptions.mode === 'exact') {
+            // For custom/exact mode, tighten all settings
+            stricterOptions.semanticExpansion = false;
+            stricterOptions.partialMatches = false;
+            stricterOptions.requireAllTerms = true;
+            stricterOptions.minScore = Math.min(10, (currentOptions.minScore || 0) + 2);
+            // Reduce search fields to core ones
+            if (stricterOptions.searchFields && stricterOptions.searchFields.length > 2) {
+                stricterOptions.searchFields = ['keywords', 'description'];
+            }
+        }
+        
+        return stricterOptions;
     }
 }
 
