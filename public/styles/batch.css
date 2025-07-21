@@ -1243,53 +1243,6 @@
     font-weight: 600;
 }
 
-/* Album Preview Button */
-.album-preview-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    padding: 0.375rem 0.75rem;
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-sm);
-    color: var(--text-secondary);
-    font-size: 0.8125rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all var(--transition-fast);
-    /* margin-left: auto; */
-}
-
-.album-preview-btn:hover {
-    background: var(--accent-primary);
-    color: white;
-    border-color: var(--accent-primary);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-sm);
-}
-
-.album-preview-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.album-preview-btn .preview-icon {
-    font-size: 1rem;
-}
-
-.album-preview-btn .preview-text {
-    display: inline;
-}
-
-@media (max-width: 480px) {
-    .album-preview-btn .preview-text {
-        display: none;
-    }
-    
-    .album-preview-btn {
-        padding: 0.375rem 0.5rem;
-    }
-}
 
 /* Album Preview Enhancements */
 .album-preview-images {

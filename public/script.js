@@ -1274,80 +1274,6 @@ class PhotoVision {
         }
     }
     
-    async openAlbumImageSelection(albumKey, albumName) {
-        try {
-            // Show loading state on the button
-            const button = document.querySelector(`.album-select-images-btn[data-album-key="${albumKey}"]`);
-            if (button) {
-                button.disabled = true;
-                button.innerHTML = '<span class="loading-spinner"></span> Loading...';
-            }
-            
-            // Fetch album preview data
-            console.log(`Fetching images for selection: ${albumKey}`);
-            const response = await fetch(`/api/smugmug/album/${albumKey}/preview`);
-            
-            if (!response.ok) {
-                let errorMessage = `HTTP ${response.status}`;
-                try {
-                    const errorData = await response.json();
-                    errorMessage = errorData.error || errorData.message || errorMessage;
-                } catch (e) {
-                    errorMessage = `${errorMessage} - ${response.statusText}`;
-                }
-                throw new Error(errorMessage);
-            }
-            
-            const result = await response.json();
-            
-            // Check if we have valid data
-            if (!result.data || !result.data.images) {
-                throw new Error('Invalid preview data received');
-            }
-            
-            // Transform images for lightbox format and filter out processed images for selection mode
-            const allImages = result.data.images.map(img => {
-                // Debug: Log the raw image data
-                console.log('Raw image data:', img);
-                
-                return {
-                    smugmugUrl: img.largeUrl || img.thumbnailUrl,
-                    thumbnail: img.thumbnailUrl,
-                    filename: img.filename,
-                    caption: img.caption,
-                    description: img.description || img.caption || img.filename,
-                    keywords: img.keywords || [],
-                    albumName: albumName,
-                    imageKey: img.imageKey,
-                    smugmugImageKey: img.imageKey,
-                    isProcessed: img.isProcessed || false,
-                    analysisTimestamp: img.analysisTimestamp
-                };
-            });
-            
-            // Filter out processed images for selection mode
-            const unprocessedImages = allImages.filter(img => !img.isProcessed);
-            
-            if (unprocessedImages.length === 0) {
-                alert('All images in this album have already been processed. There are no images to select.');
-                return;
-            }
-            
-            // Open the lightbox in selection mode with only unprocessed images
-            this.openAlbumPreviewLightbox(unprocessedImages, albumName, albumKey, true);
-            
-        } catch (error) {
-            console.error('Error loading images for selection:', error);
-            alert(`Error loading images: ${error.message}`);
-        } finally {
-            // Reset button state
-            const button = document.querySelector(`.album-select-images-btn[data-album-key="${albumKey}"]`);
-            if (button) {
-                button.disabled = false;
-                button.innerHTML = '<span class="select-text">Select Images</span>';
-            }
-        }
-    }
     
     openAlbumPreviewLightbox(images, albumName, albumKey, selectionMode = false) {
         if (images.length === 0) {
@@ -1359,45 +1285,48 @@ class PhotoVision {
         console.log('Preview lightbox images:', images);
         console.log('First image details:', images[0]);
         
-        // Build header HTML based on selection mode
-        let headerHTML = '';
-        if (selectionMode) {
-            const excludedCount = this.getAlbumExcludedCount(albumKey);
-            headerHTML = `
-                <div class="preview-header">
-                    <h2 class="preview-title">${albumName} - Select Images to Exclude</h2>
-                    <div class="preview-info">
-                        <div class="selection-controls">
-                            <button class="select-all-btn" title="Select all images">
-                                <span class="icon">☑</span> Select All
-                            </button>
-                            <button class="deselect-all-btn" title="Deselect all images">
-                                <span class="icon">☐</span> Deselect All
-                            </button>
-                            <span class="selection-count">${excludedCount} excluded</span>
-                        </div>
-                        <span class="image-count">${images.length} unprocessed images</span>
-                        <button class="refresh-preview-btn" data-album-key="${albumKey}" title="Refresh from SmugMug">
-                            <span class="refresh-icon">🔄</span> Refresh
+        // Count unprocessed images
+        const unprocessedImages = images.filter(img => !img.isProcessed);
+        const selectedCount = unprocessedImages.length;
+        
+        // Build unified header with batch controls
+        const headerHTML = `
+            <div class="preview-header">
+                <h2 class="preview-title">${albumName}</h2>
+                <div class="preview-info">
+                    <div class="selection-controls">
+                        <button class="select-all-btn" title="Select all images">
+                            <span class="icon">☑</span> Select All
                         </button>
-                    </div>
-                    <button class="modal-close" id="closeLightbox">&times;</button>
-                </div>
-            `;
-        } else {
-            headerHTML = `
-                <div class="preview-header">
-                    <h2 class="preview-title">${albumName}</h2>
-                    <div class="preview-info">
-                        <span class="image-count">${images.length} images</span>
-                        <button class="refresh-preview-btn" data-album-key="${albumKey}" title="Refresh from SmugMug">
-                            <span class="refresh-icon">🔄</span> Refresh
+                        <button class="deselect-all-btn" title="Deselect all images">
+                            <span class="icon">☐</span> Deselect All
                         </button>
+                        <span class="selection-count">${selectedCount} of ${unprocessedImages.length} selected</span>
                     </div>
-                    <button class="modal-close" id="closeLightbox">&times;</button>
+                    <span class="image-count">${images.length} total images (${unprocessedImages.length} unprocessed)</span>
                 </div>
-            `;
-        }
+                <button class="modal-close" id="closeLightbox">&times;</button>
+            </div>
+        `;
+        
+        // Build footer with batch processing controls
+        const footerHTML = `
+            <div class="preview-footer">
+                <div class="batch-controls">
+                    <div class="batch-control-group">
+                        <label>Batch Name:</label>
+                        <input type="text" class="batch-name-input" placeholder="Enter batch name" value="${albumName}">
+                    </div>
+                    <div class="batch-control-group">
+                        <label>Max Images: <span class="max-images-value">50</span></label>
+                        <input type="range" class="max-images-slider" min="1" max="200" value="50">
+                    </div>
+                    <button class="start-batch-btn btn btn-primary" ${unprocessedImages.length === 0 ? 'disabled' : ''}>
+                        <span class="btn-icon">▶</span> Start Batch Processing
+                    </button>
+                </div>
+            </div>
+        `;
         
         // Create lightbox HTML with grid layout
         const lightboxHTML = `
@@ -1406,15 +1335,17 @@ class PhotoVision {
                 <div class="modal-container preview-container">
                     ${headerHTML}
                     <div class="preview-grid-container">
-                        <div class="preview-grid${selectionMode ? ' selection-mode' : ''}">
+                        <div class="preview-grid selection-mode">
                             ${images.map((img, index) => {
-                                const isExcluded = selectionMode ? this.isImageExcluded(albumKey, img.smugmugImageKey || img.imageKey) : false;
+                                // Only show checkboxes for unprocessed images
+                                const showCheckbox = !img.isProcessed;
+                                const isSelected = showCheckbox; // All unprocessed images selected by default
                                 return `
-                                    <div class="preview-thumbnail${isExcluded ? ' excluded' : ''}${img.isProcessed ? ' processed' : ''}" data-index="${index}" data-image-key="${img.smugmugImageKey || img.imageKey || ''}">
-                                        ${selectionMode ? `
+                                    <div class="preview-thumbnail${img.isProcessed ? ' processed' : ''}${isSelected ? ' selected' : ''}" data-index="${index}" data-image-key="${img.smugmugImageKey || img.imageKey || ''}">
+                                        ${showCheckbox ? `
                                             <input type="checkbox" 
                                                    class="image-checkbox" 
-                                                   ${isExcluded ? 'checked' : ''}
+                                                   checked
                                                    data-image-key="${img.smugmugImageKey || img.imageKey || ''}">
                                         ` : ''}
                                         ${img.isProcessed ? '<div class="processed-indicator" title="This image has been analyzed">✓</div>' : ''}
@@ -1430,6 +1361,7 @@ class PhotoVision {
                             }).join('')}
                         </div>
                     </div>
+                    ${footerHTML}
                 </div>
             </div>
         `;
@@ -1441,7 +1373,6 @@ class PhotoVision {
         const lightbox = document.getElementById('imageLightbox');
         const closeBtn = lightbox.querySelector('#closeLightbox');
         const overlay = lightbox.querySelector('.modal-overlay');
-        const refreshBtn = lightbox.querySelector('.refresh-preview-btn');
         
         // Close button
         closeBtn.addEventListener('click', () => {
@@ -1462,86 +1393,122 @@ class PhotoVision {
         document.addEventListener('keydown', escapeHandler);
         this.currentLightboxEscapeHandler = escapeHandler;
         
-        // Add selection control handlers if in selection mode
-        if (selectionMode) {
-            const selectAllBtn = lightbox.querySelector('.select-all-btn');
-            const deselectAllBtn = lightbox.querySelector('.deselect-all-btn');
-            const selectionCount = lightbox.querySelector('.selection-count');
+        // Add selection control handlers
+        const selectAllBtn = lightbox.querySelector('.select-all-btn');
+        const deselectAllBtn = lightbox.querySelector('.deselect-all-btn');
+        const selectionCount = lightbox.querySelector('.selection-count');
+        const maxImagesSlider = lightbox.querySelector('.max-images-slider');
+        const maxImagesValue = lightbox.querySelector('.max-images-value');
+        const startBatchBtn = lightbox.querySelector('.start-batch-btn');
+        const batchNameInput = lightbox.querySelector('.batch-name-input');
+        
+        
+        // Function to update selection count
+        const updateSelectionCount = () => {
+            const checkedCount = lightbox.querySelectorAll('.image-checkbox:checked').length;
+            selectionCount.textContent = `${checkedCount} of ${unprocessedImages.length} selected`;
             
-            // Handle checkbox changes
-            lightbox.querySelectorAll('.image-checkbox').forEach(checkbox => {
-                checkbox.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                });
-                
-                checkbox.addEventListener('change', () => {
-                    const imageKey = checkbox.getAttribute('data-image-key');
-                    const thumbnail = checkbox.closest('.preview-thumbnail');
-                    
-                    this.toggleImageSelection(albumKey, imageKey);
-                    
-                    if (checkbox.checked) {
-                        thumbnail.classList.add('excluded');
-                    } else {
-                        thumbnail.classList.remove('excluded');
-                    }
-                    
-                    // Update count
-                    const count = this.getAlbumExcludedCount(albumKey);
-                    selectionCount.textContent = `${count} excluded`;
-                    
-                    // Update album display
-                    this.updateAlbumExcludedDisplay(albumKey);
-                });
+            // Enable/disable start button based on selection
+            if (startBatchBtn) {
+                startBatchBtn.disabled = checkedCount === 0;
+            }
+        };
+        
+        // Handle checkbox changes
+        lightbox.querySelectorAll('.image-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('click', (e) => {
+                e.stopPropagation();
             });
             
-            // Select all button
-            selectAllBtn.addEventListener('click', () => {
-                const imageKeys = images.map(img => img.smugmugImageKey || img.imageKey).filter(key => key);
-                this.selectAllInAlbum(albumKey, imageKeys);
+            checkbox.addEventListener('change', () => {
+                const thumbnail = checkbox.closest('.preview-thumbnail');
                 
-                // Update UI
-                lightbox.querySelectorAll('.image-checkbox').forEach(checkbox => {
+                if (checkbox.checked) {
+                    thumbnail.classList.add('selected');
+                } else {
+                    thumbnail.classList.remove('selected');
+                }
+                
+                updateSelectionCount();
+            });
+        });
+        
+        // Select all button
+        if (selectAllBtn) {
+            selectAllBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const checkboxes = lightbox.querySelectorAll('.image-checkbox');
+                checkboxes.forEach(checkbox => {
                     checkbox.checked = true;
-                    checkbox.closest('.preview-thumbnail').classList.add('excluded');
+                    checkbox.closest('.preview-thumbnail').classList.add('selected');
                 });
-                selectionCount.textContent = `${images.length} excluded`;
-                
-                // Update album display
-                this.updateAlbumExcludedDisplay(albumKey);
-            });
-            
-            // Deselect all button
-            deselectAllBtn.addEventListener('click', () => {
-                this.deselectAllInAlbum(albumKey);
-                
-                // Update UI
-                lightbox.querySelectorAll('.image-checkbox').forEach(checkbox => {
-                    checkbox.checked = false;
-                    checkbox.closest('.preview-thumbnail').classList.remove('excluded');
-                });
-                selectionCount.textContent = '0 excluded';
-                
-                // Update album display
-                this.updateAlbumExcludedDisplay(albumKey);
-            });
-            
-            // Thumbnail clicks in selection mode
-            lightbox.querySelectorAll('.preview-thumbnail').forEach(thumb => {
-                thumb.addEventListener('click', (e) => {
-                    if (e.target.tagName !== 'INPUT') {
-                        const checkbox = thumb.querySelector('.image-checkbox');
-                        if (checkbox) {
-                            checkbox.checked = !checkbox.checked;
-                            checkbox.dispatchEvent(new Event('change'));
-                        }
-                    }
-                });
+                updateSelectionCount();
             });
         } else {
-            // Normal mode - thumbnail clicks open full lightbox
-            lightbox.querySelectorAll('.preview-thumbnail').forEach(thumb => {
-                thumb.addEventListener('click', () => {
+            console.warn('Select All button not found');
+        }
+        
+        // Deselect all button
+        if (deselectAllBtn) {
+            deselectAllBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const checkboxes = lightbox.querySelectorAll('.image-checkbox');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                    checkbox.closest('.preview-thumbnail').classList.remove('selected');
+                });
+                updateSelectionCount();
+            });
+        } else {
+            console.warn('Deselect All button not found');
+        }
+        
+        // Max images slider
+        if (maxImagesSlider) {
+            maxImagesSlider.addEventListener('input', (e) => {
+                maxImagesValue.textContent = e.target.value;
+            });
+        }
+        
+        // Start batch button
+        if (startBatchBtn) {
+            startBatchBtn.addEventListener('click', async () => {
+                // Get selected images
+                const selectedImages = [];
+                lightbox.querySelectorAll('.image-checkbox:checked').forEach(checkbox => {
+                    const imageKey = checkbox.getAttribute('data-image-key');
+                    selectedImages.push(imageKey);
+                });
+                
+                if (selectedImages.length === 0) {
+                    alert('Please select at least one image to process.');
+                    return;
+                }
+                
+                const maxImages = parseInt(maxImagesSlider.value) || 50;
+                const batchName = batchNameInput.value || albumName;
+                
+                // Close the lightbox
+                this.closeLightbox();
+                
+                // Start batch processing with selected images
+                await this.startBatchProcessingFromPreview(albumKey, albumName, selectedImages, maxImages, batchName);
+            });
+        }
+        
+        // Thumbnail clicks - open full image or toggle checkbox
+        lightbox.querySelectorAll('.preview-thumbnail').forEach(thumb => {
+            thumb.addEventListener('click', (e) => {
+                // Don't do anything if clicking the checkbox itself
+                if (e.target.tagName === 'INPUT') {
+                    return;
+                }
+                
+                // Check if clicking on the image
+                if (e.target.tagName === 'IMG' || e.target.closest('img')) {
+                    // Open full lightbox view
                     const index = parseInt(thumb.dataset.index);
                     this.closeLightbox();
                     // Pass album preview context
@@ -1551,24 +1518,15 @@ class PhotoVision {
                         albumName: albumName,
                         selectionMode: false
                     });
-                });
-            });
-        }
-        
-        // Refresh button
-        refreshBtn.addEventListener('click', async () => {
-            refreshBtn.disabled = true;
-            refreshBtn.innerHTML = '<span class="loading-spinner"></span> Refreshing...';
-            
-            try {
-                const response = await fetch(`/api/smugmug/album/${albumKey}/preview?refresh=true`);
-                if (response.ok) {
-                    this.closeLightbox();
-                    await this.previewAlbumImages(albumKey, albumName);
+                } else {
+                    // Otherwise toggle checkbox if it exists
+                    const checkbox = thumb.querySelector('.image-checkbox');
+                    if (checkbox) {
+                        checkbox.checked = !checkbox.checked;
+                        checkbox.dispatchEvent(new Event('change'));
+                    }
                 }
-            } catch (error) {
-                console.error('Error refreshing preview:', error);
-            }
+            });
         });
     }
 
@@ -3029,6 +2987,79 @@ class PhotoVision {
         }
     }
 
+    async startBatchProcessingFromPreview(albumKey, albumName, selectedImages, maxImages, batchName) {
+        // Get album details for display
+        const selectedAlbum = this.albumsData.find(a => a.AlbumKey === albumKey);
+        const albumHierarchy = selectedAlbum?.PathHierarchy || [];
+
+        // Debug logging
+        console.log('=== BATCH START FROM PREVIEW DEBUG ===');
+        console.log('Album Key:', albumKey);
+        console.log('Album Name:', albumName);
+        console.log('Selected Images:', selectedImages.length, selectedImages);
+        console.log('Max Images:', maxImages);
+        console.log('Batch Name:', batchName);
+
+        // Build the list of images to include (inverse of excluded)
+        const includedImages = selectedImages.slice(0, maxImages);
+        
+        const requestData = {
+            albumKey: albumKey,
+            maxImages: maxImages,
+            batchName: batchName,
+            includedImages: includedImages  // Using includedImages instead of excludedImages
+        };
+        
+        console.log('Request Data:', JSON.stringify(requestData, null, 2));
+        console.log('========================');
+
+        // Update message
+        this.addMessage(`Starting batch processing for ${batchName} (${includedImages.length} images selected)...`, 'assistant');
+
+        try {
+            const response = await fetch('/api/batch/start', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(requestData)
+            });
+
+            console.log('Response status:', response.status);
+
+            const data = await response.json();
+            console.log('Response data:', data);
+
+            if (data.success) {
+                const actualCount = data.data.jobCount;
+                const message = `Batch processing started! Processing ${actualCount} images.`;
+                this.addMessage(message, 'assistant');
+                
+                this.showBatchProgress();
+                // Create batch card for this batch
+                this.createBatchCard(data.data.batchId, {
+                    name: batchName,
+                    albumKey: albumKey,
+                    albumName: albumName,
+                    albumHierarchy: albumHierarchy,
+                    total: data.data.jobCount
+                });
+                this.updateBatchControls('processing');
+                this.startProgressMonitoring();
+                
+                // Switch to chat tab to show the batch progress
+                const chatTab = document.querySelector('.tab-btn');
+                if (chatTab) {
+                    chatTab.click();
+                }
+            } else {
+                this.addMessage(`Failed to start batch processing: ${data.error}`, 'assistant');
+                console.error('Batch start failed:', data);
+            }
+        } catch (error) {
+            console.error('Error starting batch processing:', error);
+            this.addMessage('Error starting batch processing. Please try again.', 'assistant');
+        }
+    }
+
     async startBatchProcessing() {
         if (!this.selectedAlbumKey) {
             this.addMessage('Please select an album first.', 'assistant');
@@ -4091,20 +4122,6 @@ class PhotoVision {
                                     <span class="metadata-value">${this.formatDate(album.Date)}</span>
                                 </div>
                             ` : ''}
-                            <button class="album-preview-btn" 
-                                    data-album-key="${album.AlbumKey}"
-                                    data-album-name="${album.Name}"
-                                    onclick="event.stopPropagation();"
-                                    title="Preview album images">
-                                <span class="preview-text">Preview</span>
-                            </button>
-                            <button class="album-select-images-btn" 
-                                    data-album-key="${album.AlbumKey}"
-                                    data-album-name="${album.Name}"
-                                    onclick="event.stopPropagation();"
-                                    title="Select images to process">
-                                <span class="select-text">Select Images</span>
-                            </button>
                         </div>
                         
                         <div class="album-processing-status" id="processing-status-${album.AlbumKey}">
@@ -4118,33 +4135,16 @@ class PhotoVision {
             `;
         }).join('');
         
-        // Add click handlers for album selection (entire card is clickable)
+        // Add click handlers for album preview (entire card is clickable)
         albumsList.querySelectorAll('.album-item').forEach(item => {
-            item.addEventListener('click', (e) => {
+            item.addEventListener('click', async (e) => {
                 const albumKey = e.currentTarget.dataset.albumKey;
-                this.selectAlbum(albumKey);
-            });
-        });
-        
-        // Add click handlers for preview buttons
-        albumsList.querySelectorAll('.album-preview-btn').forEach(btn => {
-            btn.addEventListener('click', async (e) => {
-                e.stopPropagation();
-                const albumKey = btn.dataset.albumKey;
-                const albumName = btn.dataset.albumName;
+                const album = this.filteredAlbums.find(a => a.AlbumKey === albumKey);
+                const albumName = album?.Name || 'Untitled Album';
                 await this.previewAlbumImages(albumKey, albumName);
             });
         });
         
-        // Add click handlers for select images buttons
-        albumsList.querySelectorAll('.album-select-images-btn').forEach(btn => {
-            btn.addEventListener('click', async (e) => {
-                e.stopPropagation();
-                const albumKey = btn.dataset.albumKey;
-                const albumName = btn.dataset.albumName;
-                await this.openAlbumImageSelection(albumKey, albumName);
-            });
-        });
         
         // Load processing status for filtered albums
         this.loadProcessingStatusForFilteredAlbums();

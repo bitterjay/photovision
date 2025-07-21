@@ -1570,7 +1570,8 @@ Be specific and descriptive to enable natural language searches like "photos of 
           forceReprocessing = false,
           maxImages = 50,
           batchName,
-          excludedImages = []
+          excludedImages = [],
+          includedImages = null  // New parameter for explicitly included images
         } = requestData;
         
         // Debug logging
@@ -1661,8 +1662,20 @@ Be specific and descriptive to enable natural language searches like "photos of 
         let skippedImages = [];
         let userExcludedImages = [];
 
-        // First, filter out user-excluded images
-        if (excludedImages && excludedImages.length > 0) {
+        // Handle image selection - either by inclusion list or exclusion list
+        if (includedImages && includedImages.length > 0) {
+          // New behavior: explicit inclusion list from preview
+          imagesToProcess = imagesToProcess.filter(img => 
+            includedImages.includes(img.ImageKey)
+          );
+          
+          userExcludedImages = imagesResult.images.filter(img => 
+            !includedImages.includes(img.ImageKey)
+          );
+          
+          log(`User selected ${imagesToProcess.length} images for processing`, 'DEBUG');
+        } else if (excludedImages && excludedImages.length > 0) {
+          // Legacy behavior: exclusion list
           imagesToProcess = imagesToProcess.filter(img => 
             !excludedImages.includes(img.ImageKey)
           );

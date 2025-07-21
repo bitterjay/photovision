@@ -8255,7 +8255,7 @@
     "albumKey": "4k94S8",
     "albumName": "Saturday PM awards",
     "albumUri": "/api/v2/album/4k94S8",
-    "imageCount": 21,
+    "imageCount": 27,
     "images": [
       {
         "imageKey": "BCsczt6",
@@ -8264,7 +8264,28 @@
         "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-BCsczt6/0/KRSz7KCQFtxjJF8CmJ2PZgdSqSzCs694x3CC4vbpk/Th/GCP07546-Th.jpg",
         "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-BCsczt6/0/LQZ55BzG2VJtxrtsnksb3KBpntwM3KrTvxcW23SLW/D/GCP07546-D.jpg",
         "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-BCsczt6",
-        "isProcessed": false
+        "isProcessed": true,
+        "description": "The image shows three female athletes standing on a podium at an outdoor archery competition. The backdrop features large banners with the USA Archery and WIAWIS logos, indicating this is a national or regional event. The competitors are wearing blue and red uniforms, holding their archery equipment, and appear to be celebrating their achievements after a competition. The setting is a grassy field surrounded by bleachers and other archery equipment, with a cloudy blue sky overhead. The overall mood is one of accomplishment and pride, with the vibrant colors and proud postures of the athletes creating an energetic and lively atmosphere. The composition is well-balanced, with the podium and banners forming the central focus.",
+        "keywords": [
+          "archery",
+          "competition",
+          "podium",
+          "athletes",
+          "women",
+          "uniforms",
+          "outdoor",
+          "field",
+          "clouds",
+          "celebration",
+          "usa archery",
+          "wiawis",
+          "sporting event",
+          "medal winners",
+          "accomplishment",
+          "pride",
+          "awards"
+        ],
+        "analysisTimestamp": "2025-07-20T01:54:24.470Z"
       },
       {
         "imageKey": "JHpFZLN",
@@ -8273,7 +8294,26 @@
         "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-JHpFZLN/0/K4MLSMhmW6x82BR4r2rtvdfTLMNHfCfPLtcbK6Npn/Th/GCP07554-Th.jpg",
         "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-JHpFZLN/0/MsqhShz6wM3hhq2dsm6SP7MHHpbNpt4ftP67xFXT9/D/GCP07554-D.jpg",
         "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-JHpFZLN",
-        "isProcessed": false
+        "isProcessed": true,
+        "description": "The image depicts three people standing on a raised platform or stage at an outdoor sports or competition event. The background shows a grassy field with some clouds in the sky, indicating an outdoor setting. The people are wearing athletic uniforms or gear, suggesting they are participating in a sporting event or competition. There are large flags or banners with the text 'USA ARCHERY' and 'WIAWIS' displayed prominently, indicating this is likely an archery competition or tournament hosted by the USA Archery organization. The overall mood and atmosphere seem lively and energetic, with the participants appearing focused and engaged in their sport. The composition features the central platform surrounded by the grassy field, creating a balanced and visually appealing layout. The colors are primarily vibrant, with the red, white, and blue uniforms standing out against the green grass and blue sky.",
+        "keywords": [
+          "sports",
+          "competition",
+          "archery",
+          "USA Archery",
+          "outdoor event",
+          "athletic uniforms",
+          "platform",
+          "field",
+          "sky",
+          "flags",
+          "banners",
+          "energetic",
+          "focused",
+          "balanced composition",
+          "vibrant colors"
+        ],
+        "analysisTimestamp": "2025-07-20T01:54:28.154Z"
       },
       {
         "imageKey": "fMxfg9x",
@@ -8282,7 +8322,10 @@
         "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-fMxfg9x/0/Ls5wcmMP5m6vrF3g5MhkT4vXf2Xh6HTxSwrqfWSNK/Th/GCP07555-Th.jpg",
         "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-fMxfg9x/0/KG3bKJmk4crPcdZtF7CL4KMkHL9RZmfVs7kds5ZLd/D/GCP07555-D.jpg",
         "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-fMxfg9x",
-        "isProcessed": false
+        "isProcessed": true,
+        "description": "{\n  \"description\": \"The image shows an outdoor sporting event or competition taking place on a grassy field. In the foreground, two people are standing and watching the event, which appears to involve a group of athletes or competitors posing on a podium or stage. The people in the foreground are wearing casual athletic clothing, suggesting they may be spectators or participants. \n\nIn the background, several large purple and black flags or banners are visible, displaying the name 'WIAWIS'. This suggests this is some kind of sporting event or competition organized by the WIAWIS organization. The sky is partially cloudy, with both blue sky and gray, dramatic clouds visible, creating an atmospheric, energetic setting for the event.\n\nThe overall mood and atmosphere of the image is one of excitement and anticipation, with the athletes or competitors posing proudly on the podium and the spectators watching intently. The vibrant green grass, colorful flags, and dramatic sky contribute to the dynamic, sports-focused setting.\",\n  \"keywords\": [\"outdoor\", \"sporting event\", \"competition\", \"athletes\", \"podium\", \"spectators\", \"flags\", \"banners\", \"WIAWIS\", \"cloudy sky\", \"athletic\", \"energetic\", \"excitement\", \"green grass\"]\n}",
+        "keywords": [],
+        "analysisTimestamp": "2025-07-20T01:54:31.973Z"
       },
       {
         "imageKey": "jWpzfVn",
@@ -8291,7 +8334,23 @@
         "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-jWpzfVn/0/NF9NZpPppWXzsv5THSQX55PssSpNgwrSCFfK2GG5p/Th/GCP07559-Th.jpg",
         "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-jWpzfVn/0/MMt9j7NFbXjcm5NcHhxSCPBtPdqh9F4nFb8z4JtP2/D/GCP07559-D.jpg",
         "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-jWpzfVn",
-        "isProcessed": false
+        "isProcessed": true,
+        "description": "The image shows three people standing on a podium at an outdoor archery event. The backdrop includes large USA Archery and WIAWIS branded flags and banners, indicating this is a USA Archery competition or event. The three people are wearing athletic clothing and holding medals, suggesting they have just competed and placed in the event. The setting is a grassy field surrounded by cloudy skies, creating a vibrant, athletic atmosphere. The overall composition is visually striking, with the brightly colored flags and banners contrasting against the natural green grass and gray sky. The scene conveys a sense of achievement, competition, and national pride associated with the USA Archery organization.",
+        "keywords": [
+          "archery",
+          "competition",
+          "podium",
+          "medals",
+          "USA Archery",
+          "WIAWIS",
+          "outdoor",
+          "athletic",
+          "achievement",
+          "national pride",
+          "flags",
+          "banners"
+        ],
+        "analysisTimestamp": "2025-07-20T01:54:37.555Z"
       },
       {
         "imageKey": "VSwft4d",
@@ -8300,7 +8359,10 @@
         "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-VSwft4d/0/L5QtCWwRQ7PqgbGcJDWH7zsLxvwHB6DhBZqpnnLgm/Th/GCP07561-Th.jpg",
         "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-VSwft4d/0/MB8xB6MzMvkp7vKXqBCxRfkd4LGBcJqWdfLgfsG7S/D/GCP07561-D.jpg",
         "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-VSwft4d",
-        "isProcessed": false
+        "isProcessed": true,
+        "description": "{\n  \"description\": \"The image depicts an outdoor archery competition event hosted by USA Archery. The scene shows two female archery competitors posing together on a stage or platform surrounded by purple and white event flags and banners. The competitors are wearing red and blue uniforms, indicating they are likely part of a national team or organization. Behind them is a large backdrop displaying event sponsors and information about the \"USA Archery\" and \"JOAD (Junior Olympic Archery Development) Target Nationals\" competition. The setting appears to be a grassy field or sports complex, with cloudy blue skies and a few buildings visible in the background. The overall mood is one of excitement and celebration around the competitive archery event. The composition and visual elements, including the colorful flags, backdrop, and uniforms, create a dynamic and visually engaging scene.\",\n  \"keywords\": [\"archery\", \"competition\", \"USA Archery\", \"JOAD Target Nationals\", \"outdoor event\", \"female archers\", \"national team\", \"sports event\", \"athletic competition\", \"colorful flags\", \"athletic uniforms\", \"grassy field\", \"cloudy sky\"]\n}",
+        "keywords": [],
+        "analysisTimestamp": "2025-07-20T01:54:41.382Z"
       },
       {
         "imageKey": "tr8wnqn",
@@ -8309,7 +8371,21 @@
         "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-tr8wnqn/0/KN6T9vFrwmb8QvMPtBb2F3PzjzP4KC3KrGQk3Q7tZ/Th/GCP07563-Th.jpg",
         "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-tr8wnqn/0/NB2GF8BWpXRTLGwwrZWXJX4WQLtLMKjHWN2shXJWX/D/GCP07563-D.jpg",
         "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-tr8wnqn",
-        "isProcessed": false
+        "isProcessed": true,
+        "description": "The image shows two young women posing for a photograph in front of a large event backdrop. They are standing on a stage or platform, holding archery equipment like bows and arrows. The backdrop features the logos and sponsors of the 'USA Archery Road to Target Nationals' event, including companies like Hoyt, Easton, and DataCore. The setting appears to be an outdoor sports field or athletic facility, with lush green grass and cloudy skies in the background. The women are wearing patriotic-themed uniforms in red, white, and blue, suggesting they are likely participating in some kind of national-level archery competition or event. The overall mood is one of celebration and accomplishment, with the women's expressions and the vibrant event branding creating an energetic and enthusiastic atmosphere.",
+        "keywords": [
+          "archery",
+          "competition",
+          "women",
+          "uniforms",
+          "event",
+          "sponsors",
+          "outdoor",
+          "sports",
+          "field",
+          "patriotic"
+        ],
+        "analysisTimestamp": "2025-07-20T01:54:45.813Z"
       },
       {
         "imageKey": "HxhMBVg",
@@ -8318,7 +8394,22 @@
         "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-HxhMBVg/0/LPvjQXT9t84CRjWbd477j7N9LwxSMsKbq4KmxN4Nt/Th/GCP07568-Th.jpg",
         "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-HxhMBVg/0/MP4zRBmdgk3JJDJDtZ69NDNw5hzkSSZGqsTsTPzNf/D/GCP07568-D.jpg",
         "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-HxhMBVg",
-        "isProcessed": false
+        "isProcessed": true,
+        "description": "The image shows three young people, two girls and one boy, standing in front of a large banner for the 'JOAB Target Nationals and JOAD U.S. Open' archery competition. They are all wearing red and white USA Archery team uniforms and holding archery equipment. A young girl, likely a sibling or friend, is also in the photo standing in front of the group. They are posing in front of the competition banner which features various sponsor logos. The scene is set outdoors, with a cloudy sky in the background. The image conveys a sense of excitement and pride for the archery competition and team. The overall mood is upbeat and celebratory, with the bright colors and competitive gear creating an energetic atmosphere.",
+        "keywords": [
+          "archery",
+          "usa archery",
+          "joab target nationals",
+          "joad u.s. open",
+          "team uniforms",
+          "archery equipment",
+          "outdoor competition",
+          "celebratory",
+          "proud",
+          "energetic",
+          "sponsor banners"
+        ],
+        "analysisTimestamp": "2025-07-20T01:54:49.673Z"
       },
       {
         "imageKey": "tcVj9XC",
@@ -8327,7 +8418,26 @@
         "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-tcVj9XC/0/KxwLS6zBJ96ThdBwTxQvbK2cn8bTQvbK2XcJc2LkN/Th/GCP07571-Th.jpg",
         "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-tcVj9XC/0/Mt3fbnDKKKv4wJHbBGHLsMLqrPQqkdTbfbK5xsbDK/D/GCP07571-D.jpg",
         "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-tcVj9XC",
-        "isProcessed": false
+        "isProcessed": true,
+        "description": "The image shows an archery competition event taking place outdoors on a grassy field. Three female athletes are standing on a podium, receiving awards for their performance. They are wearing athletic clothing and holding trophy medals. Behind them, there are large banners and signage displaying the event name 'USA Archery' and 'JOAD Target Nationals'. The setting has a slightly overcast, but bright sky with some clouds. The overall atmosphere appears to be one of achievement, competition, and celebration. The color palette features shades of purple, blue, and red, with the green grass creating a vibrant contrast. The composition draws the viewer's attention to the award ceremony at the center of the image.",
+        "keywords": [
+          "archery",
+          "competition",
+          "outdoor event",
+          "award ceremony",
+          "female athletes",
+          "trophies",
+          "medals",
+          "USA Archery",
+          "JOAD Target Nationals",
+          "podium",
+          "sports event",
+          "athletic achievement",
+          "colorful",
+          "overcast sky",
+          "grassy field"
+        ],
+        "analysisTimestamp": "2025-07-20T01:54:53.375Z"
       },
       {
         "imageKey": "5xr8xsW",
@@ -8336,7 +8446,25 @@
         "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-5xr8xsW/0/MBWkBMhvkPB49NMLmXxvdvRwc4KzpjJWSVt2FZwxd/Th/GCP07574-Th.jpg",
         "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-5xr8xsW/0/LZ9mTNRH5j4bx7QCCzZmbqF9dqPNLLttwDTHsXNzj/D/GCP07574-D.jpg",
         "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-5xr8xsW",
-        "isProcessed": false
+        "isProcessed": true,
+        "description": "The image shows two young women standing on a stage or platform in an outdoor setting. They are wearing USA Archery uniforms and holding what appears to be an award or certificate. The background features a large banner with the event name 'USA Archery Joan Target Nationals' and various sponsor logos. The sky is partly cloudy with some blue patches, creating a slightly overcast but still bright atmosphere. The grass in the foreground is lush and green, indicating a grassy, open field or park setting. The overall mood is one of achievement and celebration, with the women's poses and expressions conveying a sense of pride and accomplishment. The composition and vibrant colors contribute to an energetic and visually appealing scene.",
+        "keywords": [
+          "archery",
+          "usa archery",
+          "joan target nationals",
+          "outdoor event",
+          "award ceremony",
+          "achievement",
+          "celebration",
+          "women",
+          "uniforms",
+          "sponsors",
+          "green grass",
+          "cloudy sky",
+          "athletic competition",
+          "sports"
+        ],
+        "analysisTimestamp": "2025-07-20T01:54:57.175Z"
       },
       {
         "imageKey": "dhhZ4Hw",
@@ -8345,7 +8473,26 @@
         "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-dhhZ4Hw/0/L3dgJNmfbLrfmfJP85W88fq7dVGd25cB4r7HrRGKF/Th/GCP07577-Th.jpg",
         "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-dhhZ4Hw/0/Ltc2h6HjPLKF2Z6L6zNKscXppvw4qCCxRxMwbw4tZ/D/GCP07577-D.jpg",
         "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-dhhZ4Hw",
-        "isProcessed": false
+        "isProcessed": true,
+        "description": "The image shows three female athletes standing on a podium at an archery competition. The backdrop features signage for the 'USA Archery Nationals' event and the 'WIAWIS' company, which appears to be a sponsor. The three women are holding compound bows and wearing athletic gear, indicating they have just competed in an archery event. They are standing on a raised platform with green grass in the foreground and a cloudy sky in the background. The overall scene conveys a sense of accomplishment and competitive spirit, with the athletes celebrating their success at the national archery championships.",
+        "keywords": [
+          "archery",
+          "competition",
+          "podium",
+          "athletes",
+          "women",
+          "compound bows",
+          "athletic gear",
+          "USA Archery Nationals",
+          "WIAWIS",
+          "outdoor",
+          "grass",
+          "clouds",
+          "accomplishment",
+          "competition",
+          "championship"
+        ],
+        "analysisTimestamp": "2025-07-20T01:55:00.605Z"
       },
       {
         "imageKey": "GLXM4qJ",
@@ -8354,7 +8501,23 @@
         "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-GLXM4qJ/0/Mc3n8m4txgS7555pBbKrV2nZJmmk67qwKR7LgnprG/Th/GCP07580-Th.jpg",
         "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-GLXM4qJ/0/Lmv4Vt9Vvgn9pSpPzq7cCNBP26c4qXjg9GmP7z9PS/D/GCP07580-D.jpg",
         "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-GLXM4qJ",
-        "isProcessed": false
+        "isProcessed": true,
+        "description": "The image shows three people standing on a podium at an archery competition. The backdrop features banners and logos for the event, including 'USA Archery', 'World Archery', and 'WIAWIS'. The competitors are holding archery equipment and appear to be celebrating their achievements, likely having placed in the competition. The setting is an outdoor field or sports venue, with a grassy landscape and cloudy sky in the background. The overall mood is one of sportsmanship and accomplishment, with the vibrant colors and competition branding creating an energetic and competitive atmosphere. The composition is centered around the podium and the athletes, drawing the viewer's attention to the main subjects of the image.",
+        "keywords": [
+          "archery",
+          "competition",
+          "podium",
+          "medals",
+          "outdoor",
+          "sports",
+          "field",
+          "clouds",
+          "branding",
+          "accomplishment",
+          "sportsmanship",
+          "equipment"
+        ],
+        "analysisTimestamp": "2025-07-20T01:55:03.938Z"
       },
       {
         "imageKey": "b8KRHXj",
@@ -8363,7 +8526,10 @@
         "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-b8KRHXj/0/Ls3CL3NBtXrbwgSfC3Tn8CnjpbxG2wK5kbgTj5MM5/Th/GCP07581-Th.jpg",
         "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-b8KRHXj/0/NVSLr7NjNz9qL9XKjBFQZBHRDvrFmjknHg59xvJjp/D/GCP07581-D.jpg",
         "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-b8KRHXj",
-        "isProcessed": false
+        "isProcessed": true,
+        "description": "{\n  \"description\": \"The image shows an outdoor setting for a sporting event, specifically an archery competition. The scene features several large black and purple flags or banners with the 'WIAWIS' logo, indicating this is likely an event organized by the World Archery organization. In the center is a large backdrop or signage displaying the event name 'USA ARCHERY ROAD TO TARGET NATIONALS' along with various sponsor logos.\n\nThe setting appears to be a grassy field or sports venue, with cloudy skies and a mix of light and shadow creating an atmospheric, somewhat dramatic backdrop. The overall mood feels lively and anticipatory, with the vibrant colors and event signage suggesting an energetic, competitive environment.\n\nThe composition of the image places the central event backdrop and sponsor displays prominently, flanked by the tall event flags on either side. This creates a visually balanced and eye-catching arrangement that would likely draw the attention of spectators or participants at the event.\",\n  \"keywords\": [\n    \"archery\",\n    \"sporting event\",\n    \"outdoor venue\",\n    \"competition\",\n    \"world archery\",\n    \"usa archery\",\n    \"road to target nationals\",\n    \"sponsor banners\",\n    \"event flags\",\n    \"grassy field\",\n    \"cloudy sky\",\n    \"dramatic lighting\",\n    \"vibrant colors\",\n    \"anticipatory mood\"\n  ]\n}",
+        "keywords": [],
+        "analysisTimestamp": "2025-07-20T01:55:08.215Z"
       },
       {
         "imageKey": "SgRFCdv",
@@ -8372,7 +8538,27 @@
         "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-SgRFCdv/0/Lmqm2R9wDDpPT5vcXnhQqVR378fRwJFKS889jLKxS/Th/GCP07587-Th.jpg",
         "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-SgRFCdv/0/LTdjNb2q3sVRHh5rZwFTHkQq337q5hbPB8Wc5p7Nx/D/GCP07587-D.jpg",
         "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-SgRFCdv",
-        "isProcessed": false
+        "isProcessed": true,
+        "description": "The image shows three young people standing on a podium, holding medals and trophies. They appear to be athletes or competitors who have just won an archery competition. The setting is an outdoor sports field or stadium, with grassy ground and a cloudy sky in the background. Several flags and banners with the logos of 'USA Archery' and 'WIAWIS' are visible, indicating this is a national or international archery event. The mood is celebratory, with the athletes wearing proud expressions on their faces. The composition is visually balanced, with the three medalists centered on the podium and the backdrop of the sports field framing the scene. The colors are mostly muted, with the dark-colored flags and banners contrasting with the bright green grass. Overall, the image captures the accomplishment and pride of these young archery champions.",
+        "keywords": [
+          "archery",
+          "competition",
+          "podium",
+          "medals",
+          "trophies",
+          "athletes",
+          "outdoor",
+          "sports field",
+          "USA Archery",
+          "WIAWIS",
+          "celebration",
+          "pride",
+          "national",
+          "international",
+          "green",
+          "clouds"
+        ],
+        "analysisTimestamp": "2025-07-20T01:55:11.755Z"
       },
       {
         "imageKey": "WWdPnWw",
@@ -8381,7 +8567,25 @@
         "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-WWdPnWw/0/KmxwXSWPPTK7cXWStS5gQqZthTzNrwrgR3VdrjfNv/Th/GCP07590-Th.jpg",
         "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-WWdPnWw/0/LQJTCnDdhtFdmKRVvkGKwQTBcjZtMm9vZzXKwSFhw/D/GCP07590-D.jpg",
         "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-WWdPnWw",
-        "isProcessed": false
+        "isProcessed": true,
+        "description": "The image shows a podium and backdrop at an outdoor sporting event, likely a national archery competition. Three people, two women and one man, are standing on the podium holding medals. They appear to be athletes who have just competed and won their events. The podium is surrounded by large purple and white flags with the 'WIAWIS' logo, indicating this is a WIAWIS (World Archery) event. In the background, there are more flags and banners with the 'USA Archery' and 'Road to Target Nationals' branding, further suggesting this is a major national archery competition. The setting is a grassy, open field under a cloudy, overcast sky, creating a subdued, athletic atmosphere. The overall composition and colors, with the purple and white flags and the green grass, give the image a vibrant, energetic feel befitting a sporting event.",
+        "keywords": [
+          "archery",
+          "competition",
+          "podium",
+          "medals",
+          "athletes",
+          "WIAWIS",
+          "USA Archery",
+          "outdoor",
+          "field",
+          "flags",
+          "banners",
+          "sporting event",
+          "national championship",
+          "awards ceremony"
+        ],
+        "analysisTimestamp": "2025-07-20T01:55:16.005Z"
       },
       {
         "imageKey": "MSw2FzM",
@@ -8390,7 +8594,21 @@
         "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-MSw2FzM/0/LnSLW6R2nqRXhs97ZJcn4ZgfsGPPGHV2TKmwnMgJ8/Th/GCP07592-Th.jpg",
         "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-MSw2FzM/0/NVwftsNp4qMHCmLWQ23td9nTnR97KWpFGS5C25PBZ/D/GCP07592-D.jpg",
         "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-MSw2FzM",
-        "isProcessed": false
+        "isProcessed": true,
+        "description": "The image shows a group of people standing in front of a backdrop with the 'USA Archery' and 'NFAA National' logos, which appears to be at an archery competition or event. There are several people, including adults and children, posing together. They seem to be celebrating or receiving an award, as one person is holding a trophy. The setting is an outdoor field with lush green grass, under a cloudy sky. The overall mood is one of excitement and accomplishment. The visual elements include the vibrant purple and white flags or banners of the 'WIAWIS' company, which appear to be sponsors of the event. The composition is balanced, with the group of people centered in the frame and the logos and signage providing context. The lighting is natural, with some shadows cast on the ground, creating a sense of depth and dimension.",
+        "keywords": [
+          "archery",
+          "competition",
+          "award ceremony",
+          "outdoor event",
+          "family",
+          "celebration",
+          "trophy",
+          "sponsors",
+          "signage",
+          "cloudy sky"
+        ],
+        "analysisTimestamp": "2025-07-20T01:55:19.655Z"
       },
       {
         "imageKey": "NGBXdDC",
@@ -8399,7 +8617,26 @@
         "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-NGBXdDC/0/KG23qGDfKFbmVQLbscWP6BnhVx8CNqh2FTFbmBcxp/Th/GCP07593-Th.jpg",
         "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-NGBXdDC/0/NRnQzRsB3whgFWBs73PffpHWzZqW8DTbrp9D9gN6X/D/GCP07593-D.jpg",
         "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-NGBXdDC",
-        "isProcessed": false
+        "isProcessed": true,
+        "description": "The image shows a group of people gathered at an outdoor archery event. In the center of the frame, a woman is holding a medal or trophy, surrounded by four other people, two adults and two children. They appear to be celebrating and posing for a photograph in front of a large event banner that prominently displays the 'USA Archery' and 'Joad Target Nation' logos, along with various sponsor names and logos. The people are dressed casually, with the adults wearing t-shirts and the children wearing shorts and sandals. The setting is a grassy field or park, with cloudy skies and some tall poles or structures visible in the background, likely part of the archery event setup. The overall mood is one of excitement and accomplishment, with the people's expressions and body language suggesting they are happy and proud of their achievements. The composition is balanced, with the group centered in the frame and the event banner providing a visually striking backdrop. The image has a vibrant, colorful palette, with the blue and red tones of the event branding contrasting nicely with the green grass and gray sky.",
+        "keywords": [
+          "archery",
+          "outdoor event",
+          "celebration",
+          "group portrait",
+          "trophy",
+          "medal",
+          "sports",
+          "athletic",
+          "outdoor recreation",
+          "casual clothing",
+          "cloudy sky",
+          "grassy field",
+          "event branding",
+          "colorful",
+          "vibrant"
+        ],
+        "analysisTimestamp": "2025-07-20T01:55:23.831Z"
       },
       {
         "imageKey": "qr2PgnZ",
@@ -8408,7 +8645,10 @@
         "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-qr2PgnZ/0/KJnkD23QXtTPZTJpw2ZhHBrfS82qjxdJ8CKpWz5PM/Th/GCP07595-Th.jpg",
         "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-qr2PgnZ/0/NgDNBtgt2fqnPTjQ5zphkXsVgJBzFBr2GkgpCbdn3/D/GCP07595-D.jpg",
         "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-qr2PgnZ",
-        "isProcessed": false
+        "isProcessed": true,
+        "description": "{\n  \"description\": \"The image shows a group of people posing in front of a large banner at what appears to be an archery event or competition. The banner displays the event name 'JOAO TARGET NATIONAL 2025' and various sponsor logos, indicating this is a major archery competition. \n\nThe group consists of two adults, a man and a woman, along with three children, two girls and a boy. They are all smiling and dressed casually, suggesting this is a family or group outing to attend the archery event. The setting is an outdoor field or park, with green grass and a cloudy sky in the background.\n\nIn the foreground, an archery bow and arrows can be seen, likely belonging to one of the participants. The overall mood is one of excitement and camaraderie, with the group gathered together to enjoy the archery competition.\",\n  \"keywords\": [\"archery\", \"competition\", \"event\", \"family\", \"group\", \"outdoor\", \"field\", \"park\", \"banner\", \"sponsors\", \"bow\", \"arrows\", \"cloudy\", \"people\", \"children\", \"adults\"]\n}",
+        "keywords": [],
+        "analysisTimestamp": "2025-07-20T01:55:27.434Z"
       },
       {
         "imageKey": "WzdM8Xt",
@@ -8417,7 +8657,29 @@
         "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-WzdM8Xt/0/Mmn377j3NrkBt9rn4tFmw6PTXtmQZ94jzwWD7ZrMW/Th/GCP07598-Th.jpg",
         "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-WzdM8Xt/0/K2Rf4LdSmmQS3TgXmt6kdbHpjggvLzV9kWFFmvTx8/D/GCP07598-D.jpg",
         "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-WzdM8Xt",
-        "isProcessed": false
+        "isProcessed": true,
+        "description": "The image shows three female athletes standing on a podium at what appears to be an archery competition or event. They are holding compound bows and wearing athletic uniforms, medals, and hats. In the background, there are flags and banners with the 'USA Archery' and 'Wa Wis' logos, indicating this is a sponsored or organized archery competition. The setting is an outdoor field or park, with a cloudy sky and lush green grass in the foreground. The overall mood is one of achievement and competition, with the athletes posing proudly on the podium. The composition is balanced, with the podium and athletes centered in the frame and the logos and scenery providing a visually appealing backdrop.",
+        "keywords": [
+          "archery",
+          "competition",
+          "athletes",
+          "podium",
+          "compound bow",
+          "uniforms",
+          "medals",
+          "USA Archery",
+          "Wa Wis",
+          "outdoor",
+          "field",
+          "landscape",
+          "clouds",
+          "grass",
+          "athletic",
+          "female",
+          "achievement",
+          "sponsored event"
+        ],
+        "analysisTimestamp": "2025-07-20T01:55:31.072Z"
       },
       {
         "imageKey": "9s8CHwk",
@@ -8426,7 +8688,26 @@
         "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-9s8CHwk/0/NSQ2W37hMhxDVtJsHpRJMMgK4vXfdXzv6fSWqtRNL/Th/GCP07599-Th.jpg",
         "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-9s8CHwk/0/LQjk3rGsKb6XDWNmXJ4RbxDbMbnvbZGfKJRGj3HGb/D/GCP07599-D.jpg",
         "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-9s8CHwk",
-        "isProcessed": false
+        "isProcessed": true,
+        "description": "The image shows three female athletes standing on a grassy field in front of a large banner advertising a national archery competition. The women are wearing matching uniforms in red, white, and blue, and appear to be medal winners, as they are holding medals around their necks. They are posing together, smiling and looking happy. Behind them, there is a large black and white flag with the USA Archery logo, as well as several other sponsor banners and signs. The setting has an outdoor, athletic event atmosphere, with cloudy skies and a grassy field in the background. The overall mood is celebratory and triumphant, with the athletes' expressions and the competition banners creating a sense of accomplishment and athletic achievement.",
+        "keywords": [
+          "archery",
+          "competition",
+          "athletes",
+          "women",
+          "medals",
+          "uniforms",
+          "outdoor",
+          "sporting event",
+          "celebration",
+          "accomplishment",
+          "USA Archery",
+          "sponsors",
+          "athletic",
+          "grassy field",
+          "cloudy sky"
+        ],
+        "analysisTimestamp": "2025-07-20T01:55:34.749Z"
       },
       {
         "imageKey": "RSQ6QW5",
@@ -8435,7 +8716,22 @@
         "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-RSQ6QW5/0/M8GRR8v3qgDZ9pMDjnc6j9j2pRD9DX69tQjnbTMMQ/Th/GCP07603-Th.jpg",
         "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-RSQ6QW5/0/MjhL3vR7c5PRNkFF4j2cSWZxntvB8cp3S9twrckMh/D/GCP07603-D.jpg",
         "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-RSQ6QW5",
-        "isProcessed": false
+        "isProcessed": true,
+        "description": "The image depicts an outdoor archery competition event. Three female archers are standing on a podium, holding medals they have won. The podium is set up on a grassy field, with a cloudy sky in the background. Purple and white flags with the 'WIAWIS' logo are displayed on either side of the podium, indicating this is a WIAWIS (World Archery Indoor Championships) event. The archers are wearing sports uniforms, and the background includes a large backdrop display with sponsors and event information. The overall scene conveys a competitive and celebratory atmosphere, with the athletes proudly displaying their achievements.",
+        "keywords": [
+          "archery",
+          "competition",
+          "podium",
+          "medals",
+          "female athletes",
+          "outdoor event",
+          "WIAWIS",
+          "sports uniforms",
+          "sponsors",
+          "celebration",
+          "achievement"
+        ],
+        "analysisTimestamp": "2025-07-20T01:55:38.220Z"
       },
       {
         "imageKey": "TtntDzS",
@@ -8444,12 +8740,81 @@
         "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-TtntDzS/0/MdbczHCNbSX6kDj4B5Sbf8mj86tJ2RKtJzGmjM5sp/Th/GCP07605-Th.jpg",
         "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-TtntDzS/0/KQSQfF5RVRqLcK2g5jvhBswVkvPj2rMgrgBBh3JV7/D/GCP07605-D.jpg",
         "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-TtntDzS",
+        "isProcessed": true,
+        "description": "The image shows three young female athletes standing together on a grassy field. They are wearing matching sports uniforms in red, orange, and black colors, and appear to have just competed in some kind of archery event or competition. Behind them is a large backdrop display with the 'USA Archery' logo, sponsors, and information about the 'JOAD TARGET NATIONALS' event. The backdrop also features the 'WIAAWS' logo, indicating this is likely a women's archery competition or tournament. The girls are holding medal awards, suggesting they have placed or won in their events. The overall mood is one of pride, accomplishment, and camaraderie, set against a slightly overcast, but bright and vibrant outdoor setting. The composition places the athletes centrally, with the event backdrop framing them, creating a celebratory and visually striking scene.",
+        "keywords": [
+          "archery",
+          "athletes",
+          "competition",
+          "event",
+          "female",
+          "medal",
+          "outdoor",
+          "sports",
+          "tournament",
+          "uniforms",
+          "women"
+        ],
+        "analysisTimestamp": "2025-07-20T01:55:42.078Z"
+      },
+      {
+        "imageKey": "dn4dwGX",
+        "filename": "DSC03456.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-dn4dwGX/0/M559k8b3KRT6XJ97jtZS6n7nkmJkDPhZbhTHBs9TS/Th/DSC03456-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-dn4dwGX/0/KsdcfrzGtG8JjJ24DV6v3n8CqVrdvv835NDCzbfW4/D/DSC03456-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-dn4dwGX",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "z3z7pHL",
+        "filename": "DSC03461.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-z3z7pHL/0/LHF8MH2dRCGvHzfnBHw8Kqbdk9n7FWMhdPRGB5BKg/Th/DSC03461-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-z3z7pHL/0/Kq8X4mf4hdBC7mzJw7bR9sG7HrxLjmj5sLGP3Jp8X/D/DSC03461-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-z3z7pHL",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "h9GCVw4",
+        "filename": "DSC03465.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-h9GCVw4/0/KNKmqNzjvcqJv2MMGzm6r28rbGwBG3VqJxCPScrJB/Th/DSC03465-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-h9GCVw4/0/NQMGjndzpMb4RgNsmZMZWmHJ5Z3rVkQXLwBVH4ddD/D/DSC03465-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-h9GCVw4",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "gd8n9bV",
+        "filename": "DSC03466.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-gd8n9bV/0/NTv8ZRndJD2KvLrwCqrk69ZCK3LFmXj2mrjwC4ngd/Th/DSC03466-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-gd8n9bV/0/MLw7mwM6sqbQ8RkRKdQh58kvz8DNnWvmQn8W9Rw5k/D/DSC03466-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-gd8n9bV",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "Z75fDh3",
+        "filename": "DSC03469.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-Z75fDh3/0/KKcbsQ6SSmpcxdJDD72pt5zXN5fNMG6nL4cLTqNmJ/Th/DSC03469-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-Z75fDh3/0/NcrSLGpNnbMp7sJwWQzwVFv9CVzn5jmPxNQ6H56hw/D/DSC03469-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-Z75fDh3",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "WR5P23T",
+        "filename": "DSC03538.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-WR5P23T/0/LVgLDrWM6wtts6w9BRF49kKsvwzC7xDWWfSJTVM5W/Th/DSC03538-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-WR5P23T/0/Ng5PqHTTzJPGFkpK7L5GCFpfx9jxVQGWXLK696nLJ/D/DSC03538-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Saturday-PM-awards/i-WR5P23T",
         "isProcessed": false
       }
     ],
     "processedCount": 21,
-    "processingProgress": 100,
-    "lastFetched": "2025-07-20T04:54:48.576Z"
+    "processingProgress": 78,
+    "lastFetched": "2025-07-21T19:01:17.551Z"
   },
   "3PCPNB": {
     "albumKey": "3PCPNB",
@@ -12405,5 +12770,331 @@
     "processedCount": 0,
     "processingProgress": 0,
     "lastFetched": "2025-07-21T00:26:15.301Z"
+  },
+  "TSnrRT": {
+    "albumKey": "TSnrRT",
+    "albumName": "Sunday Awards",
+    "albumUri": "/api/v2/album/TSnrRT",
+    "imageCount": 35,
+    "images": [
+      {
+        "imageKey": "FNQgfPx",
+        "filename": "DSC03474.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-FNQgfPx/0/NPqJmzn4nBGcXcSQm6qmL78Fw2nmRGvXhSQBzFrCK/Th/DSC03474-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-FNQgfPx/0/LwnQ87R3kSRCW26kQ4D7qsCK9z48rsHdFj7cFZSg5/D/DSC03474-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-FNQgfPx",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "mt9f72J",
+        "filename": "DSC03482.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-mt9f72J/0/LS59ZwNBTkrVZqC3FRmKvDnTPsV4gz9FZcpnJH2V5/Th/DSC03482-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-mt9f72J/0/NGdW6FC49GszKq78CHmNSt6Dbhm6T2GFxJj4S8tns/D/DSC03482-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-mt9f72J",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "dZ3r7pf",
+        "filename": "DSC03486.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-dZ3r7pf/0/NHWb84D8BXx8sdjzKbQgWthwN6hm9ZGFkMwGPFRp4/Th/DSC03486-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-dZ3r7pf/0/NZh3qjsHdpFfTjs84DVvj5wGfrHffPNkjm3f94ccM/D/DSC03486-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-dZ3r7pf",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "35SqsNC",
+        "filename": "DSC03489.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-35SqsNC/0/LV6m22FpgmHMWKqpZS8CpCCvQd6nXhNq5m5Npvs72/Th/DSC03489-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-35SqsNC/0/MsjWbDSQtJLFqCK5rp9XrP3Zg6tzqDQXsxkRxxRnn/D/DSC03489-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-35SqsNC",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "r4fHP6w",
+        "filename": "DSC03492.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-r4fHP6w/0/MgkmzCLNg7ZXqT68cNbgbnLSsj9D3kw4JBnq5L9zT/Th/DSC03492-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-r4fHP6w/0/NgBfDfHmmczMQNfN9w7NMxtxPMWgG3XNPDPTz5ng6/D/DSC03492-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-r4fHP6w",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "sMb3Xv4",
+        "filename": "DSC03493.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-sMb3Xv4/0/Lg2XFMBhMhtcLgJXqk23vF8CHjSDhxQS7PsM53mFx/Th/DSC03493-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-sMb3Xv4/0/KLpMHpBcBk9mxrXnf9SpFtcGfdMWh5pQVm7VZ8VMj/D/DSC03493-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-sMb3Xv4",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "p6qvSMv",
+        "filename": "DSC03495.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-p6qvSMv/0/M68ThHnVbqtzj2vtX9Nk5LzmNmWhS4JVvvnp23pwQ/Th/DSC03495-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-p6qvSMv/0/LNTJjF3c4n8qLKg7jVPBkTGM8z7G5FS9sQSJ5MNRc/D/DSC03495-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-p6qvSMv",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "g5pf3Qv",
+        "filename": "DSC03496.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-g5pf3Qv/0/KpQN7HNx8bv6t6vcWddzXk8GqMhndQz6tgn7Jt898/Th/DSC03496-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-g5pf3Qv/0/LQRPVktPNNJrGqMQvdGH8p3sMZ9jQtj94s5t3ZvWr/D/DSC03496-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-g5pf3Qv",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "77KvgKF",
+        "filename": "DSC03503.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-77KvgKF/0/MWsbrqnkhdR22hV66XbGkb8VDRSJpJ2tqs46rbJTf/Th/DSC03503-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-77KvgKF/0/LtGxDP3BTG76HqFjjQ46RTkn5J7QT5pNwgWC6THzV/D/DSC03503-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-77KvgKF",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "8hSGxf4",
+        "filename": "DSC03504.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-8hSGxf4/0/LrbZWDVfqqCCbJhpH4qpv57bt26q8gX8MW36qqCmX/Th/DSC03504-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-8hSGxf4/0/K6JJ4TVdCWLQJNQZ8HmsqWc58LmDnxQ9BB89QWrbN/D/DSC03504-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-8hSGxf4",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "dKzq89p",
+        "filename": "DSC03507.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-dKzq89p/0/LNKWcDxHM53gMC86qmqLgR3h3LzjgxXnv9Ct4ZWSP/Th/DSC03507-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-dKzq89p/0/Kh2zv5KcT4fQMf4fGNhxBFQvFT2Ln6N5LG8cR8RdC/D/DSC03507-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-dKzq89p",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "C5RThcR",
+        "filename": "DSC03511.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-C5RThcR/0/Mfdqkf5hdPKsLQf2FPLXgztTZJPFR4v4f4kDWzSnJ/Th/DSC03511-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-C5RThcR/0/LHxvC8q2ZLWCQncV68zwGTTdrQc3XkwwLJnCBk6fb/D/DSC03511-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-C5RThcR",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "cMRj3fn",
+        "filename": "DSC03514.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-cMRj3fn/0/NMQm98gQ49zFNtxqrZqnGhKJqgBWNZRpkBFJxZFBd/Th/DSC03514-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-cMRj3fn/0/LznnSdmqXFkrZw43vpBqDXD9s6XdBf9pwkHkmSnFV/D/DSC03514-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-cMRj3fn",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "kzBv32b",
+        "filename": "DSC03518.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-kzBv32b/0/K7XK4Z5TNgJqDVCJGPN5F2CPz5rsVpPMDWzcR6rjV/Th/DSC03518-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-kzBv32b/0/LxxZN8CRfLW29JSh5rCLK93DJ3mwbqnMZ3rfvGdGQ/D/DSC03518-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-kzBv32b",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "Ffqb4rt",
+        "filename": "DSC03522.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-Ffqb4rt/0/MqQknrzFrtsF3WSkVbn4x54nKNbDHNWG45GpPdBZJ/Th/DSC03522-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-Ffqb4rt/0/LZnqL4p9fDNBpdN4XnGc5DFfZ97FVKK9ZRwGNrJRX/D/DSC03522-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-Ffqb4rt",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "nZSVFHX",
+        "filename": "DSC03525.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-nZSVFHX/0/KWNnm2QXKTp7gfcR2Md9bpMbk3kPqNSRqwjwdsvdQ/Th/DSC03525-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-nZSVFHX/0/MGTvP3fP9zBHs984HcDGLbxdLVSWShbhb93KMRZLR/D/DSC03525-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-nZSVFHX",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "W9xtQNS",
+        "filename": "DSC03528.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-W9xtQNS/0/LRKGBvDfWkhvpnKjg8gCfJZSZ8jBZ75FTNjt99LBw/Th/DSC03528-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-W9xtQNS/0/NLFrV6tS8bMJVjczH3B56ghR2pmjFwKJ9Q2srFBnV/D/DSC03528-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-W9xtQNS",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "b6PVRDp",
+        "filename": "DSC03531.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-b6PVRDp/0/Kc73Qm4pfkBSd5FKBn5SKvKcSKRJJpTTnctqx898n/Th/DSC03531-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-b6PVRDp/0/LVJtJ7ndZ8gghBJTwJ69HB53fXQVmF2MthR7NB5tf/D/DSC03531-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-b6PVRDp",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "35Msck5",
+        "filename": "DSC03535.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-35Msck5/0/MCMrTG6QckGbbrNQt2sTF5H44JQd5Hm44Zbf6hgjC/Th/DSC03535-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-35Msck5/0/NJwccmpDcB59TjPXvj3BL79gJ2kT7cNw4Hcm7q79P/D/DSC03535-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-35Msck5",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "6wvG2Gb",
+        "filename": "DSC03541.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-6wvG2Gb/0/L4XSQLVgxncpp3DCngdrMXCdhWn9mrBV93wph5HMj/Th/DSC03541-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-6wvG2Gb/0/LQKLz72WP896nXkhxGtMHXmgNn7BKrfnP67swdwn5/D/DSC03541-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-6wvG2Gb",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "brXzcDQ",
+        "filename": "DSC03545.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-brXzcDQ/0/KSTS2WCkCp7HBv67jKxrt6cVKSHnzRGCjz8vTSJZZ/Th/DSC03545-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-brXzcDQ/0/KzLBS5txRMXkhhDNX2qZ2mzmBmSLH9fT5tFGJPgBM/D/DSC03545-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-brXzcDQ",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "ZvhmNSQ",
+        "filename": "DSC03548.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-ZvhmNSQ/0/NWTChfVXKBgbp7tFwV9HmD7dgMhQnzhM8WmSkCv5g/Th/DSC03548-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-ZvhmNSQ/0/NCP7XpbjFzqZzXRttxvtS9HpVcbJxcCJ8zpZsnrfr/D/DSC03548-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-ZvhmNSQ",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "SnLs6Bh",
+        "filename": "DSC03550.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-SnLs6Bh/0/KSmx4kjS2CbtMJWxc42qQs3cxzFG9FM2XCwhm3Mh8/Th/DSC03550-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-SnLs6Bh/0/MPdrh3q7p9S3PMNntdMMHV27z8Qz7cNT8rf9b7fL3/D/DSC03550-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-SnLs6Bh",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "vTGx9RF",
+        "filename": "DSC03555.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-vTGx9RF/0/M3bgw4NKpW2SSCDPDPBTzcR4JzDZwKF4gh39GbKVV/Th/DSC03555-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-vTGx9RF/0/K2kCFnpT5WDTGh6DB58Z8PbnfWCHKXrWzV8pZPK2t/D/DSC03555-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-vTGx9RF",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "rc9h3LJ",
+        "filename": "DSC03558.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-rc9h3LJ/0/NSV32cNmcNsdTG5HKZ4hpC8RVk5w9w6p9HZVp7gCF/Th/DSC03558-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-rc9h3LJ/0/KszqNjDv74NVN23SDgVdXBTwjfnSnR5J7cLNHL6RF/D/DSC03558-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-rc9h3LJ",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "fqgbHqQ",
+        "filename": "DSC03562.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-fqgbHqQ/0/LnTRBGFHwfvR8Ptwm7q39gVgjnVhTkWtjZCTcbw35/Th/DSC03562-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-fqgbHqQ/0/NBqX3kbT64B7JKkhMLTGtJGfhxK7TDddvLnDfp88Q/D/DSC03562-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-fqgbHqQ",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "99jSwvK",
+        "filename": "DSC03564.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-99jSwvK/0/K9FFwGDb3cLJj3Dv7LF48CF7pbpvQmqkKtk2TFJtX/Th/DSC03564-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-99jSwvK/0/KTnqVVgqN63krGqT82txX4fr9wd99h3RBwFg3B4Jx/D/DSC03564-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-99jSwvK",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "Mnn3rrD",
+        "filename": "DSC03570.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-Mnn3rrD/0/MZKgsSjFVTVTSQ5Bk6CjWB6TLqbXfZfMFZrzb2Frv/Th/DSC03570-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-Mnn3rrD/0/NNPc5FmcvDZJnLh6H7p3wpXwXRw8nK34Mq4qCNQrL/D/DSC03570-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-Mnn3rrD",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "b7J3Drr",
+        "filename": "DSC03574.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-b7J3Drr/0/NVqCCggfgcXQxZrBBDbst4qfSv3W7sv25sGbhCKBC/Th/DSC03574-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-b7J3Drr/0/LBmsH7Xdzw8vgnnN9J8fPKMzQkjSMKLmdGrpTnvfr/D/DSC03574-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-b7J3Drr",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "D3kbWHD",
+        "filename": "DSC03575.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-D3kbWHD/0/MQzDwjgGqVpp6CDs4RN9dKCWPR5b3sqWPzPT2LT98/Th/DSC03575-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-D3kbWHD/0/LQbjnNRhJ2BjzkrXXW3S5BBd9b5G2WvfC3vrKzCGT/D/DSC03575-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-D3kbWHD",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "7FhWXrG",
+        "filename": "DSC03577.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-7FhWXrG/0/M7kCwNvVVhL6tC4sQmbrPrhTDPcwpLgPp8B2X6t7C/Th/DSC03577-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-7FhWXrG/0/KTFsvNJTTXgFPcDG324ZCN9XwFvzNHLswQDBbfC84/D/DSC03577-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-7FhWXrG",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "ZdgNDcj",
+        "filename": "DSC03582.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-ZdgNDcj/0/MvBmKchf6dx9Z2JPqq9BWXd6Wk8qn53JJVfMMB8dT/Th/DSC03582-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-ZdgNDcj/0/M9jtS7zfQmRdVB47Ppr2XfdN37BHT9FcqztdNLsXj/D/DSC03582-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-ZdgNDcj",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "csP7K4k",
+        "filename": "DSC03585.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-csP7K4k/0/LpmNJnTV2kLNbHdThbhSDhzsCmz3JSFDFhZ5WCQ9M/Th/DSC03585-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-csP7K4k/0/NjTctJNDM6XpQdKTnqSM6GnGVPBZgFnr7nMSxLhc7/D/DSC03585-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-csP7K4k",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "ZQ7MLj5",
+        "filename": "DSC03591.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-ZQ7MLj5/0/K3gmW99VndH3Q9gwCND2SvT9JWhvZGRSDSrGLGB3q/Th/DSC03591-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-ZQ7MLj5/0/NWmNZbpPvQZnJ4N7kqftT4r8CTFsqmVmWhpMxkMPg/D/DSC03591-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-ZQ7MLj5",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "rT3xdvn",
+        "filename": "DSC03593.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-rT3xdvn/0/MrK8nL9Fc27SbbxqnVSxqCJddT5pQN38PVTJT49Qh/Th/DSC03593-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-rT3xdvn/0/M4Cv63Rd6FfD5JdH7vttTqDFM2GxPZfFv3VXXr7FP/D/DSC03593-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/JOAD-Target-Nationals-JOAD-US-Open/Sunday-Awards/i-rT3xdvn",
+        "isProcessed": false
+      }
+    ],
+    "processedCount": 0,
+    "processingProgress": 0,
+    "lastFetched": "2025-07-21T19:41:01.638Z"
   }
 }
