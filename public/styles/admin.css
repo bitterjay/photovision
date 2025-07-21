@@ -276,6 +276,12 @@
     border-color: var(--accent-primary);
 }
 
+/* Style based on checkbox checked state */
+.toggle-switch:has(input[type="checkbox"]:checked) {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+}
+
 .toggle-switch::before {
     content: '';
     position: absolute;
@@ -290,6 +296,11 @@
 }
 
 .toggle-switch.active::before {
+    transform: translateX(1.5rem);
+}
+
+/* Move the toggle based on checkbox state */
+.toggle-switch:has(input[type="checkbox"]:checked)::before {
     transform: translateX(1.5rem);
 }
 

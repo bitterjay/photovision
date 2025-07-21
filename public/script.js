@@ -70,6 +70,7 @@ class PhotoVision {
         this.initializeStatusDashboard();
         this.initializeThemeSystem();
         this.initializeTabSystem();
+        this.initializeSubTabSystem();
         this.initializeImageLoading();
         this.initializeSearchControls();
         this.loadStarredImages();
@@ -150,6 +151,47 @@ class PhotoVision {
                 this.setActiveTab(tabId);
                 localStorage.setItem('photovision-active-tab', tabId);
             });
+        });
+    }
+
+    initializeSubTabSystem() {
+        // Initialize sub-tab system for dashboard
+        const subTabButtons = document.querySelectorAll('.sub-tab-btn');
+        const subTabPanels = document.querySelectorAll('.sub-tab-panel');
+        
+        if (!subTabButtons.length || !subTabPanels.length) return;
+
+        // Load saved active sub-tab or default to system-status
+        const savedSubTab = localStorage.getItem('photovision-dashboard-subtab') || 'system-status';
+        this.setActiveSubTab(savedSubTab);
+
+        // Add click handlers for sub-tab buttons
+        subTabButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const subTabId = btn.dataset.subtab;
+                this.setActiveSubTab(subTabId);
+                localStorage.setItem('photovision-dashboard-subtab', subTabId);
+            });
+        });
+    }
+
+    setActiveSubTab(subTabId) {
+        // Update button states
+        const subTabButtons = document.querySelectorAll('.sub-tab-btn');
+        subTabButtons.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.subtab === subTabId);
+        });
+
+        // Update panel visibility
+        const subTabPanels = document.querySelectorAll('.sub-tab-panel');
+        subTabPanels.forEach(panel => {
+            // Match panel IDs: systemStatusSubTab -> system-status, imageAnalysisSubTab -> image-analysis, dataSubTab -> data
+            let shouldShow = false;
+            if (subTabId === 'system-status' && panel.id === 'systemStatusSubTab') shouldShow = true;
+            if (subTabId === 'image-analysis' && panel.id === 'imageAnalysisSubTab') shouldShow = true;
+            if (subTabId === 'data' && panel.id === 'dataSubTab') shouldShow = true;
+            
+            panel.classList.toggle('active', shouldShow);
         });
     }
 
@@ -1896,6 +1938,29 @@ class PhotoVision {
         this.setupBatchProcessingEventListeners();
         await this.checkAllConnections();
         await this.checkActiveBatches();
+        
+        // Initialize analysis status indicator
+        this.initializeAnalysisStatus();
+    }
+    
+    async initializeAnalysisStatus() {
+        try {
+            const response = await fetch('/api/admin/image-analysis-config');
+            const data = await response.json();
+            
+            if (data.success) {
+                const analysisStatus = document.getElementById('analysisStatus');
+                if (analysisStatus) {
+                    if (data.data.enabled) {
+                        analysisStatus.classList.add('status-success');
+                    } else {
+                        analysisStatus.classList.remove('status-success');
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error initializing analysis status:', error);
+        }
     }
 
     setupStatusEventListeners() {
@@ -1936,6 +2001,45 @@ class PhotoVision {
         if (disconnectBtn) {
             disconnectBtn.addEventListener('click', () => {
                 this.disconnectSmugMug();
+            });
+        }
+        
+        // Analysis status bar - click to toggle custom prompt
+        const analysisStatusBar = document.getElementById('analysisStatus');
+        if (analysisStatusBar) {
+            analysisStatusBar.addEventListener('click', async () => {
+                try {
+                    // Call the toggle API endpoint
+                    const response = await fetch('/api/admin/image-analysis-config/toggle', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        const enableCustomAnalysis = document.getElementById('enableCustomAnalysis');
+                        if (enableCustomAnalysis) {
+                            // Update the checkbox to reflect the new state
+                            // This will trigger its change event which updates UI
+                            enableCustomAnalysis.checked = data.data.enabled;
+                        }
+                        
+                        // Also update the header status indicator immediately
+                        const analysisStatus = document.getElementById('analysisStatus');
+                        if (analysisStatus) {
+                            if (data.data.enabled) {
+                                analysisStatus.classList.add('status-success');
+                            } else {
+                                analysisStatus.classList.remove('status-success');
+                            }
+                        }
+                    } else {
+                        console.error('Failed to toggle image analysis:', data.error);
+                    }
+                } catch (error) {
+                    console.error('Error toggling image analysis:', error);
+                }
             });
         }
     }
@@ -2048,59 +2152,10 @@ class PhotoVision {
         }
         
         // Handle Claude-specific API key information
-        if (service === 'claude' && additionalInfo.apiKeyInfo) {
-            this.updateClaudeApiKeyInfo(additionalInfo.apiKeyInfo);
-        }
+        // Removed API key info from Claude status card
     }
     
-    updateClaudeApiKeyInfo(apiKeyInfo) {
-        const serviceCard = document.getElementById('claudeStatusCard');
-        if (!serviceCard) return;
-        
-        // Remove existing API key info if any
-        const existingInfo = serviceCard.querySelector('.api-key-info-status');
-        if (existingInfo) {
-            existingInfo.remove();
-        }
-        
-        // Create new API key info element
-        const infoDiv = document.createElement('div');
-        infoDiv.className = 'api-key-info-status';
-        
-        if (!apiKeyInfo.configured) {
-            infoDiv.innerHTML = `
-                <div class="api-key-status-line">
-                    <svg class="status-icon warning" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="8" x2="12" y2="12"></line>
-                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                    </svg>
-                    <span class="api-key-status-text">No API key configured</span>
-                </div>
-            `;
-        } else {
-            const sourceText = apiKeyInfo.source === 'database' ? 'Encrypted Storage' : 'Environment Variable';
-            const sourceIcon = apiKeyInfo.source === 'database' ? 
-                '<path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>' : 
-                '<rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9"></path>';
-            
-            infoDiv.innerHTML = `
-                <div class="api-key-status-line">
-                    <svg class="status-icon success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        ${sourceIcon}
-                    </svg>
-                    <span class="api-key-status-text">${sourceText}</span>
-                    ${apiKeyInfo.maskedKey ? `<code class="masked-key">${apiKeyInfo.maskedKey}</code>` : ''}
-                </div>
-            `;
-        }
-        
-        // Insert after service-info div
-        const serviceInfo = serviceCard.querySelector('.service-info');
-        if (serviceInfo) {
-            serviceInfo.appendChild(infoDiv);
-        }
-    }
+    // Removed updateClaudeApiKeyInfo function - API key info no longer displayed in status card
 
     async testClaudeConnection() {
         this.addMessage('Testing Claude AI connection...', 'assistant');
@@ -2111,21 +2166,7 @@ class PhotoVision {
         this.addMessage(`Claude AI test result: ${status}`, 'assistant');
     }
     
-    navigateToApiConfig() {
-        // Switch to admin tab
-        this.setActiveTab('admin');
-        
-        // Scroll to API configuration card
-        setTimeout(() => {
-            const apiConfigCard = document.getElementById('apiConfigurationCard');
-            if (apiConfigCard) {
-                apiConfigCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                // Add a highlight effect
-                apiConfigCard.classList.add('highlight');
-                setTimeout(() => apiConfigCard.classList.remove('highlight'), 2000);
-            }
-        }, 100);
-    }
+    // Removed navigateToApiConfig function - Configure button removed from Claude status card
 
     async testSmugMugConnection() {
         this.addMessage('Testing SmugMug connection...', 'assistant');
@@ -2343,10 +2384,31 @@ class PhotoVision {
         this.selectedAlbumKey = null;
     }
 
+    async updateTotalScannedImages() {
+        try {
+            const response = await fetch('/api/data/count');
+            const data = await response.json();
+            
+            if (data.success) {
+                const totalScannedElement = document.getElementById('totalScannedImages');
+                if (totalScannedElement) {
+                    // Format number with commas for readability
+                    const formattedCount = (data.data?.count || 0).toLocaleString();
+                    totalScannedElement.textContent = formattedCount;
+                }
+            }
+        } catch (error) {
+            console.error('Error updating total scanned images:', error);
+        }
+    }
+
     async loadAlbums(page = 1, append = false) {
         const albumsList = document.getElementById('albumsList');
         
         if (!albumsList) return;
+
+        // Update total scanned images when loading albums
+        this.updateTotalScannedImages();
 
         // Prevent multiple simultaneous loads
         if (this.paginationState.isLoading) return;
@@ -3507,6 +3569,9 @@ class PhotoVision {
                         this.stopProgressMonitoring();
                         this.updateBatchControls('completed');
                         
+                        // Update total scanned images after all batches complete
+                        this.updateTotalScannedImages();
+                        
                         // All batches complete - cards auto-remove after delay
                     }
                 } else {
@@ -3520,6 +3585,9 @@ class PhotoVision {
                         this.updateBatchControls('completed');
                         this.showBatchResults(status);
                         this.addMessage(`Batch processing completed! Processed: ${status.processed}, Failed: ${status.failed}`, 'assistant');
+                        
+                        // Update total scanned images after batch completes
+                        this.updateTotalScannedImages();
                         
                         // Single batch complete - card auto-removes after delay
                         
@@ -5607,9 +5675,46 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Event listeners
     if (enableCustomAnalysis) {
-        enableCustomAnalysis.addEventListener('change', () => {
+        enableCustomAnalysis.addEventListener('change', async (event) => {
             updateCharCount();
             updateImageAnalysisToggle();
+            
+            // Don't save if this is a programmatic change (not trusted)
+            if (!event.isTrusted) {
+                return;
+            }
+            
+            // Save the toggle state when changed directly in the UI
+            try {
+                const response = await fetch('/api/admin/image-analysis-config/toggle', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ enabled: enableCustomAnalysis.checked })
+                });
+                
+                const data = await response.json();
+                if (!data.success) {
+                    console.error('Failed to save toggle state:', data.error);
+                }
+            } catch (error) {
+                console.error('Error saving toggle state:', error);
+            }
+        });
+    }
+    
+    // Add click handler for the toggle switch itself
+    const imageAnalysisToggle = document.querySelector('[data-toggle="image-analysis"]');
+    if (imageAnalysisToggle) {
+        imageAnalysisToggle.addEventListener('click', async (event) => {
+            // Prevent double-firing if clicking the checkbox directly
+            if (event.target.tagName === 'INPUT') {
+                return;
+            }
+            
+            // Click the checkbox which will trigger its change event
+            if (enableCustomAnalysis) {
+                enableCustomAnalysis.click();
+            }
         });
     }
     
@@ -6200,7 +6305,7 @@ Be specific and descriptive to enable natural language searches like "photos of 
     if (saveAnalysisConfigBtn) {
         saveAnalysisConfigBtn.addEventListener('click', async () => {
             const config = {
-                enabled: enableCustomAnalysis.checked,
+                // Don't include enabled field - it's managed separately now
                 preContext: preContextInput.value,
                 template: analysisTemplate.value,
                 modifiedBy: 'admin'

@@ -624,6 +624,28 @@ Remember: You're not just delivering search results - you're sharing exciting ph
       }
     }
 
+    if (pathname === '/api/admin/image-analysis-config/toggle' && method === 'POST') {
+      log('Toggle image analysis enabled state');
+      try {
+        const requestData = await parseJSON(req);
+        let newEnabledState;
+        
+        if (requestData && typeof requestData.enabled === 'boolean') {
+          // If enabled is provided, use it
+          newEnabledState = requestData.enabled;
+        } else {
+          // Otherwise, toggle the current state
+          const currentConfig = await dataManager.getImageAnalysisConfig();
+          newEnabledState = !currentConfig.enabled;
+        }
+        
+        const updatedConfig = await dataManager.toggleImageAnalysisEnabled(newEnabledState);
+        return sendSuccess(res, updatedConfig, `Image analysis ${newEnabledState ? 'enabled' : 'disabled'}`);
+      } catch (error) {
+        return sendError(res, 500, 'Failed to toggle image analysis state', error);
+      }
+    }
+
     if (pathname === '/api/admin/image-analysis-config/preview' && method === 'POST') {
       log('Preview image analysis config request');
       try {

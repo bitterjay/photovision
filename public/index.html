@@ -22,7 +22,7 @@
                         <span class="status-indicator-dot"></span>
                         <span class="status-text">Initializing...</span>
                     </div>
-                    <div class="analysis-status-bar" id="analysisStatus">
+                    <div class="analysis-status-bar" id="analysisStatus" title="Click to toggle custom prompt">
                         <span class="status-indicator-dot"></span>
                         <span class="status-text">Custom Prompt</span>
                     </div>
@@ -186,6 +186,7 @@
                 <div class="batch-processing-section">
                     <div class="section-header">
                         <h3>Album Batch Processing</h3>
+                        <p class="section-subtitle">Total images scanned: <span id="totalScannedImages">0</span></p>
                         <div class="header-actions">
                             
                             <div class="batch-actions">
@@ -338,20 +339,57 @@
 
             <!-- Dashboard Tab -->
             <div class="tab-panel" id="dashboardTab">
-                <div class="dashboard-section">
-                    <div class="section-header">
-                        <h3>System Status</h3>
-                        <div class="section-header-right">
-                            <small>Last checked: <span id="lastChecked">Never</span></small>
-                            <button id="refreshStatus" class="refresh-btn">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="23,4 23,10 17,10"></polyline>
-                                    <polyline points="1,20 1,14 7,14"></polyline>
-                                    <path d="M20.49,9A9,9,0,0,0,5.64,5.64L1,10m22,4-4.64,4.36A9,9,0,0,1,3.51,15"></path>
-                                </svg>
-                            </button>
+                <!-- Sub-tab Navigation -->
+                <div class="sub-tab-navigation">
+                    <button class="sub-tab-btn active" data-subtab="system-status">
+                        <svg class="sub-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                            <rect x="9" y="9" width="6" height="6"></rect>
+                            <line x1="9" y1="1" x2="9" y2="4"></line>
+                            <line x1="15" y1="1" x2="15" y2="4"></line>
+                            <line x1="9" y1="20" x2="9" y2="23"></line>
+                            <line x1="15" y1="20" x2="15" y2="23"></line>
+                            <line x1="20" y1="9" x2="23" y2="9"></line>
+                            <line x1="20" y1="14" x2="23" y2="14"></line>
+                            <line x1="1" y1="9" x2="4" y2="9"></line>
+                            <line x1="1" y1="14" x2="4" y2="14"></line>
+                        </svg>
+                        System Status
+                    </button>
+                    <button class="sub-tab-btn" data-subtab="image-analysis">
+                        <svg class="sub-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                            <polyline points="21 15 16 10 5 21"></polyline>
+                        </svg>
+                        Image Analysis
+                    </button>
+                    <button class="sub-tab-btn" data-subtab="data">
+                        <svg class="sub-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                        </svg>
+                        Data
+                    </button>
+                </div>
+                
+                <!-- System Status Sub-tab -->
+                <div class="sub-tab-panel active" id="systemStatusSubTab">
+                    <div class="dashboard-section">
+                        <div class="section-header">
+                            <h3>System Status</h3>
+                            <div class="section-header-right">
+                                <small>Last checked: <span id="lastChecked">Never</span></small>
+                                <button id="refreshStatus" class="refresh-btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="23,4 23,10 17,10"></polyline>
+                                        <polyline points="1,20 1,14 7,14"></polyline>
+                                        <path d="M20.49,9A9,9,0,0,0,5.64,5.64L1,10m22,4-4.64,4.36A9,9,0,0,1,3.51,15"></path>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
-                    </div>
                     
                     <div class="services-grid">
                         <div class="service-card" id="claudeStatusCard">
@@ -366,8 +404,12 @@
                                 </div>
                             </div>
                             <div class="service-actions">
-                                <button id="testClaude" class="btn btn-secondary">Test</button>
-                                <button id="configureApiKey" class="btn btn-primary" onclick="window.photoVision.navigateToApiConfig()">Configure</button>
+                                <button id="testClaude" class="btn btn-secondary">
+                                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                                    </svg>
+                                    Test
+                                </button>
                             </div>
                         </div>
                         
@@ -390,22 +432,14 @@
                             </div>
                         </div>
                     </div>
-                    
-                </div>
-                
-                <!-- Admin Tools Section in Dashboard -->
-                <div class="admin-tools-section">
-                    <div class="section-header">
-                        <h3>Admin Tools</h3>
-                        <div class="admin-badge">
-                            <svg class="admin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 1l3 6 6 .75-4.15 4.2.9 6.05L12 15l-5.75 3-0.9-6.05L1 7.75 7 7l3-6z"></path>
-                            </svg>
-                            <span>Advanced</span>
-                        </div>
                     </div>
                     
-                    <div class="admin-controls" id="adminControls">
+                    <!-- LLM Configuration Section -->
+                    <div class="llm-configuration-section">
+                        <div class="section-header">
+                            <h3>LLM Configuration</h3>
+                        </div>
+                        
                         <div class="admin-card" id="apiConfigurationCard">
                             <div class="admin-card-header">
                                 <h4>
@@ -413,9 +447,9 @@
                                         <rect x="3" y="11" width="18" height="10" rx="2" ry="2"></rect>
                                         <path d="M7 11V7a5 5 0 0110 0v4"></path>
                                     </svg>
-                                    API Configuration
+                                    LLM Configuration
                                 </h4>
-                                <p class="card-description">Manage your Claude API credentials</p>
+                                <p class="card-description">Manage your Claude API credentials and model settings</p>
                             </div>
                             
                             <div class="admin-card-content">
@@ -501,303 +535,6 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="admin-card" id="duplicateDetectionCard">
-                            <div class="admin-card-header">
-                                <h4>
-                                    <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <circle cx="11" cy="11" r="8"></circle>
-                                        <path d="M21 21l-4.35-4.35"></path>
-                                    </svg>
-                                    Duplicate Detection & Cleanup
-                                </h4>
-                                <p class="card-description">Manage duplicate image records in the database</p>
-                            </div>
-                            
-                            <div class="admin-card-content">
-                                <div class="control-group">
-                                    <button id="analyzeDuplicates" class="btn btn-primary">
-                                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <circle cx="11" cy="11" r="8"></circle>
-                                            <path d="M21 21l-4.35-4.35"></path>
-                                        </svg>
-                                        Analyze Duplicates
-                                    </button>
-                                    <button id="refreshDuplicateInfo" class="btn btn-secondary">
-                                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <polyline points="23,4 23,10 17,10"></polyline>
-                                            <polyline points="1,20 1,14 7,14"></polyline>
-                                            <path d="M20.49,9A9,9,0,0,0,5.64,5.64L1,10m22,4-4.64,4.36A9,9,0,0,1,3.51,15"></path>
-                                        </svg>
-                                        Refresh
-                                    </button>
-                                </div>
-                                
-                                <div class="duplicate-settings-admin">
-                                    <h5>Processing Settings</h5>
-                                    <div class="setting-group">
-                                        <label for="duplicateHandling">Duplicate Handling:</label>
-                                        <select id="duplicateHandling">
-                                            <option value="skip">Skip duplicates (recommended)</option>
-                                            <option value="update">Update existing records</option>
-                                            <option value="replace">Replace existing records</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="toggle-switch-wrapper">
-                                        <span class="toggle-switch-label">Force reprocess all images</span>
-                                        <label class="toggle-switch" data-toggle="force-reprocessing">
-                                            <input type="checkbox" id="forceReprocessing">
-                                        </label>
-                                    </div>
-                                </div>
-                                
-                                <div class="duplicate-analysis" id="duplicateAnalysis" style="display: none;">
-                                    <div class="analysis-results">
-                                        <h5>Analysis Results</h5>
-                                        <div class="stats-grid">
-                                            <div class="stat-card">
-                                                <div class="stat-value" id="totalImagesAnalyzed">0</div>
-                                                <div class="stat-label">Total Images</div>
-                                            </div>
-                                            <div class="stat-card">
-                                                <div class="stat-value" id="duplicateGroupsFound">0</div>
-                                                <div class="stat-label">Duplicate Groups</div>
-                                            </div>
-                                            <div class="stat-card">
-                                                <div class="stat-value" id="recordsToRemove">0</div>
-                                                <div class="stat-label">Records to Remove</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="admin-card" id="imageAnalysisCard">
-                            <div class="admin-card-header">
-                                <div class="admin-card-header-content">
-                                    <h4>
-                                        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M9 12l2 2 4-4"></path>
-                                            <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"></path>
-                                            <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3"></path>
-                                        </svg>
-                                        Image Analysis Configuration
-                                        <button class="help-icon" id="analysisHelpIcon" title="Tips for effective pre-context">
-                                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
-                                            </svg>
-                                        </button>
-                                    </h4>
-                                    <p class="card-description">Customize how AI analyzes your images with custom pre-context prompts</p>
-                                    
-                                    <!-- Help block content -->
-                                    <div class="help-block" id="analysisHelpBlock" style="display: none;">
-                                        <h5>Tips for Effective Pre-Context:</h5>
-                                        <ul>
-                                            <li>Be specific about the type of images you're analyzing</li>
-                                            <li>Mention key elements to focus on (technique, equipment, emotions)</li>
-                                            <li>Use terminology relevant to your domain</li>
-                                            <li>Keep it concise but descriptive</li>
-                                            <li>Test with sample images to verify results</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="admin-card-header-controls">
-                                    <div class="toggle-switch-wrapper">
-                                        <span class="toggle-switch-label">Enable</span>
-                                        <label class="toggle-switch" data-toggle="image-analysis">
-                                            <input type="checkbox" id="enableCustomAnalysis">
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="admin-card-content">
-                                
-                                <div class="template-selection">
-                                    <label for="analysisTemplate">Quick Templates:</label>
-                                    <select id="analysisTemplate" class="template-select">
-                                        <option value="">Custom user input (use text area below)</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="context-input-section">
-                                    <label for="preContextInput">Custom Pre-Context:</label>
-                                    <textarea id="preContextInput" 
-                                              class="context-textarea" 
-                                              placeholder="Enter custom context that will be added before the default analysis prompt. For example: 'You are analyzing photos from an archery competition. Focus on athletic performance, technique, equipment, and competitive atmosphere.'"
-                                              rows="6">Please analyze this image in detail. Provide a comprehensive description and generate relevant keywords for indexing. Return your response as a JSON object with the following structure:
-
-{
-  "description": "A detailed description of the image...",
-  "keywords": ["keyword1", "keyword2", "keyword3", ...]
-}
-
-For the description, include:
-1. Main subjects (people, objects, animals)
-2. Setting and location type
-3. Activities or actions taking place
-4. Mood, lighting, and atmosphere
-5. Colors, composition, and visual elements
-6. Any text or signs visible
-7. Time of day or season if apparent
-
-For keywords, provide 5-10 relevant terms that would help with searching and indexing, such as:
-- Main subjects (person, animal, object types)
-- Activities (running, eating, playing)
-- Settings (outdoor, indoor, beach, forest)
-- Emotions/moods (happy, serious, peaceful)
-- Visual elements (colorful, black and white, sunset)
-- Equipment or objects visible
-
-Be specific and descriptive to enable natural language searches like "photos of people laughing outdoors" or "sunset landscapes with mountains".</textarea>
-                                    <div class="input-meta">
-                                        <span class="char-count">
-                                            <span id="contextCharCount">0</span> / 2000 characters
-                                        </span>
-                                        <span class="input-help">
-                                            This context will be added before the standard analysis instructions.
-                                        </span>
-                                    </div>
-                                </div>
-                                
-                                <div class="control-group">
-                                    <button id="saveAnalysisConfig" class="btn btn-primary">
-                                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"></path>
-                                            <polyline points="17,21 17,13 7,13 7,21"></polyline>
-                                            <polyline points="7,3 7,8 15,8"></polyline>
-                                        </svg>
-                                        Save Configuration
-                                    </button>
-                                    <button id="resetAnalysisConfig" class="btn btn-secondary">
-                                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <polyline points="1,4 1,10 7,10"></polyline>
-                                            <polyline points="23,20 23,14 17,14"></polyline>
-                                            <path d="M20.49,9A9,9,0,0,0,5.64,5.64L1,10m22,4-4.64,4.36A9,9,0,0,1,3.51,15"></path>
-                                        </svg>
-                                        Reset to Default
-                                    </button>
-                                </div>
-                                
-                                <div class="accordion-wrapper">
-                                    <button class="accordion-header" id="previewAccordionBtn">
-                                        <div class="accordion-title">
-                                            <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                                <circle cx="12" cy="12" r="3"></circle>
-                                            </svg>
-                                            Preview Complete Prompt
-                                        </div>
-                                        <svg class="accordion-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <polyline points="6,9 12,15 18,9"></polyline>
-                                        </svg>
-                                    </button>
-                                    
-                                    <div class="accordion-content" id="previewAccordionContent">
-                                        <p class="preview-placeholder">The complete prompt preview will appear here automatically as you type in the textarea above.</p>
-                                    </div>
-                                </div>
-                                
-                                <!-- Configuration Testing Section -->
-                                <div class="accordion-wrapper">
-                                    <button class="accordion-header" id="testingAccordionBtn">
-                                        <div class="accordion-title">
-                                            <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <path d="M9 12l2 2 4-4"></path>
-                                                <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"></path>
-                                                <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3"></path>
-                                            </svg>
-                                            Test Configuration with Images
-                                        </div>
-                                        <svg class="accordion-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <polyline points="6,9 12,15 18,9"></polyline>
-                                        </svg>
-                                    </button>
-                                    
-                                    <div class="accordion-content" id="testingAccordionContent">
-                                        <p class="testing-description">Upload one or more images to test your current analysis configuration. This helps you verify your custom prompts before running batch processing.</p>
-                                        
-                                        <div class="testing-controls">
-                                            <div class="comparison-toggle-wrapper">
-                                                <label class="comparison-toggle">
-                                                    <input type="checkbox" id="enableComparison" checked>
-                                                    <span class="toggle-slider"></span>
-                                                </label>
-                                                <div class="toggle-info">
-                                                    <span class="toggle-label">Show comparison with default analysis</span>
-                                                    <p class="toggle-description">When enabled, each image will be analyzed with both your custom configuration and the default settings to show the difference.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="config-testing-section">
-                                            <div class="test-upload-area" id="testUploadArea">
-                                                <div class="test-upload-content">
-                                                    <div class="upload-icon">
-                                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
-                                                            <polyline points="7,10 12,15 17,10"></polyline>
-                                                            <line x1="12" y1="15" x2="12" y2="3"></line>
-                                                        </svg>
-                                                    </div>
-                                                    <h4>Test Images Upload</h4>
-                                                    <p>Drag and drop images here or click to select multiple files</p>
-                                                    <input type="file" id="testFileInput" accept="image/*" multiple style="display: none;">
-                                                    <button class="btn btn-secondary" onclick="document.getElementById('testFileInput').click()">
-                                                        Choose Images
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="test-progress" id="testProgress" style="display: none;">
-                                                <div class="progress-header">
-                                                    <h5>Testing Progress</h5>
-                                                    <span class="test-status" id="testStatus">Processing...</span>
-                                                </div>
-                                                <div class="progress-bar-container">
-                                                    <div class="progress-bar">
-                                                        <div class="progress-fill" id="testProgressFill"></div>
-                                                    </div>
-                                                    <span class="progress-percentage" id="testProgressPercentage">0%</span>
-                                                </div>
-                                                <div class="progress-stats">
-                                                    <span class="stat-text">Processing <span id="testCurrentFile">file</span>... (<span id="testProcessedCount">0</span> of <span id="testTotalCount">0</span>)</span>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="test-results-summary" id="testResultsSummary" style="display: none;">
-                                                <div class="results-summary-card">
-                                                    <div class="summary-info">
-                                                        <h5>Analysis Complete</h5>
-                                                        <p id="resultsSummaryText">0 images processed successfully</p>
-                                                    </div>
-                                                    <div class="summary-actions">
-                                                        <button id="viewTestResults" class="btn btn-primary">
-                                                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                                                <circle cx="12" cy="12" r="3"></circle>
-                                                            </svg>
-                                                            View Results
-                                                        </button>
-                                                        <button id="clearTestResults" class="btn btn-secondary">
-                                                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                                                <line x1="6" y1="6" x2="18" y2="18"></line>
-                                                            </svg>
-                                                            Clear
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                            </div>
-                        </div>
 
                         <div class="admin-card" id="modelConfigCard">
                             <div class="admin-card-header">
@@ -872,36 +609,341 @@ Be specific and descriptive to enable natural language searches like "photos of 
                                 </div>
                             </div>
                         </div>
-
-                        <div class="admin-card danger-zone" id="dataDestructionCard">
-                            <div class="admin-card-header">
+                    </div>
+                </div>
+                
+                <!-- Image Analysis Sub-tab Panel -->
+                <div class="sub-tab-panel" id="imageAnalysisSubTab">
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <div class="admin-card-header-content">
                                 <h4>
                                     <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <polyline points="3,6 5,6 21,6"></polyline>
-                                        <path d="M19,6V20a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6M8,6V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2V6"></path>
+                                        <path d="M9 12l2 2 4-4"></path>
+                                        <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"></path>
+                                        <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3"></path>
                                     </svg>
-                                    Data Destruction (Testing Only)
+                                    Image Analysis Configuration
+                                    <button class="help-icon" id="analysisHelpIcon" title="Tips for effective pre-context">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                                        </svg>
+                                    </button>
                                 </h4>
-                                <p class="card-description warning">This will permanently delete all image data. Use only for testing purposes.</p>
+                                <p class="card-description">Customize how AI analyzes your images with custom pre-context prompts</p>
+                                
+                                <!-- Help block content -->
+                                <div class="help-block" id="analysisHelpBlock" style="display: none;">
+                                    <h5>Tips for Effective Pre-Context:</h5>
+                                    <ul>
+                                        <li>Be specific about the type of images you're analyzing</li>
+                                        <li>Mention key elements to focus on (technique, equipment, emotions)</li>
+                                        <li>Use terminology relevant to your domain</li>
+                                        <li>Keep it concise but descriptive</li>
+                                        <li>Test with sample images to verify results</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="admin-card-header-controls">
+                                <div class="toggle-switch-wrapper">
+                                    <span class="toggle-switch-label">Enable</span>
+                                    <label class="toggle-switch" data-toggle="image-analysis">
+                                        <input type="checkbox" id="enableCustomAnalysis">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="admin-card-content">
+                            
+                            <div class="template-selection">
+                                <label for="analysisTemplate">Quick Templates:</label>
+                                <select id="analysisTemplate" class="template-select">
+                                    <option value="">Custom user input (use text area below)</option>
+                                </select>
                             </div>
                             
-                            <div class="admin-card-content">
-                                <div class="data-info">
-                                    <span class="data-count">Current records: <span id="recordCount">Loading...</span></span>
+                            <div class="context-input-section">
+                                <label for="preContextInput">Custom Pre-Context:</label>
+                                <textarea id="preContextInput" 
+                                          class="context-textarea" 
+                                          placeholder="Enter custom context that will be added before the default analysis prompt. For example: 'You are analyzing photos from an archery competition. Focus on athletic performance, technique, equipment, and competitive atmosphere.'"
+                                          rows="6">Please analyze this image in detail. Provide a comprehensive description and generate relevant keywords for indexing. Return your response as a JSON object with the following structure:
+
+{
+  "description": "A detailed description of the image...",
+  "keywords": ["keyword1", "keyword2", "keyword3", ...]
+}
+
+For the description, include:
+1. Main subjects (people, objects, animals)
+2. Setting and location type
+3. Activities or actions taking place
+4. Mood, lighting, and atmosphere
+5. Colors, composition, and visual elements
+6. Any text or signs visible
+7. Time of day or season if apparent
+
+For keywords, provide 5-10 relevant terms that would help with searching and indexing, such as:
+- Main subjects (person, animal, object types)
+- Activities (running, eating, playing)
+- Settings (outdoor, indoor, beach, forest)
+- Emotions/moods (happy, serious, peaceful)
+- Visual elements (colorful, black and white, sunset)
+- Equipment or objects visible
+
+Be specific and descriptive to enable natural language searches like "photos of people laughing outdoors" or "sunset landscapes with mountains".</textarea>
+                                <div class="input-meta">
+                                    <span class="char-count">
+                                        <span id="contextCharCount">0</span> / 2000 characters
+                                    </span>
+                                    <span class="input-help">
+                                        This context will be added before the standard analysis instructions.
+                                    </span>
                                 </div>
-                                
-                                <button id="destroyAllData" class="btn btn-danger">
+                            </div>
+                            
+                            <div class="control-group">
+                                <button id="saveAnalysisConfig" class="btn btn-primary">
                                     <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <polyline points="3,6 5,6 21,6"></polyline>
-                                        <path d="M19,6V20a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6M8,6V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2V6"></path>
+                                        <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"></path>
+                                        <polyline points="17,21 17,13 7,13 7,21"></polyline>
+                                        <polyline points="7,3 7,8 15,8"></polyline>
                                     </svg>
-                                    Destroy All Image Data
+                                    Save Configuration
+                                </button>
+                                <button id="resetAnalysisConfig" class="btn btn-secondary">
+                                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="1,4 1,10 7,10"></polyline>
+                                        <polyline points="23,20 23,14 17,14"></polyline>
+                                        <path d="M20.49,9A9,9,0,0,0,5.64,5.64L1,10m22,4-4.64,4.36A9,9,0,0,1,3.51,15"></path>
+                                    </svg>
+                                    Reset to Default
                                 </button>
                             </div>
+                            
+                            <div class="accordion-wrapper">
+                                <button class="accordion-header" id="previewAccordionBtn">
+                                    <div class="accordion-title">
+                                        <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                            <circle cx="12" cy="12" r="3"></circle>
+                                        </svg>
+                                        Preview Complete Prompt
+                                    </div>
+                                    <svg class="accordion-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="6,9 12,15 18,9"></polyline>
+                                    </svg>
+                                </button>
+                                
+                                <div class="accordion-content" id="previewAccordionContent">
+                                    <p class="preview-placeholder">The complete prompt preview will appear here automatically as you type in the textarea above.</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Configuration Testing Section -->
+                            <div class="accordion-wrapper">
+                                <button class="accordion-header" id="testingAccordionBtn">
+                                    <div class="accordion-title">
+                                        <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M9 12l2 2 4-4"></path>
+                                            <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"></path>
+                                            <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3"></path>
+                                        </svg>
+                                        Test Configuration with Images
+                                    </div>
+                                    <svg class="accordion-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="6,9 12,15 18,9"></polyline>
+                                    </svg>
+                                </button>
+                                
+                                <div class="accordion-content" id="testingAccordionContent">
+                                    <p class="testing-description">Upload one or more images to test your current analysis configuration. This helps you verify your custom prompts before running batch processing.</p>
+                                    
+                                    <div class="testing-controls">
+                                        <div class="comparison-toggle-wrapper">
+                                            <label class="comparison-toggle">
+                                                <input type="checkbox" id="enableComparison" checked>
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                            <div class="toggle-info">
+                                                <span class="toggle-label">Show comparison with default analysis</span>
+                                                <p class="toggle-description">When enabled, each image will be analyzed with both your custom configuration and the default settings to show the difference.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="config-testing-section">
+                                        <div class="test-upload-area" id="testUploadArea">
+                                            <div class="test-upload-content">
+                                                <div class="upload-icon">
+                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
+                                                        <polyline points="7,10 12,15 17,10"></polyline>
+                                                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                                                    </svg>
+                                                </div>
+                                                <h4>Test Images Upload</h4>
+                                                <p>Drag and drop images here or click to select multiple files</p>
+                                                <input type="file" id="testFileInput" accept="image/*" multiple style="display: none;">
+                                                <button class="btn btn-secondary" onclick="document.getElementById('testFileInput').click()">
+                                                    Choose Images
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="test-progress" id="testProgress" style="display: none;">
+                                            <div class="progress-header">
+                                                <h5>Testing Progress</h5>
+                                                <span class="test-status" id="testStatus">Processing...</span>
+                                            </div>
+                                            <div class="progress-bar-container">
+                                                <div class="progress-bar">
+                                                    <div class="progress-fill" id="testProgressFill"></div>
+                                                </div>
+                                                <span class="progress-percentage" id="testProgressPercentage">0%</span>
+                                            </div>
+                                            <div class="progress-stats">
+                                                <span class="stat-text">Processing <span id="testCurrentFile">file</span>... (<span id="testProcessedCount">0</span> of <span id="testTotalCount">0</span>)</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="test-results-summary" id="testResultsSummary" style="display: none;">
+                                            <div class="results-summary-card">
+                                                <div class="summary-info">
+                                                    <h5>Analysis Complete</h5>
+                                                    <p id="resultsSummaryText">0 images processed successfully</p>
+                                                </div>
+                                                <div class="summary-actions">
+                                                    <button id="viewTestResults" class="btn btn-primary">
+                                                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                                            <circle cx="12" cy="12" r="3"></circle>
+                                                        </svg>
+                                                        View Results
+                                                    </button>
+                                                    <button id="clearTestResults" class="btn btn-secondary">
+                                                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                        </svg>
+                                                        Clear
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
                         </div>
                     </div>
                 </div>
+                
+                <!-- Data Sub-tab Panel -->
+                <div class="sub-tab-panel" id="dataSubTab">
+                    <div class="admin-card" id="duplicateDetectionCard">
+                        <div class="admin-card-header">
+                            <h4>
+                                <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <path d="M21 21l-4.35-4.35"></path>
+                                </svg>
+                                Duplicate Detection & Cleanup
+                            </h4>
+                            <p class="card-description">Manage duplicate image records in the database</p>
+                        </div>
+                        
+                        <div class="admin-card-content">
+                            <div class="control-group">
+                                <button id="analyzeDuplicates" class="btn btn-primary">
+                                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="11" cy="11" r="8"></circle>
+                                        <path d="M21 21l-4.35-4.35"></path>
+                                    </svg>
+                                    Analyze Duplicates
+                                </button>
+                                <button id="refreshDuplicateInfo" class="btn btn-secondary">
+                                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="23,4 23,10 17,10"></polyline>
+                                        <polyline points="1,20 1,14 7,14"></polyline>
+                                        <path d="M20.49,9A9,9,0,0,0,5.64,5.64L1,10m22,4-4.64,4.36A9,9,0,0,1,3.51,15"></path>
+                                    </svg>
+                                    Refresh
+                                </button>
+                            </div>
+                            
+                            <div class="duplicate-settings-admin">
+                                <h5>Processing Settings</h5>
+                                <div class="setting-group">
+                                    <label for="duplicateHandling">Duplicate Handling:</label>
+                                    <select id="duplicateHandling">
+                                        <option value="skip">Skip duplicates (recommended)</option>
+                                        <option value="update">Update existing records</option>
+                                        <option value="replace">Replace existing records</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="toggle-switch-wrapper">
+                                    <span class="toggle-switch-label">Force reprocess all images</span>
+                                    <label class="toggle-switch" data-toggle="force-reprocessing">
+                                        <input type="checkbox" id="forceReprocessing">
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="duplicate-analysis" id="duplicateAnalysis" style="display: none;">
+                                <div class="analysis-results">
+                                    <h5>Analysis Results</h5>
+                                    <div class="stats-grid">
+                                        <div class="stat-card">
+                                            <div class="stat-value" id="totalImagesAnalyzed">0</div>
+                                            <div class="stat-label">Total Images</div>
+                                        </div>
+                                        <div class="stat-card">
+                                            <div class="stat-value" id="duplicateGroupsFound">0</div>
+                                            <div class="stat-label">Duplicate Groups</div>
+                                        </div>
+                                        <div class="stat-card">
+                                            <div class="stat-value" id="recordsToRemove">0</div>
+                                            <div class="stat-label">Records to Remove</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="admin-card danger-zone" id="dataDestructionCard">
+                        <div class="admin-card-header">
+                            <h4>
+                                <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3,6 5,6 21,6"></polyline>
+                                    <path d="M19,6V20a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6M8,6V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2V6"></path>
+                                </svg>
+                                Data Destruction (Testing Only)
+                            </h4>
+                            <p class="card-description warning">This will permanently delete all image data. Use only for testing purposes.</p>
+                        </div>
+                        
+                        <div class="admin-card-content">
+                            <div class="data-info">
+                                <span class="data-count">Current records: <span id="recordCount">Loading...</span></span>
+                            </div>
+                            
+                            <button id="destroyAllData" class="btn btn-danger">
+                                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3,6 5,6 21,6"></polyline>
+                                    <path d="M19,6V20a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6M8,6V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2V6"></path>
+                                </svg>
+                                Destroy All Image Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- End of Data Sub-tab Panel -->
             </div>
+            <!-- End of Dashboard Tab -->
 
             <!-- Starred Tab -->
             <div class="tab-panel" id="starredTab">
