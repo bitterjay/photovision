@@ -710,3 +710,169 @@
     color:white !important;
 }
 
+/* Star/Favorite Functionality */
+.star-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: rgba(0, 0, 0, 0.6);
+    border: none;
+    border-radius: 50%;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    z-index: 10;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.star-btn:hover {
+    background: rgba(0, 0, 0, 0.8);
+    transform: scale(1.1);
+}
+
+.star-btn:active {
+    transform: scale(0.95);
+}
+
+.star-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: none;
+    stroke: white;
+    stroke-width: 2;
+    transition: all var(--transition-fast);
+}
+
+.star-btn.starred .star-icon {
+    fill: #FFC107;
+    stroke: #FFC107;
+}
+
+.star-btn:hover .star-icon {
+    stroke: #FFC107;
+}
+
+.star-btn.starred:hover .star-icon {
+    fill: #FFD54F;
+    stroke: #FFD54F;
+}
+
+/* Star button in card actions */
+.card-btn.star-btn-inline {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+    gap: 0.5rem;
+}
+
+.card-btn.star-btn-inline:hover {
+    background: #FFC107;
+    color: white;
+    border-color: #FFC107;
+}
+
+.card-btn.star-btn-inline.starred {
+    background: #FFC107;
+    color: white;
+    border-color: #FFC107;
+}
+
+.card-btn.star-btn-inline.starred:hover {
+    background: #FFD54F;
+    border-color: #FFD54F;
+}
+
+/* Star indicator in metadata modal */
+.star-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: #FFC107;
+    font-weight: 600;
+}
+
+/* Starred tab specific styles */
+.starred-tab-content {
+    padding: 1.5rem;
+}
+
+.starred-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.starred-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.starred-count {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+}
+
+.starred-empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-muted);
+}
+
+.starred-empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.starred-empty-message {
+    font-size: 1.125rem;
+    margin-bottom: 0.5rem;
+}
+
+.starred-empty-hint {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+/* Starred images grid */
+.starred-images-grid {
+    column-count: 3;
+    column-gap: 1rem;
+    margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+    .starred-images-grid {
+        column-count: 2;
+    }
+    
+    .star-btn {
+        width: 2rem;
+        height: 2rem;
+    }
+    
+    .star-icon {
+        width: 1rem;
+        height: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .starred-images-grid {
+        column-count: 1;
+    }
+}
+

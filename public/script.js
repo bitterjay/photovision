@@ -20,6 +20,10 @@ class PhotoVision {
         this.analysisResult = document.getElementById('analysisResult');
         this.resultContent = document.getElementById('resultContent');
         
+        // Starred images state
+        this.starredImages = new Set();
+        this.starredImagesLoaded = false;
+        
         // Connection dashboard elements
         this.claudeStatusCard = document.getElementById('claudeStatusCard');
         this.smugmugStatusCard = document.getElementById('smugmugStatusCard');
@@ -56,6 +60,7 @@ class PhotoVision {
         this.initializeThemeSystem();
         this.initializeTabSystem();
         this.initializeImageLoading();
+        this.loadStarredImages();
         console.log('PhotoVision initialized');
     }
 
@@ -190,6 +195,8 @@ class PhotoVision {
             this.loadAlbums();
         } else if (tabId === 'dashboard') {
             this.checkAllConnections();
+        } else if (tabId === 'starred') {
+            this.loadStarredTab();
         }
     }
 
@@ -4374,6 +4381,228 @@ class PhotoVision {
             setTimeout(() => toast.remove(), 300);
         }, 3000);
     }
+
+    // Star/Favorite Methods
+    
+    async loadStarredImages() {
+        try {
+            const response = await fetch('/api/images/starred/ids');
+            const data = await response.json();
+            
+            if (data.success && data.data) {
+                this.starredImages = new Set(data.data);
+                this.starredImagesLoaded = true;
+            }
+        } catch (error) {
+            console.error('Error loading starred images:', error);
+            this.starredImages = new Set();
+            this.starredImagesLoaded = true;
+        }
+    }
+    
+    isImageStarred(imageId) {
+        return this.starredImages.has(imageId);
+    }
+    
+    async toggleStar(imageId, buttonElement) {
+        try {
+            // Optimistic UI update
+            const wasStarred = this.starredImages.has(imageId);
+            
+            if (wasStarred) {
+                this.starredImages.delete(imageId);
+                if (buttonElement) {
+                    buttonElement.classList.remove('starred');
+                    buttonElement.title = 'Add to favorites';
+                }
+            } else {
+                this.starredImages.add(imageId);
+                if (buttonElement) {
+                    buttonElement.classList.add('starred');
+                    buttonElement.title = 'Remove from favorites';
+                }
+            }
+            
+            // Make API call
+            const response = await fetch('/api/images/toggle-star', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ imageId })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                // Update all star buttons for this image
+                this.updateAllStarButtons(imageId, data.data.isStarred);
+                
+                // If we're on the starred tab, refresh it
+                if (this.getCurrentTab() === 'starred') {
+                    this.loadStarredTab();
+                }
+                
+                // Show toast notification
+                this.showToast(data.data.isStarred ? 'Added to favorites' : 'Removed from favorites', 'success');
+            } else {
+                // Revert on error
+                if (wasStarred) {
+                    this.starredImages.add(imageId);
+                    if (buttonElement) {
+                        buttonElement.classList.add('starred');
+                        buttonElement.title = 'Remove from favorites';
+                    }
+                } else {
+                    this.starredImages.delete(imageId);
+                    if (buttonElement) {
+                        buttonElement.classList.remove('starred');
+                        buttonElement.title = 'Add to favorites';
+                    }
+                }
+                
+                this.showToast('Failed to update favorite status', 'error');
+            }
+        } catch (error) {
+            console.error('Error toggling star:', error);
+            this.showToast('Failed to update favorite status', 'error');
+        }
+    }
+    
+    updateAllStarButtons(imageId, isStarred) {
+        // Update all star buttons for this image
+        const starButtons = document.querySelectorAll(`.star-btn[data-image-key="${imageId}"]`);
+        starButtons.forEach(btn => {
+            if (isStarred) {
+                btn.classList.add('starred');
+                btn.title = 'Remove from favorites';
+            } else {
+                btn.classList.remove('starred');
+                btn.title = 'Add to favorites';
+            }
+        });
+        
+        // Update inline star buttons
+        const inlineStarButtons = document.querySelectorAll(`.star-btn-inline[data-image-key="${imageId}"]`);
+        inlineStarButtons.forEach(btn => {
+            if (isStarred) {
+                btn.classList.add('starred');
+                btn.textContent = '★ Starred';
+            } else {
+                btn.classList.remove('starred');
+                btn.textContent = '☆ Star';
+            }
+        });
+    }
+    
+    async loadStarredTab() {
+        const starredPanel = document.getElementById('starredTab');
+        if (!starredPanel) return;
+        
+        try {
+            // Show loading state
+            starredPanel.innerHTML = `
+                <div class="starred-tab-content">
+                    <div class="starred-header">
+                        <h2 class="starred-title">
+                            <span>⭐</span> Starred Images
+                        </h2>
+                        <span class="starred-count">Loading...</span>
+                    </div>
+                    <div class="search-results-loading">Loading starred images...</div>
+                </div>
+            `;
+            
+            // Fetch starred images
+            const response = await fetch('/api/images/starred');
+            const data = await response.json();
+            
+            if (data.success && data.data) {
+                const starredImages = data.data;
+                
+                if (starredImages.length === 0) {
+                    starredPanel.innerHTML = `
+                        <div class="starred-tab-content">
+                            <div class="starred-header">
+                                <h2 class="starred-title">
+                                    <span>⭐</span> Starred Images
+                                </h2>
+                                <span class="starred-count">0 images</span>
+                            </div>
+                            <div class="starred-empty">
+                                <div class="starred-empty-icon">⭐</div>
+                                <div class="starred-empty-message">No starred images yet</div>
+                                <div class="starred-empty-hint">Click the star icon on any image to save it to your favorites</div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    let html = `
+                        <div class="starred-tab-content">
+                            <div class="starred-header">
+                                <h2 class="starred-title">
+                                    <span>⭐</span> Starred Images
+                                </h2>
+                                <span class="starred-count">${starredImages.length} image${starredImages.length !== 1 ? 's' : ''}</span>
+                            </div>
+                            <div class="starred-images-grid">
+                    `;
+                    
+                    starredImages.forEach((photo, index) => {
+                        const photoId = `starred-${Date.now()}-${index}`;
+                        
+                        html += `
+                            <div class="minimal-result-card">
+                                ${createImageContainer(photo, photoId)}
+                                <div class="card-actions">
+                                    <button class="card-btn info-btn" onclick="window.photoVision.showMetadataModal('${photoId}')">
+                                        Details
+                                    </button>
+                                    ${photo.smugmugUrl ? `
+                                        <a href="${photo.smugmugUrl}" target="_blank" class="card-btn download-btn" download>
+                                            Download
+                                        </a>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `;
+                        
+                        // Store photo data for modal
+                        this.storePhotoData(photoId, photo);
+                    });
+                    
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                    
+                    starredPanel.innerHTML = html;
+                    
+                    // Add lightbox handlers
+                    this.addLightboxHandlers(starredPanel, starredImages);
+                }
+            } else {
+                throw new Error(data.error || 'Failed to load starred images');
+            }
+        } catch (error) {
+            console.error('Error loading starred tab:', error);
+            starredPanel.innerHTML = `
+                <div class="starred-tab-content">
+                    <div class="starred-header">
+                        <h2 class="starred-title">
+                            <span>⭐</span> Starred Images
+                        </h2>
+                    </div>
+                    <div class="error-message">
+                        Failed to load starred images. Please try again.
+                    </div>
+                </div>
+            `;
+        }
+    }
+    
+    getCurrentTab() {
+        const activeTab = document.querySelector('.tab-btn.active');
+        return activeTab ? activeTab.dataset.tab : null;
+    }
 }
 
 // Initialize the application when DOM is loaded
@@ -6157,9 +6386,19 @@ function createImageContainer(photo, photoId) {
     }
     
     const aspectClass = getImageAspectRatio(photo.filename, photo.description);
+    const imageKey = photo.smugmugImageKey || photo.imageKey || photo.id || photoId;
+    const isStarred = window.photoVision?.isImageStarred(imageKey) || false;
     
     return `
         <div class="image-container ${aspectClass}">
+            <button class="star-btn ${isStarred ? 'starred' : ''}" 
+                    onclick="window.photoVision.toggleStar('${imageKey}', this)" 
+                    title="${isStarred ? 'Remove from favorites' : 'Add to favorites'}"
+                    data-image-key="${imageKey}">
+                <svg class="star-icon" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                </svg>
+            </button>
             <div class="image-skeleton">
                 <div class="loading-indicator"></div>
             </div>

@@ -481,6 +481,90 @@ Remember: You're not just delivering search results - you're sharing exciting ph
       return sendSuccess(res, images, `Retrieved ${images.length} images`);
     }
 
+    // Star image endpoint
+    if (pathname === '/api/images/star' && method === 'POST') {
+      try {
+        const { imageId } = await parseJSON(req);
+        
+        if (!imageId) {
+          return sendError(res, 400, 'Image ID is required');
+        }
+        
+        log(`Starring image: ${imageId}`);
+        const result = await dataManager.starImage(imageId);
+        
+        if (result.success) {
+          return sendSuccess(res, result, result.message);
+        } else {
+          return sendError(res, 400, result.message);
+        }
+      } catch (error) {
+        return sendError(res, 500, 'Failed to star image', error);
+      }
+    }
+
+    // Unstar image endpoint
+    if (pathname === '/api/images/unstar' && method === 'POST') {
+      try {
+        const { imageId } = await parseJSON(req);
+        
+        if (!imageId) {
+          return sendError(res, 400, 'Image ID is required');
+        }
+        
+        log(`Unstarring image: ${imageId}`);
+        const result = await dataManager.unstarImage(imageId);
+        
+        if (result.success) {
+          return sendSuccess(res, result, result.message);
+        } else {
+          return sendError(res, 400, result.message);
+        }
+      } catch (error) {
+        return sendError(res, 500, 'Failed to unstar image', error);
+      }
+    }
+
+    // Toggle star endpoint
+    if (pathname === '/api/images/toggle-star' && method === 'POST') {
+      try {
+        const { imageId } = await parseJSON(req);
+        
+        if (!imageId) {
+          return sendError(res, 400, 'Image ID is required');
+        }
+        
+        log(`Toggling star for image: ${imageId}`);
+        const result = await dataManager.toggleStarImage(imageId);
+        
+        return sendSuccess(res, result, result.message);
+      } catch (error) {
+        return sendError(res, 500, 'Failed to toggle star status', error);
+      }
+    }
+
+    // Get starred images endpoint
+    if (pathname === '/api/images/starred' && method === 'GET') {
+      try {
+        log('Getting starred images');
+        const starredImages = await dataManager.getStarredImages();
+        return sendSuccess(res, starredImages, `Retrieved ${starredImages.length} starred images`);
+      } catch (error) {
+        return sendError(res, 500, 'Failed to get starred images', error);
+      }
+    }
+
+    // Get starred image IDs endpoint
+    if (pathname === '/api/images/starred/ids' && method === 'GET') {
+      try {
+        log('Getting starred image IDs');
+        const starredIds = await dataManager.getStarredImageIds();
+        return sendSuccess(res, starredIds, `Retrieved ${starredIds.length} starred image IDs`);
+      } catch (error) {
+        return sendError(res, 500, 'Failed to get starred image IDs', error);
+      }
+    }
+
     // Config endpoint
     if (pathname === '/api/config' && method === 'GET') {
       log('Config request');
@@ -2620,6 +2704,11 @@ async function startServer() {
   log('  GET  /api/search?q= - Search images');
   log('  POST /api/chat      - Send chat message');
   log('  GET  /api/images    - Get all images');
+  log('  POST /api/images/star         - Star an image');
+  log('  POST /api/images/unstar       - Unstar an image');
+  log('  POST /api/images/toggle-star  - Toggle star status');
+  log('  GET  /api/images/starred      - Get all starred images');
+  log('  GET  /api/images/starred/ids  - Get starred image IDs');
   log('  GET  /api/config    - Get configuration');
   log('  POST /api/config    - Update configuration');
   log('  POST /api/analyze   - Analyze image with Claude');
