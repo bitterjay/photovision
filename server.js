@@ -2618,6 +2618,92 @@ Be specific and descriptive to enable natural language searches like "photos of 
         return sendError(res, 500, 'Failed to destroy image data', error);
       }
     }
+    
+    // Admin delete album-specific processed images endpoint
+    if (pathname === '/api/admin/delete-album-processed-images' && method === 'POST') {
+      log('Delete album processed images request received', 'INFO');
+      
+      try {
+        const requestData = await parseRequestBody(req);
+        const { albumKey, albumName } = requestData;
+        
+        if (!albumKey) {
+          return sendError(res, 400, 'Album key is required');
+        }
+        
+        // Get current images before deletion
+        const currentImages = await dataManager.getImages();
+        const albumImages = Object.entries(currentImages).filter(([id, img]) => {
+          // Match images by album key in smugmugImageKey or by album name
+          return (img.smugmugImageKey && img.smugmugImageKey.startsWith(albumKey)) || 
+                 img.albumName === albumName;
+        });
+        
+        const deletedCount = albumImages.length;
+        
+        if (deletedCount === 0) {
+          return sendSuccess(res, {
+            deletedCount: 0,
+            message: 'No processed images found for this album'
+          }, 'No images to delete');
+        }
+        
+        log(`Deleting ${deletedCount} processed images from album: ${albumName} (${albumKey})`, 'INFO');
+        
+        // Create backup with timestamp
+        const timestamp = Date.now();
+        const backupFilename = `album_${albumKey}_backup_${timestamp}.json`;
+        const backupPath = path.join('./data', backupFilename);
+        
+        // Create backup of deleted images
+        const backupData = {
+          albumKey,
+          albumName,
+          deletedAt: new Date().toISOString(),
+          deletedCount,
+          images: Object.fromEntries(albumImages)
+        };
+        
+        try {
+          await fs.writeFile(backupPath, JSON.stringify(backupData, null, 2));
+          log(`Backup created: ${backupFilename}`, 'INFO');
+        } catch (backupError) {
+          log(`Failed to create backup: ${backupError.message}`, 'ERROR');
+          return sendError(res, 500, 'Failed to create backup before deletion: ' + backupError.message);
+        }
+        
+        // Remove album images from the main data
+        const remainingImages = Object.fromEntries(
+          Object.entries(currentImages).filter(([id, img]) => {
+            // Keep images that don't match the album
+            return !((img.smugmugImageKey && img.smugmugImageKey.startsWith(albumKey)) || 
+                    img.albumName === albumName);
+          })
+        );
+        
+        // Save updated images
+        await dataManager.saveImages(remainingImages);
+        
+        log(`Successfully deleted ${deletedCount} images from album ${albumName}`, 'INFO');
+        
+        // Clear album processing status cache to force refresh
+        if (dataManager.albumStatusCache) {
+          delete dataManager.albumStatusCache[albumKey];
+        }
+        
+        return sendSuccess(res, {
+          deletedCount,
+          backupFile: backupFilename,
+          albumKey,
+          albumName,
+          timestamp: new Date().toISOString(),
+          message: `Successfully deleted ${deletedCount} processed images from "${albumName}"`
+        }, `Deleted ${deletedCount} images from album`);
+        
+      } catch (error) {
+        return sendError(res, 500, 'Failed to delete album processed images', error);
+      }
+    }
 
     // Destroy all images data endpoint (for testing)
     if (pathname === '/api/images/destroy-all' && method === 'DELETE') {
@@ -2765,6 +2851,7 @@ async function startServer() {
   log('  GET  /api/batch/details/:id      - Get batch details');
   log('  GET  /api/data/count             - Get image data count');
   log('  POST /api/admin/destroy-all-data - Destroy all data (testing)');
+  log('  POST /api/admin/delete-album-processed-images - Delete processed images from specific album');
   log('  POST /api/admin/duplicates/detect   - Detect duplicate images');
   log('  POST /api/admin/duplicates/cleanup  - Clean up duplicate images');
   log('  POST /api/admin/duplicates/validate - Validate duplicate cleanup');

@@ -1208,8 +1208,8 @@ class PhotoVision {
     // Album Preview Methods
     async previewAlbumImages(albumKey, albumName) {
         try {
-            // Show loading state on the button
-            const button = document.querySelector(`button[data-album-key="${albumKey}"]`);
+            // Show loading state on the button (but not the delete button)
+            const button = document.querySelector(`button[data-album-key="${albumKey}"]:not(.delete-processed-btn)`);
             if (button) {
                 button.disabled = true;
                 button.innerHTML = '<span class="loading-spinner"></span> Loading...';
@@ -1265,8 +1265,8 @@ class PhotoVision {
             console.error('Error previewing album:', error);
             this.addMessage(`Error loading album preview: ${error.message}`, 'assistant');
         } finally {
-            // Reset button state
-            const button = document.querySelector(`button[data-album-key="${albumKey}"]`);
+            // Reset button state (but not the delete button)
+            const button = document.querySelector(`button[data-album-key="${albumKey}"]:not(.delete-processed-btn)`);
             if (button) {
                 button.disabled = false;
                 button.innerHTML = '<span class="preview-text">Preview</span>';
@@ -1309,6 +1309,10 @@ class PhotoVision {
             </div>
         `;
         
+        // Count processed images
+        const processedImages = images.filter(img => img.isProcessed);
+        const processedCount = processedImages.length;
+        
         // Build footer with batch processing controls
         const footerHTML = `
             <div class="preview-footer">
@@ -1324,6 +1328,15 @@ class PhotoVision {
                     <button class="start-batch-btn btn btn-primary" ${unprocessedImages.length === 0 ? 'disabled' : ''}>
                         <span class="btn-icon">▶</span> Start Batch Processing
                     </button>
+                    ${processedCount > 0 ? `
+                        <button class="delete-processed-btn btn btn-danger" data-album-key="${albumKey}" data-album-name="${albumName}" data-processed-count="${processedCount}">
+                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3,6 5,6 21,6"></polyline>
+                                <path d="M19,6V20a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6M8,6V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2V6"></path>
+                            </svg>
+                            Delete ${processedCount} Processed Image${processedCount > 1 ? 's' : ''}
+                        </button>
+                    ` : ''}
                 </div>
             </div>
         `;
@@ -1495,6 +1508,18 @@ class PhotoVision {
                 
                 // Start batch processing with selected images
                 await this.startBatchProcessingFromPreview(albumKey, albumName, selectedImages, maxImages, batchName);
+            });
+        }
+        
+        // Delete processed images button
+        const deleteProcessedBtn = lightbox.querySelector('.delete-processed-btn');
+        if (deleteProcessedBtn) {
+            deleteProcessedBtn.addEventListener('click', async () => {
+                const albumKeyToDelete = deleteProcessedBtn.getAttribute('data-album-key');
+                const albumNameToDelete = deleteProcessedBtn.getAttribute('data-album-name');
+                const processedCountToDelete = parseInt(deleteProcessedBtn.getAttribute('data-processed-count'));
+                
+                await this.handleDeleteAlbumProcessedImages(albumKeyToDelete, albumNameToDelete, processedCountToDelete);
             });
         }
         
@@ -3057,6 +3082,88 @@ class PhotoVision {
         } catch (error) {
             console.error('Error starting batch processing:', error);
             this.addMessage('Error starting batch processing. Please try again.', 'assistant');
+        }
+    }
+    
+    async handleDeleteAlbumProcessedImages(albumKey, albumName, processedCount) {
+        // First confirmation
+        const firstConfirm = confirm(
+            `⚠️ WARNING: Delete Processed Images\n\n` +
+            `This will permanently delete ${processedCount} processed image${processedCount > 1 ? 's' : ''} from the album "${albumName}".\n\n` +
+            `This action cannot be undone. Are you sure you want to continue?`
+        );
+        
+        if (!firstConfirm) return;
+        
+        // Second confirmation with typed input
+        const secondConfirm = prompt(
+            `⚠️ FINAL WARNING\n\n` +
+            `You are about to delete ${processedCount} processed image${processedCount > 1 ? 's' : ''} from "${albumName}".\n\n` +
+            `To confirm, please type: DELETE\n\n` +
+            `This will permanently remove the analysis data for these images.`
+        );
+        
+        if (secondConfirm !== 'DELETE') {
+            alert('Action cancelled. No images were deleted.');
+            return;
+        }
+        
+        // Show loading state
+        const deleteBtn = document.querySelector('.delete-processed-btn');
+        if (deleteBtn) {
+            deleteBtn.disabled = true;
+            deleteBtn.innerHTML = '<span class="loading-spinner"></span> Deleting...';
+        }
+        
+        try {
+            const response = await fetch('/api/admin/delete-album-processed-images', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    albumKey: albumKey,
+                    albumName: albumName
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                // Show success message
+                alert(
+                    `✅ Successfully deleted ${result.data.deletedCount} processed image${result.data.deletedCount > 1 ? 's' : ''} from "${albumName}".\n\n` +
+                    `Backup saved as: ${result.data.backupFile}`
+                );
+                
+                // Close the lightbox
+                this.closeLightbox();
+                
+                // Refresh the album preview
+                await this.previewAlbumImages(albumKey, albumName);
+                
+                // Update the album processing status in the background
+                this.loadAlbumProcessingStatus(albumKey);
+                
+            } else {
+                alert(`Failed to delete processed images: ${result.error || 'Unknown error'}`);
+            }
+        } catch (error) {
+            console.error('Error deleting processed images:', error);
+            alert('Network error occurred while deleting processed images.');
+        } finally {
+            // Re-enable button if it still exists
+            const deleteBtn = document.querySelector('.delete-processed-btn');
+            if (deleteBtn) {
+                deleteBtn.disabled = false;
+                deleteBtn.innerHTML = `
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3,6 5,6 21,6"></polyline>
+                        <path d="M19,6V20a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6M8,6V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2V6"></path>
+                    </svg>
+                    Delete ${processedCount} Processed Image${processedCount > 1 ? 's' : ''}
+                `;
+            }
         }
     }
 
@@ -5773,7 +5880,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const testingAccordionContent = document.getElementById('testingAccordionContent');
     
     if (testingAccordionBtn && testingAccordionContent) {
-        testingAccordionBtn.addEventListener('click', () => {
+        testingAccordionBtn.addEventListener('click', async () => {
             const isOpen = testingAccordionContent.classList.contains('open');
             
             if (isOpen) {
@@ -5784,8 +5891,41 @@ document.addEventListener('DOMContentLoaded', function() {
                 testingAccordionContent.classList.add('open');
                 testingAccordionBtn.classList.add('active');
                 testingAccordionBtn.setAttribute('aria-expanded', 'true');
+                
+                // Load and display model configuration
+                await loadTestModelConfig();
             }
         });
+    }
+    
+    // Load and display model configuration for testing
+    async function loadTestModelConfig() {
+        const testModelNameElement = document.getElementById('testModelName');
+        if (!testModelNameElement) return;
+        
+        try {
+            const response = await fetch('/api/config/models');
+            const data = await response.json();
+            
+            if (data.success && data.data) {
+                const modelConfig = data.data;
+                const batchModel = modelConfig.batchProcessingModel;
+                
+                // Find the model details
+                const modelInfo = modelConfig.availableModels.find(m => m.id === batchModel);
+                
+                if (modelInfo) {
+                    testModelNameElement.textContent = `${modelInfo.name} (${modelInfo.id})`;
+                } else {
+                    testModelNameElement.textContent = batchModel;
+                }
+            } else {
+                testModelNameElement.textContent = 'Default model';
+            }
+        } catch (error) {
+            console.error('Error loading model config:', error);
+            testModelNameElement.textContent = 'Error loading model';
+        }
     }
     
     // Configuration testing functionality
@@ -5962,6 +6102,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     const singleFormData = new FormData();
                     singleFormData.append('image0', file);
                     
+                    // Create data URL for the image
+                    const imageDataUrl = await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(file);
+                    });
+                    
                     const response = await fetch('/api/analyze/test', {
                         method: 'POST',
                         body: singleFormData
@@ -5970,12 +6118,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     const data = await response.json();
                     
                     if (data.success && data.data.results && data.data.results.length > 0) {
-                        results.push(data.data.results[0]);
+                        // Add the image data URL to the result
+                        const result = data.data.results[0];
+                        result.imageDataUrl = imageDataUrl;
+                        results.push(result);
                     } else {
                         results.push({
                             filename: file.name,
                             success: false,
-                            error: data.error || 'Unknown error'
+                            error: data.error || 'Unknown error',
+                            imageDataUrl: imageDataUrl
                         });
                     }
                 } catch (error) {
@@ -6082,6 +6234,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         <span class="result-status">${statusText}</span>
                     </div>
                 </div>
+                ${result.imageDataUrl ? `
+                    <div class="test-image-preview" onclick="window.openImageModal('${result.imageDataUrl}', '${result.filename}')">
+                        <img src="${result.imageDataUrl}" alt="${result.filename}" loading="lazy" />
+                    </div>
+                ` : ''}
                 <div class="result-content">
             `;
             
@@ -6236,6 +6393,59 @@ document.addEventListener('DOMContentLoaded', function() {
         const i = Math.floor(Math.log(bytes) / Math.log(k));
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
+    
+    // Image modal functionality
+    window.openImageModal = function(imageDataUrl, filename) {
+        // Create modal if it doesn't exist
+        let modal = document.getElementById('imageEnlargeModal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'imageEnlargeModal';
+            modal.className = 'image-enlarge-modal';
+            modal.innerHTML = `
+                <div class="image-enlarge-content">
+                    <button class="image-enlarge-close" onclick="window.closeImageModal()">&times;</button>
+                    <img id="enlargedImage" src="" alt="" />
+                    <div class="image-enlarge-caption"></div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            // Close on background click
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    window.closeImageModal();
+                }
+            });
+        }
+        
+        // Set image and show modal
+        const img = modal.querySelector('#enlargedImage');
+        const caption = modal.querySelector('.image-enlarge-caption');
+        img.src = imageDataUrl;
+        img.alt = filename;
+        caption.textContent = filename;
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    };
+    
+    window.closeImageModal = function() {
+        const modal = document.getElementById('imageEnlargeModal');
+        if (modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    };
+    
+    // Close image modal on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const imageModal = document.getElementById('imageEnlargeModal');
+            if (imageModal && imageModal.style.display === 'flex') {
+                window.closeImageModal();
+            }
+        }
+    });
     
     
     // Hot-load preview content function

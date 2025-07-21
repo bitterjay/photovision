@@ -276,16 +276,16 @@
     "maxJobsPerBatch": 1000
   },
   "imageAnalysisConfig": {
-    "enabled": false,
-    "preContext": "You are analyzing photos from a sports competition. Focus on athletic performance, technique, equipment, and competitive atmosphere. Emphasize participant achievements, skill demonstration, and event organization. Pay attention to sports-specific terminology and competitive elements. If there are images of people, be extremely descriptive of what those people look like. Their skin color, age (provide a range of the ages of people in the photo), if they have a disability and if they do, describe that disability. Describe the quality of the photo - whether it looks like it was taken by a professional or not.",
+    "enabled": true,
+    "preContext": "You are analyzing photos from a sports competition. Focus on athletic performance, technique, equipment, and competitive atmosphere. Emphasize participant achievements, skill demonstration, and event organization. Pay attention to sports-specific terminology and competitive elements. If there are images of people, be extremely descriptive of what those people look like. Their skin color, age (provide a range of the ages of people in the photo), if they have a disability and if they do, describe that disability. Describe the quality of the photo - whether it looks like it was taken by a professional or not. If the image does not have people in it, be explicit about that fact.",
     "template": "",
     "modifiedBy": "admin",
-    "lastModified": "2025-07-21T17:02:39.962Z",
-    "lastToggled": "2025-07-21T17:40:46.869Z"
+    "lastModified": "2025-07-21T20:33:14.939Z",
+    "lastToggled": "2025-07-21T20:50:05.213Z"
   },
   "claudeModelConfig": {
-    "chatModel": "claude-3-5-sonnet-20241022",
-    "batchProcessingModel": "claude-3-haiku-20240307",
+    "chatModel": "claude-3-5-haiku-20241022",
+    "batchProcessingModel": "claude-3-5-haiku-20241022",
     "availableModels": [
       {
         "id": "claude-3-5-sonnet-20241022",
@@ -324,7 +324,7 @@
       }
     ],
     "modifiedBy": "admin",
-    "lastModified": "2025-07-19T22:43:45.951Z"
+    "lastModified": "2025-07-21T20:49:53.481Z"
   },
   "storageConfig": {
     "mode": "album",
@@ -350,6 +350,7 @@
   },
   "starredImages": [
     "mdcdaeyczxek3jal5nh",
-    "mdb04x3scxa58m9lqj7"
+    "mdb04x3scxa58m9lqj7",
+    "mdb3htho2vocvgjhue9"
   ]
 }
