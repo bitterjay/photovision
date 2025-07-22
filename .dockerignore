@@ -1,0 +1,52 @@
+# Node modules
+node_modules/
+npm-debug.log*
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Test files
+test-*.js
+test/
+tests/
+
+# Development files
+.git/
+.gitignore
+nodemon.json
+.DS_Store
+
+# Documentation
+README.md
+CLAUDE.md
+cline_docs/
+docs/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+*.tmp
+*.log
+.cache/
+
+# Backup files
+*.backup
+*.bak
+data/backups/
+
+# Docker files (don't copy into image)
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# SSL certificates (should be mounted, not copied)
+ssl/
+*.pem
+*.key
+*.crt

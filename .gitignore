@@ -44,3 +44,17 @@ build/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# PM2
+.pm2/
+pm2.log
+
+# Deployment specific
+*.pem
+*.key
+*.crt
+ssl/
+
+# Temporary files
+*.tmp
+*.temp

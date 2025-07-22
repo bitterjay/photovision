@@ -1,0 +1,33 @@
+# Render.com deployment configuration
+services:
+  - type: web
+    name: photovision
+    runtime: node
+    region: oregon # Change to your preferred region
+    plan: starter # or 'free' for testing
+    
+    buildCommand: npm ci --only=production
+    startCommand: node server.js
+    
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: ANTHROPIC_API_KEY
+        sync: false # Set in Render dashboard
+      - key: SMUGMUG_API_KEY
+        sync: false # Set in Render dashboard
+      - key: SMUGMUG_API_SECRET
+        sync: false # Set in Render dashboard
+    
+    # Persistent disk for data storage
+    disk:
+      name: photovision-data
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1 # Adjust based on your needs
+    
+    healthCheckPath: /
+    
+    # Auto-deploy on push to main branch
+    autoDeploy: true

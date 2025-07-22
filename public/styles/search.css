@@ -450,7 +450,7 @@
 
 /* Metadata Sections */
 .metadata-section {
-    margin-bottom: 1.5rem;
+    /* margin-bottom: 1.5rem; */
 }
 
 .metadata-section:last-child {

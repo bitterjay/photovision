@@ -213,6 +213,16 @@ async function handleAPIRoutes(req, res, parsedUrl) {
   const query = parsedUrl.query;
 
   try {
+    // Health check endpoint
+    if (pathname === '/api/health' && method === 'GET') {
+      log('Health check request received');
+      return sendSuccess(res, { 
+        status: 'ok', 
+        timestamp: new Date().toISOString(),
+        version: '1.0.0'
+      });
+    }
+
     // Status endpoint
     if (pathname === '/api/status' && method === 'GET') {
       log('Status request received');
