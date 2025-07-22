@@ -2597,22 +2597,64 @@ Be specific and descriptive to enable natural language searches like "photos of 
           return sendError(res, 500, 'Failed to create backup before destruction: ' + backupError.message);
         }
 
-        // Destroy all data (set to empty array)
-        const imagesPath = path.join('./data', 'images.json');
+        // Destroy all data
+        let albumsCleared = 0;
+        let albumFilesDeleted = 0;
+        
         try {
+          // 1. Clear images.json
+          const imagesPath = path.join('./data', 'images.json');
           await fs.writeFile(imagesPath, JSON.stringify([], null, 2));
-          log(`Successfully destroyed ${imageCount} image records`, 'WARN');
+          log(`Cleared images.json - ${imageCount} records`, 'WARN');
+          
+          // 2. Clear albumPreviews.json
+          try {
+            await dataManager.saveData('albumPreviews.json', {});
+            log('Cleared albumPreviews.json', 'WARN');
+          } catch (albumPreviewError) {
+            log(`Failed to clear album previews: ${albumPreviewError.message}`, 'ERROR');
+          }
+          
+          // 3. Clear all album data if albumDataManager is available
+          if (dataManager.albumDataManager) {
+            try {
+              // Count album files before clearing
+              const albumsDir = path.join('./data', 'albums');
+              try {
+                const albumFiles = await fs.readdir(albumsDir);
+                albumFilesDeleted = albumFiles.filter(f => f.endsWith('.json')).length;
+              } catch (e) {
+                // Directory might not exist
+                albumFilesDeleted = 0;
+              }
+              
+              await dataManager.albumDataManager.clearAllAlbumData();
+              albumsCleared = albumFilesDeleted;
+              log(`Cleared ${albumsCleared} album files and indices`, 'WARN');
+            } catch (albumError) {
+              log(`Failed to clear album data: ${albumError.message}`, 'ERROR');
+            }
+          }
+          
+          // 4. Clear all caches
+          dataManager.clearCache();
+          if (dataManager.albumDataManager) {
+            dataManager.albumDataManager.albumCache.clear();
+          }
+          log('Cleared all caches', 'INFO');
+          
         } catch (destroyError) {
           log(`Failed to destroy data: ${destroyError.message}`, 'ERROR');
-          return sendError(res, 500, 'Failed to destroy image data: ' + destroyError.message);
+          return sendError(res, 500, 'Failed to destroy all data: ' + destroyError.message);
         }
 
         return sendSuccess(res, {
           deletedCount: imageCount,
+          albumsCleared: albumsCleared,
           backupFile: backupFilename,
           timestamp: new Date().toISOString(),
-          message: `Successfully destroyed ${imageCount} image records. Backup saved as ${backupFilename}`
-        }, `All image data destroyed - ${imageCount} records deleted`);
+          message: `Successfully destroyed ${imageCount} image records and ${albumsCleared} album files. Backup saved as ${backupFilename}`
+        }, `All data destroyed - ${imageCount} images, ${albumsCleared} albums`);
 
       } catch (error) {
         return sendError(res, 500, 'Failed to destroy image data', error);

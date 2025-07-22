@@ -5168,7 +5168,7 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const response = await fetch('/api/data/count');
             const data = await response.json();
-            recordCountElement.textContent = data.data?.count || 0;
+            recordCountElement.textContent = data.data.count || 0;
         } catch (error) {
             console.error('Error loading record count:', error);
             recordCountElement.textContent = 'Error';
