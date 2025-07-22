@@ -2348,19 +2348,7 @@ class PhotoVision {
             });
         }
 
-        // Sync slider and number input for max images
-        const maxImagesSlider = document.getElementById('maxImagesSlider');
-        const maxImagesInput = document.getElementById('maxImages');
-        
-        if (maxImagesSlider && maxImagesInput) {
-            maxImagesSlider.addEventListener('input', (e) => {
-                maxImagesInput.value = e.target.value;
-            });
-            
-            maxImagesInput.addEventListener('input', (e) => {
-                maxImagesSlider.value = e.target.value;
-            });
-        }
+        // Removed max images slider sync - now handled in album preview
 
         // Initialize batch processing state
         this.batchProgressInterval = null;
@@ -2730,12 +2718,7 @@ class PhotoVision {
             startBtn.disabled = false;
         }
 
-        // Update batch name if empty
-        const batchNameInput = document.getElementById('batchName');
-        const albumName = albumItem?.querySelector('.album-name')?.textContent;
-        if (batchNameInput && !batchNameInput.value && albumName) {
-            batchNameInput.value = albumName;
-        }
+        // Batch name now handled in album preview
 
         // Update batch slider instantly from DOM
         this.updateBatchSliderFromDOM(albumKey);
@@ -2752,46 +2735,9 @@ class PhotoVision {
             if (data.success) {
                 const status = data.data;
                 
-                // Auto-update the max images slider to show unprocessed count
+                // Max images slider removed - now handled in album preview
                 const unprocessedCount = status.totalImages - status.processedImages;
-                const maxImagesSlider = document.getElementById('maxImagesSlider');
-                const maxImagesInput = document.getElementById('maxImages');
-                const maxImagesLabel = document.querySelector('label[for="maxImages"]');
-                
-                console.log('Auto-updating slider:', {
-                    unprocessedCount,
-                    totalImages: status.totalImages,
-                    processedImages: status.processedImages,
-                    sliderElement: maxImagesSlider,
-                    inputElement: maxImagesInput
-                });
-                
-                if (maxImagesSlider && maxImagesInput && unprocessedCount > 0) {
-                    // Ensure the slider max is at least the unprocessed count
-                    if (parseInt(maxImagesSlider.max) < unprocessedCount) {
-                        maxImagesSlider.max = unprocessedCount;
-                        maxImagesInput.max = unprocessedCount; // Also update input max
-                    }
-                    
-                    // Update slider value
-                    maxImagesSlider.value = unprocessedCount;
-                    
-                    // Manually update the number input value (since it's readonly)
-                    maxImagesInput.value = unprocessedCount;
-                    
-                    // Update label text to show unprocessed count
-                    if (maxImagesLabel) {
-                        maxImagesLabel.textContent = `Amount of Images to Batch Process (${unprocessedCount} unprocessed)`;
-                    }
-                    
-                    console.log('After update:', {
-                        sliderValue: maxImagesSlider.value,
-                        inputValue: maxImagesInput.value
-                    });
-                } else if (maxImagesLabel) {
-                    // Reset label when no unprocessed images
-                    maxImagesLabel.textContent = 'Amount of Images to Batch Process';
-                }
+                console.log('Unprocessed images:', unprocessedCount);
             }
         } catch (error) {
             console.error('Error updating batch slider:', error);
