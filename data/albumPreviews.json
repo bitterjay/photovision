@@ -37843,5 +37843,214 @@
     "processedCount": 0,
     "processingProgress": 0,
     "lastFetched": "2025-07-25T17:27:15.415Z"
+  },
+  "ZZGsqc": {
+    "albumKey": "ZZGsqc",
+    "albumName": "Friday PM",
+    "albumUri": "/api/v2/album/ZZGsqc",
+    "imageCount": 22,
+    "images": [
+      {
+        "imageKey": "VffTVGS",
+        "filename": "GCP09319.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-VffTVGS/0/LMbT4N7wGx7Jvb4pLBBVQL5ptPfMwtJLJqqmxNL2h/Th/GCP09319-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-VffTVGS/0/LRjHcccVJmnRbtMxs73VnTFXpNmMmhvX9jCdTSSnK/D/GCP09319-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-VffTVGS",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "Pd8SSDQ",
+        "filename": "GCP09320.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-Pd8SSDQ/0/LwZBV5T6pQFQnJGLZZwX3Cf3msL6cdjwQQCnL8RgF/Th/GCP09320-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-Pd8SSDQ/0/NBGCttfGDWxHmLsQf2q2Lbdv8rC68bjK8Vw2SW6CW/D/GCP09320-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-Pd8SSDQ",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "fpTstgg",
+        "filename": "GCP09321.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-fpTstgg/0/M3PmNpNzR3kNxFKDZrkJtKwhpWZQVPvvGpHT7XNw2/Th/GCP09321-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-fpTstgg/0/MJcr8fTxgJc7kWQjXZ8R9xRkFx3WWV9sxh3ZXxxM8/D/GCP09321-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-fpTstgg",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "V7vtsQj",
+        "filename": "GCP09322.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-V7vtsQj/0/NFP3LZ6F4crSgjdqTrdw2PXqL9wqPqJDkz37TNWXk/Th/GCP09322-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-V7vtsQj/0/LwRGfzNsh3cfnRrrg8mnXSDRB8JKSMB2mJjZBVhRR/D/GCP09322-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-V7vtsQj",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "WNgFVwH",
+        "filename": "GCP09323.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-WNgFVwH/0/LBDG9VQZBQxxNFMMD24svdBs23r7fMdS7sbScxRGn/Th/GCP09323-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-WNgFVwH/0/MSkqCk9rPCFzCcVzRtQVsNLCxC3Rcm62XxK8pkSxH/D/GCP09323-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-WNgFVwH",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "XrDrffx",
+        "filename": "GCP09324.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-XrDrffx/0/LgDCSmwnQvhHbtFPj5M9z7HCwb5twh52CGfn8zDPD/Th/GCP09324-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-XrDrffx/0/KbbFK4fmmTvMVpCKHq4pP6JrwZmgJjC8njwLfpzHN/D/GCP09324-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-XrDrffx",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "f2qFjCn",
+        "filename": "GCP09325.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-f2qFjCn/0/MFx7Dj9H8M4Hrff5tBjVwzfpKzgb865H5nzqX6P7B/Th/GCP09325-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-f2qFjCn/0/KKFzwwNrVv6w9V6p8tC8V6kgB8ZNZcSCcd5r3xbbQ/D/GCP09325-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-f2qFjCn",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "wWQpm5t",
+        "filename": "GCP09326.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-wWQpm5t/0/MTQC9jzfscvnJ42t9zJzzhggdTqvqBthzD66J9c5h/Th/GCP09326-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-wWQpm5t/0/KtdzqHxJHKKRQVZ76F7f8JVRjdXhZ5s6GFdJ3ZCfw/D/GCP09326-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-wWQpm5t",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "tx6wpDx",
+        "filename": "GCP09327.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-tx6wpDx/0/LJ8pvM84ZDcS7rpmPFRrpds65PCFPfX49mnQnbZvw/Th/GCP09327-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-tx6wpDx/0/M5KNz9zrn8nG3sVFW3gGCS6KjmdQXFLpmjQwdrdPM/D/GCP09327-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-tx6wpDx",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "dmnZtb7",
+        "filename": "GCP09329.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-dmnZtb7/0/MsgKztHF46ZFhsqrhfR4kZ4tBmJFmkR7rCPnj2Lrg/Th/GCP09329-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-dmnZtb7/0/MFNC6k2Sg8RHFHJQkQLK5kG3FcW5Wn6QjQKZkxdPQ/D/GCP09329-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-dmnZtb7",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "dCPJjJz",
+        "filename": "GCP09330.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-dCPJjJz/0/NXfkHSm3M7mDk3ZMgwJQC7xdfcVnvTfCLHnFqhKm3/Th/GCP09330-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-dCPJjJz/0/LtXskLS4LCkJnXfwGzT7t9Hxmc2bTbnfmzHj6VhVh/D/GCP09330-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-dCPJjJz",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "J7xr2Wk",
+        "filename": "GCP09331.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-J7xr2Wk/0/NCDB6rRSXM7dZNR3qGPTvDqwzNwrCwwhB8RKm8Gb8/Th/GCP09331-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-J7xr2Wk/0/NTb2hdJDwFXnFKdPFDMCKrfdzcWLh4FRmfvCkzZrF/D/GCP09331-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-J7xr2Wk",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "Xjc6BZ7",
+        "filename": "GCP09332.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-Xjc6BZ7/0/K56PBH6rLdgqrQdCWgf6ZTrXvKq9kTQ3NC6x8JPQv/Th/GCP09332-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-Xjc6BZ7/0/MSvN8xw4LTFbkMbBPf9kHQgPFg8F62gc2VMHdPVRP/D/GCP09332-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-Xjc6BZ7",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "CmWVJ72",
+        "filename": "GCP09334.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-CmWVJ72/0/LcskhRD43wT3swzNWcwSqX6M7PMMw8qf72HWDjRmz/Th/GCP09334-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-CmWVJ72/0/M8LXXK4xbT6ZwfHPv64FGP2gqvrH5PfFMjCwb34hF/D/GCP09334-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-CmWVJ72",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "sZ2nksW",
+        "filename": "GCP09335.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-sZ2nksW/0/NfpzNsxj4mQV3RGSQvdTwtxgSQVNnMN7ZRW8VmdrK/Th/GCP09335-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-sZ2nksW/0/LPMTnt6wvCxmqGG5vjf8KRnzhXSFDkn3CqNFj594D/D/GCP09335-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-sZ2nksW",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "GTh7hw4",
+        "filename": "GCP09338.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-GTh7hw4/0/LCFdsSP3fS4jfrjBbmDc7w9xtVQwpKm45RPhWc7TG/Th/GCP09338-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-GTh7hw4/0/KX6CVwbbK9DqkQ83FbvB7CwGhpd5vCJDCdR9X7TNT/D/GCP09338-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-GTh7hw4",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "SvGTPQp",
+        "filename": "GCP09340.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-SvGTPQp/0/MTtfVvprxg6HxKztDGJSj7NxVrdT56wzcD25FsZLg/Th/GCP09340-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-SvGTPQp/0/K43kF6x9WBDFfSCmBLbLmkx8jZ5ptmRqDztptGw6q/D/GCP09340-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-SvGTPQp",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "cJ69qvX",
+        "filename": "GCP09341.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-cJ69qvX/0/KbsM6bQhqtZRLr2LWSppzFW3Vgd99QvqbrfCKcf2p/Th/GCP09341-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-cJ69qvX/0/KQdzSHdCrZCKx5FhQD3Sx6CR2Hj39VhPPgLwMpt6v/D/GCP09341-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-cJ69qvX",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "ZbDLG9B",
+        "filename": "GCP09342.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-ZbDLG9B/0/LLwLXCKQPF6VgZ97CZjJXv6rvD4KxxkfzfcDjZK8W/Th/GCP09342-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-ZbDLG9B/0/NQHwzsnvQ9sh3rJc8m3HFwWS22LMQRqTwQMwmSxdb/D/GCP09342-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-ZbDLG9B",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "MtRrm3C",
+        "filename": "GCP09343.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-MtRrm3C/0/KD8gqW6KHFJ8Zf4tZPq2pJcntw2ZXr8JdXxsWrRgN/Th/GCP09343-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-MtRrm3C/0/Nb52wpSnmcwpGHFRNp2jKtxj5XkQ8nGhM2tVSmxZQ/D/GCP09343-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-MtRrm3C",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "gDctk8k",
+        "filename": "GCP09344.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-gDctk8k/0/Mk7BMbn4gjNZSkcqzhR6tKbSLn66cmLBJmLrgQcKr/Th/GCP09344-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-gDctk8k/0/MX3WQdhJdw92mKTK2s3MfrjHn5K4gHPdVwMs3RZgm/D/GCP09344-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-gDctk8k",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "KhnDmrT",
+        "filename": "GCP09345.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-KhnDmrT/0/LDfRvQFsBwtFx4jXJ248r6W7ZFLmbL9X84PDvV2XT/Th/GCP09345-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-KhnDmrT/0/M5nGmSpgLfX4Cs64rrJ2dqStxVnVkQx4G4DT3XmJq/D/GCP09345-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Friday-PM/i-KhnDmrT",
+        "isProcessed": false
+      }
+    ],
+    "processedCount": 0,
+    "processingProgress": 0,
+    "lastFetched": "2025-07-26T01:00:22.877Z"
   }
 }

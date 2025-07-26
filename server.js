@@ -412,6 +412,10 @@ async function handleAPIRoutes(req, res, parsedUrl) {
         if (response.content.some(block => block.type === 'tool_use') && !finalResponse) {
           console.log('[Chat] Getting final response from Claude with search results');
           
+          // Check if search was broadened
+          const wasBroadened = searchResults.some(result => result.searchBroadened);
+          const broadeningInfo = wasBroadened ? searchResults[0].broadeningApplied : null;
+          
           // Create a follow-up request with the search results
           const followUpBody = {
             model: chatModel,
@@ -419,6 +423,8 @@ async function handleAPIRoutes(req, res, parsedUrl) {
             system: `You're PhotoVision, and you just looked through the photo collection! Share what you found in a natural, excited way.
 
 Be conversational and enthusiastic - like you're showing photos to a friend. Mention specific details that caught your eye, and express genuine excitement about the moments captured. Keep it natural and personal!
+
+${wasBroadened ? `IMPORTANT: The search was broadened to find results. Here's what happened: "${broadeningInfo}". Mention this naturally in your response, like "I broadened the search a bit to find more matches" or "I expanded to include similar concepts" - keep it conversational!` : ''}
 
 Remember: You're not just delivering search results - you're sharing exciting photo discoveries with a friend!`,
             messages: [
