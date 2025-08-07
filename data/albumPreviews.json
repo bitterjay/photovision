@@ -38225,5 +38225,709 @@
     "processedCount": 0,
     "processingProgress": 0,
     "lastFetched": "2025-08-07T03:53:30.552Z"
+  },
+  "nDSnbZ": {
+    "albumKey": "nDSnbZ",
+    "albumName": "Sunday Finals",
+    "albumUri": "/api/v2/album/nDSnbZ",
+    "imageCount": 77,
+    "images": [
+      {
+        "imageKey": "JR7vQZ7",
+        "filename": "GCP00756.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-JR7vQZ7/0/KD8xWCmX2SBkrk6zVsHr9rgVGRBXXvQ6pP8mMm2HK/Th/GCP00756-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-JR7vQZ7/0/MHWdDqq8fXt6Fq66rBh3pCvWmK8nzN2PRsPg674sw/D/GCP00756-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-JR7vQZ7",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "2RswpQ4",
+        "filename": "GCP00757.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-2RswpQ4/0/K3VXKnrrM6txXDPHT5WctdWg6xJBbVD6rb87gtDkB/Th/GCP00757-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-2RswpQ4/0/MvRjVk9zJnxcTDXDxnVGRNxphz7VP5CH3FGXwxBJJ/D/GCP00757-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-2RswpQ4",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "RzVNnZT",
+        "filename": "GCP00759.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-RzVNnZT/0/Nfp5nd9HB5w7VNM2RQ6VFnhMZTP7tQw3tk7tBrtx5/Th/GCP00759-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-RzVNnZT/0/NTKb6ptrrxbQrnxd5krwQV8r9ZM53SF2fwsH2RxBR/D/GCP00759-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-RzVNnZT",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "VFkXPcP",
+        "filename": "GCP00760.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-VFkXPcP/0/KtMMbVfbSPFQ76M8JQddDhj5hXkJkH6KKpVHBwFjm/Th/GCP00760-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-VFkXPcP/0/KhVmvXLKBvcxK6tr25wMW9KrCMmLT4mnqd6pg89mR/D/GCP00760-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-VFkXPcP",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "5qQ47XD",
+        "filename": "GCP00761.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-5qQ47XD/0/KKXPN7FW5xTwGz7MMQh7Gz2QF7hf7J5LhDvmLV8XN/Th/GCP00761-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-5qQ47XD/0/KjZGGksZ5XLXPDvrTKt5QM3kRQRg4dRzcxdGfCsBZ/D/GCP00761-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-5qQ47XD",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "mjCXWGT",
+        "filename": "GCP00762.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-mjCXWGT/0/KMJpGSXhPTK49f8KfKvCwdChpRbM2VdWCwrrVfDkt/Th/GCP00762-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-mjCXWGT/0/LDhd3qxC9KjSPzvKgPfgjdvzpF2HxmrhfB48FDGBq/D/GCP00762-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-mjCXWGT",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "z9KDtDW",
+        "filename": "GCP00763.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-z9KDtDW/0/NMdx4ctXqhn6dXLq4QL4MSSVxvpnPVgM9dVHxmzhm/Th/GCP00763-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-z9KDtDW/0/KKFbsWCSKKV5bRh3WgD96GKv4nLbGjk3qQDSS7dzf/D/GCP00763-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-z9KDtDW",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "CWB89vJ",
+        "filename": "GCP00764.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-CWB89vJ/0/LGKWhVkWqWskvCvrCLXD9nPzfC5QXXjgdhNRmFXcZ/Th/GCP00764-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-CWB89vJ/0/NM5NJDc3JLWzt42LJvRBjq4cTxrNHXvXQG6XvXXSC/D/GCP00764-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-CWB89vJ",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "dCdVfRt",
+        "filename": "GCP00769.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-dCdVfRt/0/KsxzqKMqKSskqX65MwKmJ2kkTgPKGkQVtTRpkg97H/Th/GCP00769-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-dCdVfRt/0/KdgMxPNgk9ZgxJL6KFpfSG44r75g2DWj7v8WBWC59/D/GCP00769-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-dCdVfRt",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "rGcSTRX",
+        "filename": "GCP00771.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-rGcSTRX/0/MSRWZSV67LKw9hfzXwZ25nSsZjrD3x3PM5XgXKn4g/Th/GCP00771-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-rGcSTRX/0/Mh68pJrzTStKDtr7krD48PKmNWS2X2RDgk4vFZFGG/D/GCP00771-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-rGcSTRX",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "6nsVz8v",
+        "filename": "GCP00772.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-6nsVz8v/0/LGknBvNjb6JSrtXw2qTXHKBzc7VHnM2tL6RFkZQfF/Th/GCP00772-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-6nsVz8v/0/LVvmQ2WhBw4SZZq3cJsNZ67JFmDKM9tRK34Hkb675/D/GCP00772-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-6nsVz8v",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "NbBKMMm",
+        "filename": "GCP00774.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-NbBKMMm/0/NLFf2P975RqVx4PfFLJP7MfNDPCWjTmFBxxNPhzG8/Th/GCP00774-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-NbBKMMm/0/MD7r8cH32bCnZ4qVFrZqFxRrGKxVfBC5rC9b28vNv/D/GCP00774-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-NbBKMMm",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "KDtVbHb",
+        "filename": "GCP00775.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-KDtVbHb/0/KwhCBv8vDt2FrVqJbDbMhgBHkJSfzgwgqHgZmHrzc/Th/GCP00775-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-KDtVbHb/0/KwvWdzp7T559T7CHntFcLWGfjMtwHDf3hLZkCNTgq/D/GCP00775-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-KDtVbHb",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "p8jfnPn",
+        "filename": "GCP00777.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-p8jfnPn/0/KwDBsTdh9TQswbWJmcS9vGHgNpSSMbwfbLXhrZLxV/Th/GCP00777-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-p8jfnPn/0/MhBWr3PRZKthWfnBBJRZRStT7VZrv6LxkrRHNvF7d/D/GCP00777-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-p8jfnPn",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "hh8GbSw",
+        "filename": "GCP00778.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-hh8GbSw/0/K7gZhf52s9hFK9GXqfdvx9NXfZGwrZdwpFB6Vpzs9/Th/GCP00778-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-hh8GbSw/0/M6Rv9R8JLgWLqnqRWkdP6VbCzjxCbq455LHN9LGJk/D/GCP00778-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-hh8GbSw",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "2fmg582",
+        "filename": "GCP00779.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-2fmg582/0/Mc3LZcCxMQffdKg3CD7rz6zvW9xrVxd7PvGth2pRn/Th/GCP00779-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-2fmg582/0/KNz87fNzFMGckz5gKPz8RjNDQV3DxTmzCn7MGqCwD/D/GCP00779-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-2fmg582",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "fSNTsFX",
+        "filename": "GCP00780.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-fSNTsFX/0/L4Nc5B2M82SF6f4QHMvJx75jDCGfGvNkCsGs4jLrS/Th/GCP00780-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-fSNTsFX/0/L4TzHHBvVn5StFdbhMtvwx5HvVWTmvJHGrLkbBvmK/D/GCP00780-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-fSNTsFX",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "9psxZfn",
+        "filename": "GCP00781.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-9psxZfn/0/MqHZNnDQRdM668Z3j7gMn7RZksM9HHxGb5SdvfbpB/Th/GCP00781-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-9psxZfn/0/MMrb4mzH4RMgfwhJXwMQ7xDt8FXCFqk6NzFBLDDDq/D/GCP00781-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-9psxZfn",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "sdtr5zG",
+        "filename": "GCP00783.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-sdtr5zG/0/L2cL6q9Ng4jsLVJdzV8wdJ6LhrmdjhM7QrvLQRv9v/Th/GCP00783-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-sdtr5zG/0/MdKkwJ7fvvh8Dmz663nCHd9jm3wCPZmDNTMXVVT5R/D/GCP00783-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-sdtr5zG",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "TstwW6p",
+        "filename": "GCP00784.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-TstwW6p/0/LKscD6QvxqLPNt3Jzjq2V3g7w5FL9vbwMdmxrWbRW/Th/GCP00784-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-TstwW6p/0/KSRVgcWkXMgn633hZSrVDKJjdJXrmg6xqrKqJwWT3/D/GCP00784-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-TstwW6p",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "CGQ9Rsz",
+        "filename": "GCP00785.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-CGQ9Rsz/0/Mn5SDQdwTnPNw9bNCt25HfjsBX3MJzPVSCx25PdFh/Th/GCP00785-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-CGQ9Rsz/0/MzpWrPKrCqQ9fzvjDDm9HmqctGZLVsHbDKvBC2Ffk/D/GCP00785-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-CGQ9Rsz",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "qQLGSXk",
+        "filename": "GCP00787.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-qQLGSXk/0/Lv9k5CdNFVRh74JF3236bqVTXjPj3XmSp9TdmrxKX/Th/GCP00787-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-qQLGSXk/0/KkF2t7BL5twG97TXLBkTrgMbr4kbZKg2ctpSRWW7d/D/GCP00787-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-qQLGSXk",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "RxzBxK3",
+        "filename": "GCP00793.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-RxzBxK3/0/NdDV8WqCJSmsV7BTwVChXs97C6r6BG6PfWbT9VQWv/Th/GCP00793-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-RxzBxK3/0/MG3sZgxsnVDZq3rPGJQ8XHK5b52nnfscW533Vx9Xf/D/GCP00793-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-RxzBxK3",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "njKxXTt",
+        "filename": "GCP00794.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-njKxXTt/0/LBWKL935LFCtGmVnkSVwXL28n3472Gszfk4srNMMd/Th/GCP00794-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-njKxXTt/0/K663mNnJnjMtp7NwSpd5WNMZVngvbHGKFnj3DWpMt/D/GCP00794-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-njKxXTt",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "6F2m2qH",
+        "filename": "GCP00796.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-6F2m2qH/0/LTZGQ78hK37783sjtFCsvHfcCQJspLxmCxqRMVqvj/Th/GCP00796-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-6F2m2qH/0/NZKC9tr7hSwPF6mwBSB2V6kx8qT2TDSXFbzzZxtvv/D/GCP00796-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-6F2m2qH",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "98wmRXV",
+        "filename": "GCP00797.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-98wmRXV/0/Lg4D93F7zkTN9FwgtDv2Q6PGHRZ5tmFFLMFpN5gn9/Th/GCP00797-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-98wmRXV/0/McVTz7wJqJm4hRNVWPvpsTn2PLmfSq3NNxkFMLmJb/D/GCP00797-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-98wmRXV",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "jZRtVws",
+        "filename": "GCP00799.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-jZRtVws/0/Mrt3gD4mZqxK8z67GvLKfrm6Nr5rqkcJJrVTrCX6d/Th/GCP00799-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-jZRtVws/0/Lkr25cpHqmCHKN6D7nNmv7kjcss3nqtWgwmM8k7SL/D/GCP00799-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-jZRtVws",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "TgJDWWH",
+        "filename": "GCP00800.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-TgJDWWH/0/K8tzktvdRSNW7q4QkDGC2qX7tjvxmsMQFKJ32NgqT/Th/GCP00800-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-TgJDWWH/0/LPpZrkHn7PX3gDgCkQ4HL8PRB6Z5tVz5QbRFWrHXm/D/GCP00800-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-TgJDWWH",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "7Z4dfJZ",
+        "filename": "GCP00804.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-7Z4dfJZ/0/KJBK9f4GrSNjZhk7jFGXXfb62BXJtLsmZNTJ2dnSN/Th/GCP00804-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-7Z4dfJZ/0/MbB7pDpq89s2Hb2f6MZ8sHrmG4dx6BL4J52tZKtQw/D/GCP00804-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-7Z4dfJZ",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "9Qh3QhW",
+        "filename": "GCP00805.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-9Qh3QhW/0/NZqkbxdqvq7D29SqZVS2xPh4dmGmVL3BVSvMFKkGR/Th/GCP00805-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-9Qh3QhW/0/MXVm7CFwB6H5SbzpTw2md44JCx66vWkhf9LD9qqDm/D/GCP00805-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-9Qh3QhW",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "GbpSMDk",
+        "filename": "GCP00807.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-GbpSMDk/0/MR2mhhfjWbTmz3g8CWftHmsHpWmqRCpxnLRKhvQnc/Th/GCP00807-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-GbpSMDk/0/LjwtmTk5m2RLnJ3G2sLJcjf9B57RMj2DrtPrc5Kjb/D/GCP00807-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-GbpSMDk",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "mTLcvJ6",
+        "filename": "GCP00808.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-mTLcvJ6/0/LPPxND6nXgnhkn8JwF3h4Kwcp4zz6LgV5kmK7gg9M/Th/GCP00808-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-mTLcvJ6/0/K9scdbDtFvbWpZKBqHhHW5N2Dv82nNm9N2mVzTJkG/D/GCP00808-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-mTLcvJ6",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "qk5wbKv",
+        "filename": "GCP00809.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-qk5wbKv/0/Knvvw58NhTvnv5zNskMspjNRrZgXmB3X3vgq4kgGr/Th/GCP00809-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-qk5wbKv/0/LZPsFV4Npp995JdLnb6pDjgkdgtwP49cxFnW7XKBh/D/GCP00809-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-qk5wbKv",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "DvttWcZ",
+        "filename": "GCP00810.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-DvttWcZ/0/KPxNJdb6v2wf76WjBMBTsQsWHdx9363pjzhtF7hmP/Th/GCP00810-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-DvttWcZ/0/NK5dmsQd5d8MrnvnVNh7fpMrNrMVjbGg4fck2krq9/D/GCP00810-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-DvttWcZ",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "w4fFdh2",
+        "filename": "GCP00811.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-w4fFdh2/0/LPxcghRMjFWmHjLDRRpwjNXxMvWpdtQb66qXdr8mK/Th/GCP00811-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-w4fFdh2/0/NFMSRCj2NpJPrzX5VTkxQ48Zcs37HhNC5dj2dhX69/D/GCP00811-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-w4fFdh2",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "BJSK7xD",
+        "filename": "GCP00812.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-BJSK7xD/0/Nf2dJSWZ46sJj3zwxn2q2XcSTmmKbtSSZTZgXrwPL/Th/GCP00812-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-BJSK7xD/0/L9ZmChzXms4RmxH6grfPZdF5bkV57FDBgSwxw9H6c/D/GCP00812-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-BJSK7xD",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "CM38C6j",
+        "filename": "GCP00813.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-CM38C6j/0/M9phFrZj8gVqCxJCdr63pwxk39DF5M4qPNWbf3Wsd/Th/GCP00813-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-CM38C6j/0/LmFCD3vQhLMVzrfd85KRZ7r3SH97DG2cFrTnJWGGr/D/GCP00813-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-CM38C6j",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "bbQ6hhn",
+        "filename": "GCP00815.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-bbQ6hhn/0/MdksKQqBtpptrNdXbFQ5F7hMCLz6NWMDB7vGtwxqg/Th/GCP00815-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-bbQ6hhn/0/Ktw7d7Jp2gJF6RKNdCsWVnNPnZScZQN7834qhqgRP/D/GCP00815-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-bbQ6hhn",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "cSn2BXf",
+        "filename": "GCP00816.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-cSn2BXf/0/KpNBLqXFXdgJTkZ5M42DhXGcXq5D6MdSMTzrsH6Zk/Th/GCP00816-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-cSn2BXf/0/NDkgbq66G3fZxRhrNLVpnpS6Zr2j83GjsJB9RZC9G/D/GCP00816-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-cSn2BXf",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "CkwKs9k",
+        "filename": "GCP00817.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-CkwKs9k/0/L5HvdTpgXFx92XPXr69Lf5w24FknpkJjGJJDLCqCp/Th/GCP00817-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-CkwKs9k/0/KkWQD24L36Q3L3SdqDfGCjJN9j2qmq3q5j7Kpg94x/D/GCP00817-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-CkwKs9k",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "B84hWwn",
+        "filename": "GCP00818.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-B84hWwn/0/KvND7FwQZHvWpcHjRWx94BqDLCGq4pNJv52vtVq4q/Th/GCP00818-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-B84hWwn/0/Kr3n4kzfGmBXRcMbcBKKBKcKRk7BmXhsTjQFqLfX3/D/GCP00818-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-B84hWwn",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "BvGZ2RZ",
+        "filename": "GCP00821.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-BvGZ2RZ/0/K35nddKPbwBwFnHFT33NQQnD5cQk47KgFgnzKdKPq/Th/GCP00821-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-BvGZ2RZ/0/LjfcjZN4fjTBvLNxgCSBFQNwQ7Bmg4Tr7dWCf8gzv/D/GCP00821-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-BvGZ2RZ",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "PT7zdxp",
+        "filename": "GCP00822.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-PT7zdxp/0/KtCts3QZTCRmQhTNx5hZTtpM9VcLwPv5SLVv6qZKJ/Th/GCP00822-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-PT7zdxp/0/KtLxGtp7MXbgVQR83TZVJ3FrFzzRrnrXnbhH64BVn/D/GCP00822-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-PT7zdxp",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "wNd5jfp",
+        "filename": "GCP00823.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-wNd5jfp/0/NBpCT4qcrLpPTmjZPK8J9gFK5BxnHgRt4xBFfgk6M/Th/GCP00823-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-wNd5jfp/0/MVrWHhP58WRKWdZ3KNKtNdQxj5cTMjsH2dd974nHt/D/GCP00823-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-wNd5jfp",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "TfBSPTx",
+        "filename": "GCP00825.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-TfBSPTx/0/LPHt2vQb3744vrdHNgCvJ4m63DjFWjFgkN5Q8H9kF/Th/GCP00825-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-TfBSPTx/0/LVgdzrCCz3nN6L4PbRbTMLGH8Lgxh8T7McBFqptr2/D/GCP00825-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-TfBSPTx",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "KrpS4bT",
+        "filename": "GCP00826.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-KrpS4bT/0/LQNmmFGv3SX4Rzgkv3TVCcn2xJ7zKd3QxdQj6rdGv/Th/GCP00826-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-KrpS4bT/0/Mtn7bq7qsmm2Rj2jb5hm6JzL2K9SSGr3PhpNWmdTh/D/GCP00826-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-KrpS4bT",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "79Bz7ZQ",
+        "filename": "GCP00827.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-79Bz7ZQ/0/LsdVLXXTFBNwSJBhmS8k3StgHkd93htnHwNf9VDRx/Th/GCP00827-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-79Bz7ZQ/0/LctdqchfzNVwBnjdmhhnzZDcNgd8qLJ9ncW8WSGLw/D/GCP00827-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-79Bz7ZQ",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "23rnJGp",
+        "filename": "GCP00830.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-23rnJGp/0/NRRxtgw3N8nJGZDFfxCXzLTch3L7NFxRPj9dBs2vw/Th/GCP00830-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-23rnJGp/0/MpmVZFPKWhh9tjvNXMffNxm5pDdPwKb3tHSWVxFST/D/GCP00830-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-23rnJGp",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "42HNNZQ",
+        "filename": "GCP00831.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-42HNNZQ/0/KFMRRRQhNptkhL4rtzThFLdXZrGfxs2C2jss7cW8D/Th/GCP00831-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-42HNNZQ/0/MM5SzPqggLksK6N5LKnVMCx5kjqd3KnddPkJpRrML/D/GCP00831-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-42HNNZQ",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "dMrpJkZ",
+        "filename": "GCP00833.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-dMrpJkZ/0/LV4nz3kJpsJcDFZ4g9c8hXgMCw3Kwj3JWkz8Tcswx/Th/GCP00833-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-dMrpJkZ/0/KwnRgQthbZ3f7bFBdNc8Kv9wtmKQQvnbqpWS7s5dD/D/GCP00833-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-dMrpJkZ",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "gTWgw4N",
+        "filename": "GCP00835.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-gTWgw4N/0/Mzc8dHqvQLszs5FCFkRS9Ztmh3bgVKcWhMhdz76sj/Th/GCP00835-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-gTWgw4N/0/KJH983t7gbXL3gQBXsXFKczb5mF9DWvrCwnCdFZcv/D/GCP00835-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-gTWgw4N",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "FK67kvN",
+        "filename": "GCP00836.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-FK67kvN/0/NHndJ6QpZzWFhwfCRRGF9zKLZhCBP96th3WCjh3v2/Th/GCP00836-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-FK67kvN/0/LjX4TPvFwZcDpRBdzHPKT8VtQPgFnJBLC9kDLbnqk/D/GCP00836-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-FK67kvN",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "2R6pXpj",
+        "filename": "GCP00841.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-2R6pXpj/0/LN5Mv8wg6j7bPRZhM7xfSxMHghVDkQkPL2fqw5d7x/Th/GCP00841-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-2R6pXpj/0/MrR6WWdPtdNfSDpsZBvWDsPjfNv2XwTWx8CNZbqnk/D/GCP00841-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-2R6pXpj",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "bRgHZgM",
+        "filename": "GCP00842.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-bRgHZgM/0/KddpkjnnJ7bpxgRjFGg55LxDddNjKtHSJ9z7VHw5L/Th/GCP00842-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-bRgHZgM/0/MZDvksdqVK3qnKhQnHDhwbKXzLhw8FtMhLTsT2hfV/D/GCP00842-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-bRgHZgM",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "jpppcBx",
+        "filename": "GCP00843.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-jpppcBx/0/KhRSQHtXd9FT723wPht2gWXcFtR2nJC3CDBMzzbCf/Th/GCP00843-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-jpppcBx/0/MqGVBktTkXb3BdBsWhZSbxvPNPC3NWsctvCn3WKQk/D/GCP00843-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-jpppcBx",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "RrF98vb",
+        "filename": "GCP00846.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-RrF98vb/0/KGc82pNG38sqpnxXLjHn4wSv5tsmWw4rmSXhKwGLz/Th/GCP00846-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-RrF98vb/0/KScxKZ2ZB3nP6hgwkKrsgVv7KjnjvHnQf9rMTT5dW/D/GCP00846-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-RrF98vb",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "qh4rqWH",
+        "filename": "GCP00848.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-qh4rqWH/0/M6ssrzMSfmrfwnfxpJCgnS9hnHLr22np3TqJ35c3b/Th/GCP00848-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-qh4rqWH/0/NWD9RrWqpFLJ4VMPwvKrkTrGdt5V8tKVxHSWTXVmK/D/GCP00848-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-qh4rqWH",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "bN8kJcm",
+        "filename": "GCP00849.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-bN8kJcm/0/NPSrGRxGZzQVn8GZ43X9wZV7zK5v6vPGzz2WBxhqP/Th/GCP00849-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-bN8kJcm/0/MxrqgxDwWxD8Vsb4svXBN4twTtCc8MGqB7dTMQ4kc/D/GCP00849-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-bN8kJcm",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "PDVQX7X",
+        "filename": "GCP00850.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-PDVQX7X/0/MRKCxnZgJnSHSfZ85bsP3LSZk6r9PXZ9DN9q4qsCJ/Th/GCP00850-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-PDVQX7X/0/L4ZgKHmwvfqdnrTgjSJn8RmVkT9cttfkN82TW5hX6/D/GCP00850-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-PDVQX7X",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "bLZn3qW",
+        "filename": "GCP00851.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-bLZn3qW/0/MhJ5mqRqGhLQ3LKhWQ8pFLMv5QtZxddB3MNx5NKSw/Th/GCP00851-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-bLZn3qW/0/KpsXJkxJxkRtdFksJd2nwgG6MPTP9PM2DgjSsRf88/D/GCP00851-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-bLZn3qW",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "LSpTcfZ",
+        "filename": "GCP00852.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-LSpTcfZ/0/MTTnDzZnn4g59NrLGPRzPNxRNRZsMw3hKrJpHgQ2n/Th/GCP00852-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-LSpTcfZ/0/LdrTQpbKBBWj7pfJRFkWL7ssWKBbs73bzLXQP2cNz/D/GCP00852-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-LSpTcfZ",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "nKvqVFx",
+        "filename": "GCP00853.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-nKvqVFx/0/NhRmhR6SvKMNBXZVZqMC2vn6bhjtGCSfDBdP3VWxJ/Th/GCP00853-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-nKvqVFx/0/LHdwrz78KNxwxDNmsxF38JNMqKdCkdmS7WRZ5JMSc/D/GCP00853-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-nKvqVFx",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "KCZRX57",
+        "filename": "GCP00854.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-KCZRX57/0/MWjhGcGVDc6XmH8mdBhmW3gTBPJMc4V3xmz45gfMx/Th/GCP00854-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-KCZRX57/0/Nh3zV66hDmcWptthHcVDTQkk8NQkFtRnLQqpz8FpZ/D/GCP00854-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-KCZRX57",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "qmPzv8C",
+        "filename": "GCP00855.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-qmPzv8C/0/LrwKmKvshXgm6687s443xv2kwhqwRGbDgHFQ3sZPr/Th/GCP00855-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-qmPzv8C/0/Mt5vzBwp7dv3m9xwKLnnvj7jsppMkgmTm8NBjMjvH/D/GCP00855-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-qmPzv8C",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "Wz4CctL",
+        "filename": "GCP00856.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-Wz4CctL/0/KxshfXgpdn7HNPnG6SHvhTBxcpXCKnX7m6X5X3NDG/Th/GCP00856-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-Wz4CctL/0/M8ZHv7VpZPmDzdxwNDNgtbGb3nxvGRZ8gpnvM7NmC/D/GCP00856-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-Wz4CctL",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "6t3vXWC",
+        "filename": "GCP00857.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-6t3vXWC/0/NXS3ZGDW29jqWHWhzh6GDKXPMg6Bg2ftLRdvhFrTp/Th/GCP00857-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-6t3vXWC/0/KhV6VS3LC4xk2wKDCxmnjJfjnSLZNHkp9VGf96d5n/D/GCP00857-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-6t3vXWC",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "42Zpphs",
+        "filename": "GCP00858.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-42Zpphs/0/LnDKmM2mtFkkQHGQPR9Jsvngm4gVc4dnc4BG3Rxnh/Th/GCP00858-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-42Zpphs/0/NXNphtZSZCfbWVXn8qD826qnCMpzSR52m575nJ8v8/D/GCP00858-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-42Zpphs",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "dPK46Ln",
+        "filename": "GCP00859.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-dPK46Ln/0/LRNK5CJmktkqrL7FN6kdLXp779HX9SVP4pLGP3tVp/Th/GCP00859-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-dPK46Ln/0/KJsXXm8B9BxXxc4Kxv4Hq2Bnkd7gr6R59GH4QT5Dh/D/GCP00859-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-dPK46Ln",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "KxK4QT9",
+        "filename": "GCP00861.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-KxK4QT9/0/KFFcRsHc7q9NTtkTZp2H2rcRWfWHPSGw23XtqQ8kD/Th/GCP00861-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-KxK4QT9/0/Ncb5LgtCQMqfmD7dZVcL6BtmXj2fP3QMz4Nqf5Ws3/D/GCP00861-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-KxK4QT9",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "8Nn42Lf",
+        "filename": "GCP00863.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-8Nn42Lf/0/NJfqmHXbBhFQFWrW2J6VC2KWNpzvxcQr7b9KvX8jR/Th/GCP00863-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-8Nn42Lf/0/LwfSBMgfh4JjDW7MtXcxTL3QkVSMFmQqsBKBxkvBM/D/GCP00863-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-8Nn42Lf",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "RQ5PBRj",
+        "filename": "GCP00864.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-RQ5PBRj/0/LFX3zZDK5qnB6QLFRcprp44SVfdF5M3hhP6jTHNz2/Th/GCP00864-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-RQ5PBRj/0/LLxcmj3w8sX48LPQg2Sv4xZXMNVvNdF76QtWRCmvd/D/GCP00864-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-RQ5PBRj",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "5TLx3hH",
+        "filename": "GCP00865.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-5TLx3hH/0/MdtBVJ24hBfRTtg4XFvsMwNtjT42PK6C8JBWhW5bh/Th/GCP00865-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-5TLx3hH/0/NQ9hrFm2kH3f7vwJbpT4C9S7qRSr8qZm6jzqvtpWL/D/GCP00865-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-5TLx3hH",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "JRm3tmn",
+        "filename": "GCP00866.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-JRm3tmn/0/M8ZKpFqvz2qbJmR4SMjpPdLww4MdjhsHqRbsjJqnt/Th/GCP00866-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-JRm3tmn/0/Lt3Jnn4rQw6VCzWPmvxsZ73zFDZXwDCndQwFCMjh9/D/GCP00866-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-JRm3tmn",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "BHpgWxv",
+        "filename": "GCP00867.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-BHpgWxv/0/NhscS7GFwpCDbtJHrpwZ9LtxwsHZhHKvfH8b56wnZ/Th/GCP00867-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-BHpgWxv/0/KtHHH6TVZmxZdVxXHJDDjLsdczRkBZfxSrgd7p9g3/D/GCP00867-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-BHpgWxv",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "f34FtQT",
+        "filename": "GCP00869.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-f34FtQT/0/LjfSg7rcRRNZSxdwKbXxd3BmKTvxrcXJwrtVbWSCw/Th/GCP00869-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-f34FtQT/0/NVkPcBfwnkvXDjN5bSn54kH4b6H4vkHC3rFtDCfBq/D/GCP00869-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-f34FtQT",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "mPRPBJj",
+        "filename": "GCP00870.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-mPRPBJj/0/MpB3r3MwRq7Pmgvwk2cg8QmxJpx8k9SBm9wcb38n4/Th/GCP00870-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-mPRPBJj/0/Lb9FCzGMnHvCTcbF4SZTwQpjvKxW36hJRtkMrrT7p/D/GCP00870-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-mPRPBJj",
+        "isProcessed": false
+      },
+      {
+        "imageKey": "5Dt6rST",
+        "filename": "GCP00872.jpg",
+        "caption": "",
+        "thumbnailUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-5Dt6rST/0/M7NKjBj2L3qwfCPrPkdVd6WRRwHHJd36WHhdRtH3Q/Th/GCP00872-Th.jpg",
+        "largeUrl": "https://photos.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-5Dt6rST/0/Mkgvb4shTNbMLQXHQDf9bnPRp8KTvdWh2xtLcbh5q/D/GCP00872-D.jpg",
+        "webUri": "https://usaarchery.smugmug.com/2025/Buckeye-Classic/Sunday-Finals/i-5Dt6rST",
+        "isProcessed": false
+      }
+    ],
+    "processedCount": 0,
+    "processingProgress": 0,
+    "lastFetched": "2025-08-07T03:58:10.069Z"
   }
 }

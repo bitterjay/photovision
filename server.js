@@ -1062,7 +1062,13 @@ Be specific and descriptive to enable natural language searches like "photos of 
       }
 
       try {
-        const callbackUrl = `http://localhost:${PORT}/api/smugmug/callback`;
+        // Determine base URL based on environment
+        const baseUrl = process.env.RAILWAY_PUBLIC_DOMAIN 
+          ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`
+          : process.env.BASE_URL 
+          ? process.env.BASE_URL
+          : `http://localhost:${PORT}`;
+        const callbackUrl = `${baseUrl}/api/smugmug/callback`;
         const requestTokenResult = await smugmugClient.getRequestToken(callbackUrl);
         
         if (!requestTokenResult.success) {
