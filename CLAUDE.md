@@ -56,6 +56,7 @@ node test-comprehensive-duplicate-detection.js
 ### Frontend Architecture
 - **`public/script.js`**: Main application class (`PhotoVision`) with modular functionality
 - **`public/style.css`**: Modern CSS with CSS custom properties, responsive design, and dark/light theme support
+- **`public/styles/lightbox.css`**: Enhanced lightbox with keyboard navigation (arrow keys, ESC), swipe gestures, and zoom functionality
 - **`public/index.html`**: Single-page interface with tabbed navigation
 
 ## Key Data Structures
@@ -193,6 +194,13 @@ PORT=3001
 - **Lazy Loading**: Load images and data as needed
 - **Responsive Design**: CSS Grid and Flexbox for efficient layouts
 - **Caching**: Implement client-side caching for frequently accessed data
+
+### Lightbox Features
+- **Keyboard Navigation**: Arrow keys for next/previous, ESC to close, Space to play/pause slideshow
+- **Touch Gestures**: Swipe left/right for navigation on mobile devices
+- **Zoom Controls**: Pinch-to-zoom and double-tap zoom on touch devices
+- **Slideshow Mode**: Auto-advance with 3-second intervals
+- **Visual Enhancements**: Smooth transitions, backdrop blur, and responsive design
 
 ## Security Implementation
 
