@@ -206,6 +206,33 @@ PORT=3001
 - **Signature Generation**: Proper OAuth 1.0a signature implementation
 - **Secret Protection**: Environment variables for all sensitive data
 
+## Deployment Configuration
+
+### Railway.app Deployment
+- **Configuration File**: `railway.toml` handles build and deployment settings
+- **Persistent Storage**: Data volume mounted at `/app/data` for JSON file persistence
+- **Environment Detection**: Automatic base URL detection using `RAILWAY_PUBLIC_DOMAIN`
+- **OAuth Callback URL**: Dynamic callback URL based on deployment environment
+  - Production: `https://[your-app].railway.app/api/smugmug/callback`
+  - Development: `http://localhost:3001/api/smugmug/callback`
+
+### Required Environment Variables
+```env
+ANTHROPIC_API_KEY=your_claude_api_key
+SMUGMUG_API_KEY=your_smugmug_api_key
+SMUGMUG_API_SECRET=your_smugmug_api_secret
+PORT=3001
+# Optional: Set if RAILWAY_PUBLIC_DOMAIN not available
+BASE_URL=https://your-deployed-url.com
+```
+
+### Deployment Steps
+1. Push code to GitHub repository
+2. Connect Railway to GitHub repo
+3. Set environment variables in Railway dashboard
+4. Update SmugMug app callback URL to production URL
+5. Deploy automatically on push to main branch
+
 ## IMPORTANT: Sound Notification
 
 After finishing responding to my request or running a command, run this command to notify me by sound:
